@@ -1,0 +1,162 @@
+/* src/components/ProblemSolving.css */
+
+.leetcode-card {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.leetcode-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.leetcode-text {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.dsa-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.dsa-badge {
+  background: rgba(6, 182, 212, 0.05);
+  border: 1px solid rgba(6, 182, 212, 0.15);
+  color: var(--accent-teal);
+  padding: 0.35rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.dsa-badge:hover {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: var(--accent-teal);
+  transform: translateY(-2px);
+}
+
+/* LeetCode Visual Dashboard */
+.leetcode-dashboard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.leetcode-dashboard:hover {
+  border-color: rgba(6, 182, 212, 0.25);
+  box-shadow: var(--shadow-glow-teal);
+}
+
+.dials-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap: 1rem;
+}
+
+.dial-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dial-svg-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.dial-svg-wrapper svg {
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.04);
+  stroke-width: 6;
+}
+
+.circle-progress {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-out;
+}
+
+.dial-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.dial-label {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dial-label.easy { color: var(--lc-easy); }
+.dial-label.medium { color: var(--lc-medium); }
+.dial-label.hard { color: var(--lc-hard); }
+
+/* Total Solved Display */
+.total-solved-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.total-solved-val {
+  font-size: 3rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  background: linear-gradient(135deg, var(--accent-teal), #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+
+.total-solved-lbl {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .leetcode-card {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dials-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
