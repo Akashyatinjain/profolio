@@ -199,6 +199,16 @@ const About = () => {
                   <span className="cert-issuer">Frontend Frontier / Development Workshop</span>
                 </div>
               </div>
+
+              <div className="cert-card">
+                <div className="cert-icon-wrapper">
+                  <Award size={20} style={{ color: 'var(--accent-teal)' }} />
+                </div>
+                <div className="cert-details">
+                  <span className="cert-name">2nd Runner Up in Colloquium</span>
+                  <span className="cert-issuer">Colloquium / Technical & Project Competition</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

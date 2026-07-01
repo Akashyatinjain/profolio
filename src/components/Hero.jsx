@@ -86,7 +86,7 @@ const Hero = () => {
       </div>
       <div className="hero-deco-card hero-deco-card-4">
         <Code2 size={16} />
-        <span>200+ LeetCode Solved</span>
+        <span>200+ LeetCode Submissions</span>
       </div>
 
       <div className="container">
