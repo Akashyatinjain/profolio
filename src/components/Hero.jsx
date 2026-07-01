@@ -1,6 +1,6 @@
 // src/components/Hero.jsx
 import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, FolderGit, Award } from 'lucide-react';
+import { ArrowUpRight, FolderGit, Award, Code2 } from 'lucide-react';
 import { Github } from './Icons';
 import './Hero.css';
 
@@ -82,7 +82,11 @@ const Hero = () => {
       </div>
       <div className="hero-deco-card hero-deco-card-3">
         <Award size={16} />
-        <span>Grade C+ Developer</span>
+        <span>Java Developer</span>
+      </div>
+      <div className="hero-deco-card hero-deco-card-4">
+        <Code2 size={16} />
+        <span>200+ LeetCode Solved</span>
       </div>
 
       <div className="container">
