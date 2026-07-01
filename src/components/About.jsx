@@ -49,7 +49,7 @@ const About = () => {
       <div className="container">
         <h2 className="section-title">About Me</h2>
         <p className="section-subtitle">
-          Sophomore Computer Science student aiming to bridge the gap between robust software engineering and high-availability cloud architecture.
+          3rd Year Information Technology student aiming to bridge the gap between robust software engineering and high-availability cloud architecture.
         </p>
 
         <div className="about-grid">
@@ -57,7 +57,7 @@ const About = () => {
           <div className="about-bio">
             <div className="highlight-tag">
               <GraduationCap size={18} />
-              <span>2nd Year Computer Science Student</span>
+              <span>3rd Year Information Technology Student</span>
             </div>
              <p className="about-text">
               I am a software engineer specializing in <strong className="text-highlight">Java</strong> object-oriented programming, data structures, and algorithms. 

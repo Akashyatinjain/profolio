@@ -105,7 +105,7 @@ const Hero = () => {
           </div>
 
           <p className="hero-desc">
-            Sophomore IT student with an elite focus on <strong className="text-highlight">Java OOP</strong>, Data Structures & Algorithms, and modern Full-Stack development. 
+            3rd Year IT student with an elite focus on <strong className="text-highlight">Java OOP</strong>, Data Structures & Algorithms, and modern Full-Stack development. 
             Actively building enterprise-ready solutions with secure cloud pipelines.
           </p>
 
