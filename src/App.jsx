@@ -12,10 +12,6 @@ import './App.css';
 function App() {
   useEffect(() => {
     // IntersectionObserver for scroll-reveal animations
-    const revealElements = document.querySelectorAll(
-      '.reveal, .reveal-left, .reveal-right, .reveal-scale'
-    );
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -27,14 +23,40 @@ function App() {
         });
       },
       {
-        threshold: 0.12,
-        rootMargin: '0px 0px -60px 0px',
+        threshold: 0.02, // Lower threshold for mobile devices
+        rootMargin: '0px 0px -20px 0px',
       }
     );
 
-    revealElements.forEach((el) => observer.observe(el));
+    // Helper to observe element nodes
+    const observeElements = (container) => {
+      const revealElements = container.querySelectorAll(
+        '.reveal:not(.visible), .reveal-left:not(.visible), .reveal-right:not(.visible), .reveal-scale:not(.visible)'
+      );
+      revealElements.forEach((el) => observer.observe(el));
+    };
 
-    return () => observer.disconnect();
+    // Observe initial layout
+    observeElements(document);
+
+    // Watch for dynamic DOM changes (like project category filters)
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length > 0) {
+          observeElements(document);
+        }
+      });
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
   }, []);
 
   return (

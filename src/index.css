@@ -47,13 +47,17 @@
   padding: 0;
 }
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
   line-height: 1.6;
 }
 
@@ -103,6 +107,7 @@ a {
 section {
   padding: 8rem 0 4rem;
   position: relative;
+  overflow: hidden;
 }
 
 .section-title {
