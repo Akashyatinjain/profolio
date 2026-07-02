@@ -74,7 +74,7 @@ const Hero = () => {
       {/* Decorative Floating Cards */}
       <div className="hero-deco-card hero-deco-card-1">
         <FolderGit size={16} />
-        <span>6+ Projects Live</span>
+        <span>7+ Projects Live</span>
       </div>
       <div className="hero-deco-card hero-deco-card-2">
         <Github size={16} />

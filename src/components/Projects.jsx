@@ -66,6 +66,16 @@ const Projects = () => {
       icon: <Layout size={22} />,
     },
     {
+      title: 'Developer Portfolio',
+      category: 'frontend',
+      date: 'July 2026',
+      description: 'A premium, highly interactive personal portfolio website showcasing software engineering capabilities, built using React, Vite, and custom CSS with smooth transitions and floating elements.',
+      tech: ['React', 'Vite', 'Lucide React', 'CSS3', 'JavaScript'],
+      liveUrl: 'https://akashyatinjain.github.io/',
+      githubUrl: 'https://github.com/Akashyatinjain/profolio',
+      icon: <Layout size={22} />,
+    },
+    {
       title: 'Simon Game',
       category: 'others',
       description: 'An interactive memory sequence game implementing sound cues, DOM event-listeners, record score-tracking, and dynamic CSS level animations.',
