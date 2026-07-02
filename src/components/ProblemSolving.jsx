@@ -4,8 +4,8 @@ import { Award, ArrowUpRight, BrainCircuit } from 'lucide-react';
 import './ProblemSolving.css';
 
 const ProblemSolving = () => {
-  // SVG Ring calculation: Circumference = 2 * pi * r = 2 * 3.14159 * 34 = 213.6
-  const strokeCircumference = 213.6;
+  // SVG Ring calculation: Circumference = 2 * pi * r = 2 * 3.14159 * 32 = 201.1
+  const strokeCircumference = 201.1;
 
   const leetcodeStats = {
     totalSolved: 200,
@@ -90,12 +90,12 @@ const ProblemSolving = () => {
                 return (
                   <div key={cat.label} className="dial-item">
                     <div className="dial-svg-wrapper">
-                      <svg width="80" height="80">
-                        <circle cx="40" cy="40" r="34" className="circle-bg" />
+                      <svg width="80" height="80" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="32" className="circle-bg" />
                         <circle
                           cx="40"
                           cy="40"
-                          r="34"
+                          r="32"
                           className="circle-progress"
                           style={{
                             stroke: cat.color,
