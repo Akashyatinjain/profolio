@@ -32,12 +32,12 @@ const ProblemSolving = () => {
   return (
     <section id="leetcode" className="leetcode-section">
       <div className="container">
-        <h2 className="section-title">Data Structures & Algorithms</h2>
-        <p className="section-subtitle">
+        <h2 className="section-title reveal">Data Structures & Algorithms</h2>
+        <p className="section-subtitle reveal reveal-delay-1">
           Demonstrating strong analytical skills and algorithmic competence by solving real-world challenges.
         </p>
 
-        <div className="glass-card leetcode-card">
+        <div className="glass-card leetcode-card reveal-scale reveal-delay-2">
           {/* DSA text info */}
           <div className="leetcode-info">
             <div className="highlight-tag" style={{ background: 'rgba(6, 182, 212, 0.05)', borderColor: 'rgba(6, 182, 212, 0.15)' }}>

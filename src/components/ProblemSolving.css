@@ -40,6 +40,7 @@
   background: rgba(6, 182, 212, 0.1);
   border-color: var(--accent-teal);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
 }
 
 /* LeetCode Visual Dashboard */
@@ -54,11 +55,28 @@
   gap: 2rem;
   position: relative;
   overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.leetcode-dashboard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--lc-easy), var(--lc-medium), var(--lc-hard));
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
 .leetcode-dashboard:hover {
   border-color: rgba(6, 182, 212, 0.25);
   box-shadow: var(--shadow-glow-teal);
+}
+
+.leetcode-dashboard:hover::before {
+  opacity: 1;
 }
 
 .dials-container {
@@ -96,6 +114,7 @@
   stroke-width: 6;
   stroke-linecap: round;
   transition: stroke-dashoffset 1s ease-out;
+  filter: drop-shadow(0 0 4px currentColor);
 }
 
 .dial-value {
@@ -145,7 +164,16 @@
   margin-top: 0.5rem;
 }
 
-/* Responsive */
+/* ===== RESPONSIVE ===== */
+
+/* Large Tablet */
+@media (max-width: 1024px) {
+  .leetcode-card {
+    gap: 2.5rem;
+  }
+}
+
+/* Tablet */
 @media (max-width: 992px) {
   .leetcode-card {
     grid-template-columns: 1fr;
@@ -153,10 +181,50 @@
   }
 }
 
+/* Mobile */
+@media (max-width: 768px) {
+  .leetcode-dashboard {
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+  }
+  .total-solved-val {
+    font-size: 2.5rem;
+  }
+  .leetcode-text {
+    font-size: 0.95rem;
+  }
+}
+
+/* Small Mobile */
 @media (max-width: 480px) {
+  .leetcode-dashboard {
+    padding: 1.5rem 1.25rem;
+  }
   .dials-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
+    gap: 0.5rem;
+  }
+  .dial-svg-wrapper {
+    width: 70px;
+    height: 70px;
+  }
+  .dial-svg-wrapper svg {
+    width: 70px;
+    height: 70px;
+  }
+  .dial-value {
+    font-size: 0.85rem;
+  }
+  .dial-label {
+    font-size: 0.7rem;
+  }
+  .total-solved-val {
+    font-size: 2.25rem;
+  }
+  .total-solved-lbl {
+    font-size: 0.75rem;
+  }
+  .dsa-badge {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
   }
 }

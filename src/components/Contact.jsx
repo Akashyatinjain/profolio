@@ -35,14 +35,14 @@ const Contact = () => {
     <section id="contact" className="contact-section">
       <div className="glow-orb glow-orb-purple" style={{ bottom: '-100px', right: '15%' }}></div>
       <div className="container">
-        <h2 className="section-title">Get In Touch</h2>
-        <p className="section-subtitle">
+        <h2 className="section-title reveal">Get In Touch</h2>
+        <p className="section-subtitle reveal reveal-delay-1">
           Have an exciting project suggestion, a job opportunity, or just want to chat? Shoot me a message!
         </p>
 
         <div className="contact-grid">
           {/* Info Panel */}
-          <div className="contact-info-panel">
+          <div className="contact-info-panel reveal-left">
             <div>
               <h3 className="contact-heading">Let's discuss something great</h3>
               <p className="contact-desc-text">
@@ -126,7 +126,7 @@ const Contact = () => {
           </div>
 
           {/* Contact Form Card */}
-          <div className="glass-card">
+          <div className="glass-card reveal-right">
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-row">
                 <div className="form-group">
@@ -201,19 +201,7 @@ const Contact = () => {
               </button>
 
               {formStatus === 'success' && (
-                <div
-                  style={{
-                    color: '#10b981',
-                    background: 'rgba(16, 185, 129, 0.1)',
-                    border: '1px solid rgba(16, 185, 129, 0.2)',
-                    padding: '1rem',
-                    borderRadius: '10px',
-                    fontSize: '0.9rem',
-                    marginTop: '1rem',
-                    textAlign: 'center',
-                    fontWeight: '500',
-                  }}
-                >
+                <div className="form-success-msg">
                   🎉 Thank you! Your message has been sent successfully.
                 </div>
               )}

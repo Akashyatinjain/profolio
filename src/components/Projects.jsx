@@ -94,13 +94,13 @@ const Projects = () => {
     <section id="projects" className="projects-section">
       <div className="glow-orb glow-orb-blue" style={{ bottom: '40%', right: '-150px' }}></div>
       <div className="container">
-        <h2 className="section-title">My Projects</h2>
-        <p className="section-subtitle">
+        <h2 className="section-title reveal">My Projects</h2>
+        <p className="section-subtitle reveal reveal-delay-1">
           A showcase of full-stack systems, dynamic frontend layouts, and interactive games built with modern tech principles.
         </p>
 
         {/* Filter Bar */}
-        <div className="filter-bar">
+        <div className="filter-bar reveal reveal-delay-2">
           {categories.map(cat => (
             <button
               key={cat.id}
@@ -115,7 +115,7 @@ const Projects = () => {
         {/* Projects Grid */}
         <div className="projects-grid">
           {filteredProjects.map((project, idx) => (
-            <div key={idx} className="glass-card project-card">
+            <div key={idx} className="glass-card project-card reveal-scale" style={{ transitionDelay: `${idx * 0.1}s` }}>
               <div className="project-card-header">
                 <div className="project-icon-wrapper">
                   {project.icon}

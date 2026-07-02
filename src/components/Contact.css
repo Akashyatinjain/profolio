@@ -59,6 +59,7 @@
   justify-content: center;
   color: var(--accent-blue);
   border: 1px solid var(--border-light);
+  flex-shrink: 0;
 }
 
 .contact-method-card:hover .method-icon-wrapper {
@@ -69,6 +70,7 @@
 .method-details {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .method-label {
@@ -82,6 +84,8 @@
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-primary);
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 /* Social Grid Links */
@@ -177,8 +181,12 @@
 
 .form-input:focus {
   border-color: var(--accent-purple);
-  box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.25), 0 0 4px rgba(139, 92, 246, 0.15);
   background: rgba(8, 12, 20, 0.8);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
 }
 
 textarea.form-input {
@@ -186,7 +194,33 @@ textarea.form-input {
   min-height: 150px;
 }
 
-/* Responsive */
+/* Success message */
+.form-success-msg {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 500;
+  animation: fadeInUp 0.4s ease;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Large Tablet */
+@media (max-width: 1024px) {
+  .contact-grid {
+    gap: 2.5rem;
+  }
+  .contact-heading {
+    font-size: 1.6rem;
+  }
+}
+
+/* Tablet */
 @media (max-width: 768px) {
   .contact-grid {
     grid-template-columns: 1fr;
@@ -195,5 +229,49 @@ textarea.form-input {
   .form-row {
     grid-template-columns: 1fr;
     gap: 1.25rem;
+  }
+  /* Center info panel content on mobile */
+  .contact-info-panel {
+    text-align: center;
+    align-items: center;
+  }
+  .contact-heading {
+    font-size: 1.5rem;
+  }
+  .contact-method-card:hover {
+    transform: translateY(-2px);
+  }
+  .socials-row {
+    justify-content: center;
+  }
+  .contact-form .btn {
+    align-self: center !important;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .contact-heading {
+    font-size: 1.3rem;
+  }
+  .contact-desc-text {
+    font-size: 0.9rem;
+  }
+  .method-val {
+    font-size: 0.85rem;
+  }
+  .contact-method-card {
+    padding: 1rem;
+  }
+  .method-icon-wrapper {
+    width: 38px;
+    height: 38px;
+  }
+  .social-btn {
+    width: 40px;
+    height: 40px;
+  }
+  textarea.form-input {
+    min-height: 120px;
   }
 }

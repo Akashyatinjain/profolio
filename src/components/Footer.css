@@ -43,5 +43,14 @@
   .footer-container {
     flex-direction: column;
     text-align: center;
+    gap: 0.75rem;
+  }
+  .footer {
+    padding: 2rem 0;
+    margin-top: 3rem;
+  }
+  .footer-copyright,
+  .footer-tech {
+    font-size: 0.8rem;
   }
 }

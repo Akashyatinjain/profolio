@@ -47,14 +47,14 @@ const About = () => {
     <section id="about" className="about-section">
       <div className="glow-orb glow-orb-purple" style={{ top: '30%', right: '-150px' }}></div>
       <div className="container">
-        <h2 className="section-title">About Me</h2>
-        <p className="section-subtitle">
+        <h2 className="section-title reveal">About Me</h2>
+        <p className="section-subtitle reveal reveal-delay-1">
           3rd Year Information Technology student aiming to bridge the gap between robust software engineering and high-availability cloud architecture.
         </p>
 
         <div className="about-grid">
           {/* Bio & Skills column */}
-          <div className="about-bio">
+          <div className="about-bio reveal-left">
             <div className="highlight-tag">
               <GraduationCap size={18} />
               <span>3rd Year Information Technology Student</span>
@@ -70,14 +70,17 @@ const About = () => {
                 <Code2 size={18} className="text-purple-400" />
                 Technical Arsenal
               </h3>
-              {skillCategories.map((category) => (
+              {skillCategories.map((category, catIdx) => (
                 <div key={category.title} className="skills-category">
                   <span className="skills-category-title" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                     {category.title}
                   </span>
                   <div className="skills-list">
-                    {category.skills.map((skill) => (
-                      <span key={skill} className={`skill-badge ${skill === 'Java' ? 'skill-badge-java' : ''}`}>
+                    {category.skills.map((skill, skillIdx) => (
+                      <span
+                        key={skill}
+                        className={`skill-badge ${skill === 'Java' ? 'skill-badge-java' : ''}`}
+                      >
                         {skill}
                       </span>
                     ))}
@@ -88,7 +91,7 @@ const About = () => {
           </div>
 
           {/* GitHub Stats column */}
-          <div className="glass-card github-stats-card">
+          <div className="glass-card github-stats-card reveal-right">
             <div className="stats-card-header">
               <div className="stats-card-title">
                 <Github size={22} />
@@ -143,7 +146,7 @@ const About = () => {
         {/* Education & Certifications Section */}
         <div className="credentials-section">
           {/* Education Timeline */}
-          <div className="credentials-column">
+          <div className="credentials-column reveal">
             <h3 className="credentials-title">
               <GraduationCap size={22} />
               <span>Education</span>
@@ -173,7 +176,7 @@ const About = () => {
           </div>
 
           {/* Certifications List */}
-          <div className="credentials-column">
+          <div className="credentials-column reveal reveal-delay-2">
             <h3 className="credentials-title">
               <Award size={22} />
               <span>Certifications & Bootcamps</span>

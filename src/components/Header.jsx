@@ -1,5 +1,5 @@
 // src/components/Header.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Menu, X, Terminal } from 'lucide-react';
 import './Header.css';
 
@@ -15,6 +15,27 @@ const Header = () => {
     { label: 'LeetCode', id: 'leetcode' },
     { label: 'Contact', id: 'contact' },
   ];
+
+  // Toggle body scroll lock
+  const toggleBodyScroll = useCallback((lock) => {
+    if (lock) {
+      document.body.classList.add('menu-open');
+    } else {
+      document.body.classList.remove('menu-open');
+    }
+  }, []);
+
+  // Close mobile menu and unlock body scroll
+  const closeMobileMenu = useCallback(() => {
+    setMobileMenuOpen(false);
+    toggleBodyScroll(false);
+  }, [toggleBodyScroll]);
+
+  // Open mobile menu and lock body scroll
+  const openMobileMenu = useCallback(() => {
+    setMobileMenuOpen(true);
+    toggleBodyScroll(true);
+  }, [toggleBodyScroll]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,8 +64,28 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Auto-close mobile menu when viewport crosses desktop breakpoint
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 769px)');
+    const handleResize = (e) => {
+      if (e.matches) {
+        closeMobileMenu();
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleResize);
+    return () => mediaQuery.removeEventListener('change', handleResize);
+  }, [closeMobileMenu]);
+
+  // Cleanup body class on unmount
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove('menu-open');
+    };
+  }, []);
+
   const handleNavClick = (id) => {
-    setMobileMenuOpen(false);
+    closeMobileMenu();
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
@@ -57,6 +98,14 @@ const Header = () => {
         top: offsetPosition,
         behavior: 'smooth',
       });
+    }
+  };
+
+  const handleBurgerClick = () => {
+    if (mobileMenuOpen) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
     }
   };
 
@@ -84,12 +133,20 @@ const Header = () => {
         </ul>
 
         {/* Mobile Burger Toggle */}
-        <button className="burger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+        <button className="burger" onClick={handleBurgerClick} aria-label="Toggle menu">
           {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
 
+        {/* Dark overlay behind mobile menu */}
+        <div
+          className={`nav-overlay ${mobileMenuOpen ? 'active' : ''}`}
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+        ></div>
+
         {/* Mobile Navigation Drawer */}
         <ul className={`nav-menu-mobile ${mobileMenuOpen ? 'open' : ''}`}>
+          <div className="mobile-menu-accent"></div>
           {navItems.map((item) => (
             <li key={item.id}>
               <span

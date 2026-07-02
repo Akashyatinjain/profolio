@@ -57,6 +57,11 @@ body {
   line-height: 1.6;
 }
 
+/* Body scroll lock when mobile menu is open */
+body.menu-open {
+  overflow: hidden;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
@@ -198,6 +203,51 @@ section {
   50% { opacity: 0.8; }
 }
 
+/* Scroll Reveal Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* Glow Background Circles */
 .glow-orb {
   position: absolute;
@@ -225,7 +275,27 @@ section {
   left: -100px;
 }
 
-/* Responsive Grid layouts */
+.text-highlight {
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Large Tablet / Small Laptop (1024px) */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 1.75rem;
+  }
+  section {
+    padding: 7rem 0 3.5rem;
+  }
+  .section-title {
+    font-size: 2.25rem;
+  }
+}
+
+/* Tablet (768px) */
 @media (max-width: 768px) {
   section {
     padding: 6rem 0 3rem;
@@ -236,9 +306,39 @@ section {
   .section-title {
     font-size: 2rem;
   }
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .glass-card {
+    padding: 1.5rem;
+  }
+  .glass-card:hover {
+    transform: translateY(-3px);
+  }
 }
 
-.text-highlight {
-  color: var(--accent-teal);
-  font-weight: 600;
+/* Small Mobile (480px) */
+@media (max-width: 480px) {
+  section {
+    padding: 5rem 0 2.5rem;
+  }
+  .container {
+    padding: 0 1.25rem;
+  }
+  .section-title {
+    font-size: 1.75rem;
+  }
+  .section-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+  .glass-card {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+  .btn {
+    padding: 0.7rem 1.4rem;
+    font-size: 0.9rem;
+  }
 }
