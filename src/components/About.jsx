@@ -1,6 +1,5 @@
-// src/components/About.jsx
-import React from 'react';
-import { User, Code2, GraduationCap, Award, BookOpen } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Code2, GraduationCap, Award, BookOpen } from 'lucide-react';
 import { Github } from './Icons';
 import './About.css';
 
@@ -28,20 +27,188 @@ const About = () => {
     },
   ];
 
-  const githubStats = {
+  // Fallback initial values
+  const defaultGithubStats = {
     commits: '512',
     contributions: '700+',
     streak: '22 Days',
     longestStreak: '22 Days',
+    grade: 'C+',
   };
 
-  const languages = [
+  const defaultLanguages = [
     { name: 'JavaScript', pct: '65.36%', color: '#f7df1e' },
     { name: 'HTML', pct: '13.67%', color: '#e34f26' },
     { name: 'CSS', pct: '9.79%', color: '#1572b6' },
     { name: 'EJS', pct: '8.91%', color: '#a91e50' },
     { name: 'Java', pct: '2.26%', color: '#b07219' },
   ];
+
+  const [githubStats, setGithubStats] = useState(() => {
+    try {
+      const cached = localStorage.getItem('portfolio_github_stats');
+      return cached ? JSON.parse(cached) : defaultGithubStats;
+    } catch {
+      return defaultGithubStats;
+    }
+  });
+
+  const [languages, setLanguages] = useState(() => {
+    try {
+      const cached = localStorage.getItem('portfolio_github_languages');
+      return cached ? JSON.parse(cached) : defaultLanguages;
+    } catch {
+      return defaultLanguages;
+    }
+  });
+
+  useEffect(() => {
+    const fetchGithubData = async () => {
+      const username = 'Akashyatinjain';
+      
+      // 1. Fetch Contributions & Streaks
+      try {
+        const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.contributions && data.contributions.length > 0) {
+            const sorted = [...data.contributions].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            // Calculate today in local format
+            const getLocalDateString = (date) => {
+              const offset = date.getTimezoneOffset();
+              const adjustedDate = new Date(date.getTime() - (offset * 60 * 1000));
+              return adjustedDate.toISOString().split('T')[0];
+            };
+            const todayLocalStr = getLocalDateString(new Date());
+            
+            let todayIdx = sorted.findIndex(item => item.date === todayLocalStr);
+            if (todayIdx === -1) {
+              const todayUtcStr = new Date().toISOString().split('T')[0];
+              todayIdx = sorted.findIndex(item => item.date === todayUtcStr);
+            }
+            if (todayIdx === -1) {
+              const nowMs = new Date().getTime();
+              for (let i = sorted.length - 1; i >= 0; i--) {
+                if (new Date(sorted[i].date).getTime() <= nowMs) {
+                  todayIdx = i;
+                  break;
+                }
+              }
+            }
+            
+            // Longest streak
+            let longest = 0;
+            let temp = 0;
+            const limitIdx = todayIdx !== -1 ? todayIdx : sorted.length - 1;
+            for (let i = 0; i <= limitIdx; i++) {
+              if (sorted[i].count > 0) {
+                temp++;
+                if (temp > longest) longest = temp;
+              } else {
+                temp = 0;
+              }
+            }
+            
+            // Current streak
+            let current = 0;
+            let startIdx = todayIdx;
+            if (startIdx !== -1) {
+              if (sorted[startIdx].count === 0 && startIdx > 0 && sorted[startIdx - 1].count > 0) {
+                startIdx = startIdx - 1;
+              }
+              if (sorted[startIdx].count > 0) {
+                for (let i = startIdx; i >= 0; i--) {
+                  if (sorted[i].count > 0) {
+                    current++;
+                  } else {
+                    break;
+                  }
+                }
+              }
+            }
+            
+            const totalConts = Object.values(data.total).reduce((sum, val) => sum + val, 0);
+            const currentYearStr = new Date().getFullYear().toString();
+            const yearlyCommits = data.total[currentYearStr] || 0;
+            
+            // Compute Grade
+            let grade = 'C+';
+            if (totalConts >= 1000) grade = 'A+';
+            else if (totalConts >= 750) grade = 'A';
+            else if (totalConts >= 500) grade = 'A-';
+            else if (totalConts >= 350) grade = 'B+';
+            else if (totalConts >= 200) grade = 'B';
+            else if (totalConts >= 100) grade = 'B-';
+            
+            const newStats = {
+              commits: String(yearlyCommits),
+              contributions: `${totalConts}`,
+              streak: `${current} Days`,
+              longestStreak: `${longest} Days`,
+              grade: grade,
+            };
+            
+            setGithubStats(newStats);
+            localStorage.setItem('portfolio_github_stats', JSON.stringify(newStats));
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching github contributions:', err);
+      }
+
+      // 2. Fetch Repository Primary Languages
+      try {
+        const res = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
+        if (res.ok) {
+          const repos = await res.json();
+          const langCounts = {};
+          let totalWithLanguage = 0;
+          
+          repos.forEach(repo => {
+            if (repo.language) {
+              langCounts[repo.language] = (langCounts[repo.language] || 0) + 1;
+              totalWithLanguage++;
+            }
+          });
+          
+          if (totalWithLanguage > 0) {
+            const languageColors = {
+              JavaScript: '#f7df1e',
+              HTML: '#e34f26',
+              CSS: '#1572b6',
+              EJS: '#a91e50',
+              Java: '#b07219',
+              Python: '#3572A5',
+              TypeScript: '#3178c6',
+              C: '#555555',
+              'C++': '#f34b7d',
+              PHP: '#4F5D95',
+              Shell: '#89e051',
+            };
+            
+            const sortedLangs = Object.entries(langCounts)
+              .map(([name, count]) => {
+                const pct = ((count / totalWithLanguage) * 100).toFixed(2);
+                return {
+                  name,
+                  pct: `${pct}%`,
+                  color: languageColors[name] || '#6e7681'
+                };
+              })
+              .sort((a, b) => parseFloat(b.pct) - parseFloat(a.pct));
+              
+            setLanguages(sortedLangs);
+            localStorage.setItem('portfolio_github_languages', JSON.stringify(sortedLangs));
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching github languages:', err);
+      }
+    };
+    
+    fetchGithubData();
+  }, []);
 
   return (
     <section id="about" className="about-section">
@@ -70,13 +237,13 @@ const About = () => {
                 <Code2 size={18} className="text-purple-400" />
                 Technical Arsenal
               </h3>
-              {skillCategories.map((category, catIdx) => (
+               {skillCategories.map((category) => (
                 <div key={category.title} className="skills-category">
                   <span className="skills-category-title" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                     {category.title}
                   </span>
                   <div className="skills-list">
-                    {category.skills.map((skill, skillIdx) => (
+                    {category.skills.map((skill) => (
                       <span
                         key={skill}
                         className={`skill-badge ${skill === 'Java' ? 'skill-badge-java' : ''}`}
@@ -97,7 +264,7 @@ const About = () => {
                 <Github size={22} />
                 <span>GitHub Stats Dashboard</span>
               </div>
-              <div className="github-grade" title="GitHub Activity Grade">C+</div>
+              <div className="github-grade" title="GitHub Activity Grade">{githubStats.grade || 'C+'}</div>
             </div>
 
             <div className="stats-grid">

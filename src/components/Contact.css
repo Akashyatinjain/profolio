@@ -208,6 +208,19 @@ textarea.form-input {
   animation: fadeInUp 0.4s ease;
 }
 
+.form-error-msg {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 500;
+  animation: fadeInUp 0.4s ease;
+}
+
 /* ===== RESPONSIVE ===== */
 
 /* Large Tablet */

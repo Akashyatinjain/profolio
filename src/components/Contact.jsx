@@ -19,16 +19,53 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus('sending');
 
-    // Simulate sending API request
-    setTimeout(() => {
-      setFormStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setFormStatus(null), 5000); // Clear message after 5 seconds
-    }, 1500);
+    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+    if (!accessKey) {
+      console.warn("Web3Forms access key (VITE_WEB3FORMS_ACCESS_KEY) is missing in your .env file. Running in simulation mode.");
+      setTimeout(() => {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setFormStatus(null), 5000); // Clear message after 5 seconds
+      }, 1500);
+      return;
+    }
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          from_name: "Portfolio Contact Form"
+        })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setFormStatus(null), 5000);
+      } else {
+        console.error("Web3Forms submission error:", result);
+        setFormStatus('error');
+        setTimeout(() => setFormStatus(null), 5000);
+      }
+    } catch (error) {
+      console.error("Web3Forms network error:", error);
+      setFormStatus('error');
+      setTimeout(() => setFormStatus(null), 5000);
+    }
   };
 
   return (
@@ -203,6 +240,12 @@ const Contact = () => {
               {formStatus === 'success' && (
                 <div className="form-success-msg">
                   🎉 Thank you! Your message has been sent successfully.
+                </div>
+              )}
+
+              {formStatus === 'error' && (
+                <div className="form-error-msg">
+                  ❌ Something went wrong. Please check your network or try again.
                 </div>
               )}
             </form>

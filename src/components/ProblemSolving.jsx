@@ -1,13 +1,13 @@
 // src/components/ProblemSolving.jsx
-import React from 'react';
-import { Award, ArrowUpRight, BrainCircuit } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowUpRight, BrainCircuit } from 'lucide-react';
 import './ProblemSolving.css';
 
 const ProblemSolving = () => {
   // SVG Ring calculation: Circumference = 2 * pi * r = 2 * 3.14159 * 32 = 201.1
   const strokeCircumference = 201.1;
 
-  const leetcodeStats = {
+  const defaultLeetcodeStats = {
     totalSolved: 200,
     categories: [
       { label: 'Easy', count: 110, color: 'var(--lc-easy)', pct: 55 },
@@ -15,6 +15,64 @@ const ProblemSolving = () => {
       { label: 'Hard', count: 10, color: 'var(--lc-hard)', pct: 15 },
     ],
   };
+
+  const [leetcodeStats, setLeetcodeStats] = useState(() => {
+    try {
+      const cached = localStorage.getItem('portfolio_leetcode_stats');
+      return cached ? JSON.parse(cached) : defaultLeetcodeStats;
+    } catch {
+      return defaultLeetcodeStats;
+    }
+  });
+
+  useEffect(() => {
+    const fetchLeetcodeData = async () => {
+      const username = 'Akashyatinjain';
+      try {
+        const res = await fetch(`https://alfa-leetcode-api.onrender.com/${username}`);
+        if (res.ok) {
+          const data = await res.json();
+          const totalSolved = data.totalSolved || 0;
+          const easySolved = data.easySolved || 0;
+          const mediumSolved = data.mediumSolved || 0;
+          const hardSolved = data.hardSolved || 0;
+          
+          if (totalSolved > 0) {
+            const newStats = {
+              totalSolved,
+              categories: [
+                {
+                  label: 'Easy',
+                  count: easySolved,
+                  color: 'var(--lc-easy)',
+                  pct: Math.round((easySolved / totalSolved) * 100),
+                },
+                {
+                  label: 'Medium',
+                  count: mediumSolved,
+                  color: 'var(--lc-medium)',
+                  pct: Math.round((mediumSolved / totalSolved) * 100),
+                },
+                {
+                  label: 'Hard',
+                  count: hardSolved,
+                  color: 'var(--lc-hard)',
+                  pct: Math.max(5, Math.round((hardSolved / totalSolved) * 100)),
+                },
+              ],
+            };
+            
+            setLeetcodeStats(newStats);
+            localStorage.setItem('portfolio_leetcode_stats', JSON.stringify(newStats));
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching leetcode stats:', err);
+      }
+    };
+    
+    fetchLeetcodeData();
+  }, []);
 
   const dsaTopics = [
     'Arrays & Hashing',
