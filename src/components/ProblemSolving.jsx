@@ -28,9 +28,10 @@ const ProblemSolving = () => {
   useEffect(() => {
     const fetchLC = async () => {
       try {
-        const res = await fetch(`https://alfa-leetcode-api.onrender.com/Akashyatinjain`);
+        const res = await fetch(`https://leetcode-stats-api.herokuapp.com/Akashyatinjain`);
         if (!res.ok) return;
         const data = await res.json();
+        if (data.status !== "success") return;
         const total = data.totalSolved || 0;
         if (total === 0) return;
 
@@ -121,7 +122,7 @@ const ProblemSolving = () => {
           </div>
 
           {/* GitHub Contribution Graph Display */}
-          <div className="github-chart-card card reveal-scale" style={{ transitionDelay: '0.1s' }}>
+          <div className="github-chart-card card reveal-scale">
             <div className="chart-header">
               <Github size={20} className="github-accent-icon" />
               <div>
@@ -129,15 +130,15 @@ const ProblemSolving = () => {
                 <span className="chart-subtitle">Commit heat map</span>
               </div>
             </div>
-            
+
             <div className="chart-container">
-              <img 
-                src="https://ghchart.rshah.org/2563EB/Akashyatinjain" 
-                alt="Akash Jain's GitHub Contributions Chart" 
+              <img
+                src="https://ghchart.rshah.org/2563EB/Akashyatinjain"
+                alt="Akash Jain's GitHub Contributions Chart"
                 className="github-chart-img"
               />
             </div>
-            
+
             <div className="chart-footer">
               <span className="chart-legend-text">Real-time commit frequency visualization</span>
             </div>
