@@ -1,174 +1,131 @@
-// src/components/Header.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X, Terminal } from 'lucide-react';
+import { Menu, X, FileText } from 'lucide-react';
+import { profile } from '../data/portfolio';
 import './Header.css';
+
+const navItems = [
+  { label: 'About', id: 'about' },
+  { label: 'Work', id: 'projects' },
+  { label: 'DSA & Stats', id: 'leetcode' },
+  { label: 'Contact', id: 'contact' },
+];
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
-  const navItems = [
-    { label: 'Home', id: 'home' },
-    { label: 'About', id: 'about' },
-    { label: 'Projects', id: 'projects' },
-    { label: 'LeetCode', id: 'leetcode' },
-    { label: 'Contact', id: 'contact' },
-  ];
-
-  // Toggle body scroll lock
-  const toggleBodyScroll = useCallback((lock) => {
-    if (lock) {
-      document.body.classList.add('menu-open');
-    } else {
-      document.body.classList.remove('menu-open');
-    }
+  const closeMobile = useCallback(() => {
+    setMobileOpen(false);
+    document.body.classList.remove('menu-open');
   }, []);
 
-  // Close mobile menu and unlock body scroll
-  const closeMobileMenu = useCallback(() => {
-    setMobileMenuOpen(false);
-    toggleBodyScroll(false);
-  }, [toggleBodyScroll]);
-
-  // Open mobile menu and lock body scroll
-  const openMobileMenu = useCallback(() => {
-    setMobileMenuOpen(true);
-    toggleBodyScroll(true);
-  }, [toggleBodyScroll]);
+  const openMobile = useCallback(() => {
+    setMobileOpen(true);
+    document.body.classList.add('menu-open');
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Background scroll check
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
 
-      // Active section scroll detection
-      const scrollPosition = window.scrollY + 120;
-      for (const item of navItems) {
-        const el = document.getElementById(item.id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(item.id);
-          }
+      const pos = window.scrollY + 100;
+      const sections = [{ id: 'home' }, ...navItems.map((n) => ({ id: n.id }))];
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i].id);
+        if (el && pos >= el.offsetTop) {
+          setActiveSection(sections[i].id);
+          break;
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Auto-close mobile menu when viewport crosses desktop breakpoint
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(min-width: 769px)');
-    const handleResize = (e) => {
-      if (e.matches) {
-        closeMobileMenu();
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleResize);
-    return () => mediaQuery.removeEventListener('change', handleResize);
-  }, [closeMobileMenu]);
-
-  // Cleanup body class on unmount
-  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 769px)');
+    const handler = (e) => e.matches && closeMobile();
+    mq.addEventListener('change', handler);
     return () => {
+      mq.removeEventListener('change', handler);
       document.body.classList.remove('menu-open');
     };
-  }, []);
+  }, [closeMobile]);
 
-  const handleNavClick = (id) => {
-    closeMobileMenu();
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
+  const scrollTo = (id) => {
+    closeMobile();
+    const el = document.getElementById(id);
+    if (el) {
+      window.scrollTo({ top: el.offsetTop - 72, behavior: 'smooth' });
     }
   };
 
-  const handleBurgerClick = () => {
-    if (mobileMenuOpen) {
-      closeMobileMenu();
-    } else {
-      openMobileMenu();
-    }
+  const handleResumeClick = () => {
+    window.open('/resume/Resume.pdf', '_blank');
   };
 
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
-      <div className="container header-container">
-        <div className="logo" onClick={() => handleNavClick('home')} style={{ cursor: 'pointer' }}>
-          <Terminal size={22} className="text-purple-400" style={{ stroke: 'url(#hero-grad)' }} />
-          <span>Akash Yatin Jain</span>
-          <span className="logo-dot"></span>
-        </div>
-
-        {/* Desktop Nav */}
-        <ul className="nav-menu">
-          {navItems.map((item) => (
-            <li key={item.id}>
-              <span
-                className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
-                onClick={() => handleNavClick(item.id)}
-              >
-                {item.label}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        {/* Mobile Burger Toggle */}
-        <button className="burger" onClick={handleBurgerClick} aria-label="Toggle menu">
-          {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+      <div className="container header-inner">
+        <button type="button" className="logo" onClick={() => scrollTo('home')}>
+          <span className="logo-mark">AJ</span>
+          <span className="logo-name">{profile.shortName}</span>
         </button>
 
-        {/* Dark overlay behind mobile menu */}
-        <div
-          className={`nav-overlay ${mobileMenuOpen ? 'active' : ''}`}
-          onClick={closeMobileMenu}
-          aria-hidden="true"
-        ></div>
-
-        {/* Mobile Navigation Drawer */}
-        <ul className={`nav-menu-mobile ${mobileMenuOpen ? 'open' : ''}`}>
-          <div className="mobile-menu-accent"></div>
+        <nav className="nav-desktop" aria-label="Main">
           {navItems.map((item) => (
-            <li key={item.id}>
-              <span
-                className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
-                onClick={() => handleNavClick(item.id)}
-              >
-                {item.label}
-              </span>
-            </li>
+            <button
+              key={item.id}
+              type="button"
+              className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
+              onClick={() => scrollTo(item.id)}
+            >
+              {item.label}
+            </button>
           ))}
-        </ul>
+        </nav>
+
+        <div className="header-actions">
+          <button type="button" className="btn btn-outline resume-header-btn" onClick={handleResumeClick}>
+            <FileText size={15} />
+            Resume
+          </button>
+          <button type="button" className="btn btn-primary header-cta" onClick={() => scrollTo('contact')}>
+            Hire Me
+          </button>
+          <button
+            type="button"
+            className="burger"
+            onClick={() => (mobileOpen ? closeMobile() : openMobile())}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
-      {/* SVG Linear Gradient for Terminal Icon */}
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
-        <defs>
-          <linearGradient id="hero-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#3b82f6" />
-            <stop offset="100%" stopColor="#8b5cf6" />
-          </linearGradient>
-        </defs>
-      </svg>
+      <div className={`nav-overlay ${mobileOpen ? 'open' : ''}`} onClick={closeMobile} aria-hidden="true" />
+
+      <nav className={`nav-mobile ${mobileOpen ? 'open' : ''}`} aria-label="Mobile">
+        {navItems.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
+            onClick={() => scrollTo(item.id)}
+          >
+            {item.label}
+          </button>
+        ))}
+        <button type="button" className="btn btn-outline" onClick={handleResumeClick} style={{ marginTop: '1rem' }}>
+          <FileText size={15} /> Resume
+        </button>
+        <button type="button" className="btn btn-primary" onClick={() => scrollTo('contact')} style={{ marginTop: '0.5rem' }}>
+          Get in touch
+        </button>
+      </nav>
     </header>
   );
 };

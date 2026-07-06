@@ -1,230 +1,205 @@
-/* src/components/ProblemSolving.css */
-
-.leetcode-card {
+.leetcode-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 3.5rem;
-  align-items: center;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
-.leetcode-info {
+.leetcode-layout {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2.25rem;
+  background: var(--bg-card);
+}
+
+@media (min-width: 992px) {
+  .leetcode-layout {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.leetcode-total {
+  margin-bottom: 1.25rem;
+}
+
+.leetcode-total-num {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  display: block;
+}
+
+.leetcode-total-lbl {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  font-weight: 600;
 }
 
 .leetcode-text {
   color: var(--text-secondary);
+  font-size: 0.95rem;
   line-height: 1.7;
+  margin-bottom: 1.25rem;
 }
 
-.dsa-badges {
+.dsa-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
 }
 
-.dsa-badge {
-  background: rgba(6, 182, 212, 0.05);
-  border: 1px solid rgba(6, 182, 212, 0.15);
-  color: var(--accent-teal);
-  padding: 0.35rem 0.8rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
+.leetcode-btn {
+  font-size: 0.85rem;
+  align-self: flex-start;
 }
 
-.dsa-badge:hover {
-  background: rgba(6, 182, 212, 0.1);
-  border-color: var(--accent-teal);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.15);
-}
-
-/* LeetCode Visual Dashboard */
-.leetcode-dashboard {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-light);
-  border-radius: 20px;
-  padding: 2.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s ease;
-}
-
-.leetcode-dashboard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--lc-easy), var(--lc-medium), var(--lc-hard));
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.leetcode-dashboard:hover {
-  border-color: rgba(6, 182, 212, 0.25);
-  box-shadow: var(--shadow-glow-teal);
-}
-
-.leetcode-dashboard:hover::before {
-  opacity: 1;
-}
-
-.dials-container {
+.leetcode-dials {
   display: flex;
   justify-content: space-around;
-  width: 100%;
-  gap: 1rem;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background: var(--bg-raised);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  flex-wrap: wrap;
 }
 
-.dial-item {
+.dial {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
-.dial-svg-wrapper {
+.dial-ring {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 88px;
+  height: 88px;
 }
 
-.dial-svg-wrapper svg {
+.dial-ring svg {
   transform: rotate(-90deg);
 }
 
-.circle-bg {
+.dial-bg {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.04);
+  stroke: var(--border);
   stroke-width: 6;
 }
 
-.circle-progress {
+.dial-progress {
   fill: none;
   stroke-width: 6;
   stroke-linecap: round;
-  transition: stroke-dashoffset 1s ease-out;
-  filter: drop-shadow(0 0 4px currentColor);
+  transition: stroke-dashoffset 1s ease;
 }
 
-.dial-value {
+.dial-count {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-heading);
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.15rem;
+  color: var(--text);
 }
 
 .dial-label {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.dial-label.easy { color: var(--lc-easy); }
-.dial-label.medium { color: var(--lc-medium); }
-.dial-label.hard { color: var(--lc-hard); }
-
-/* Total Solved Display */
-.total-solved-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.total-solved-val {
-  font-size: 3rem;
-  font-weight: 800;
-  font-family: var(--font-heading);
-  background: linear-gradient(135deg, var(--accent-teal), #10b981);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-}
-
-.total-solved-lbl {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-top: 0.5rem;
+  font-weight: 600;
 }
 
-/* ===== RESPONSIVE ===== */
-
-/* Large Tablet */
-@media (max-width: 1024px) {
-  .leetcode-card {
-    gap: 2.5rem;
-  }
+/* GitHub chart card styles */
+.github-chart-card {
+  padding: 2.25rem;
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
 }
 
-/* Tablet */
+.chart-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+}
+
+.github-accent-icon {
+  color: var(--accent);
+}
+
+.chart-title {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+
+.chart-subtitle {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background: var(--bg-raised);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.github-chart-img {
+  max-width: 100%;
+  height: auto;
+  filter: hue-rotate(180deg) saturate(1.2); /* Adjust colors to blue shades */
+}
+
+.chart-footer {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: 500;
+}
+
 @media (max-width: 992px) {
-  .leetcode-card {
+  .leetcode-grid {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 1.5rem;
   }
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-  .leetcode-dashboard {
-    padding: 2rem 1.5rem;
-    border-radius: 16px;
-  }
-  .total-solved-val {
-    font-size: 2.5rem;
-  }
-  .leetcode-text {
-    font-size: 0.95rem;
-  }
-}
-
-/* Small Mobile */
 @media (max-width: 480px) {
-  .leetcode-dashboard {
-    padding: 1.5rem 1.25rem;
+  .leetcode-dials {
+    flex-direction: column;
+    align-items: center;
   }
-  .dials-container {
-    gap: 0.5rem;
-  }
-  .dial-svg-wrapper {
-    width: 70px;
-    height: 70px;
-  }
-  .dial-svg-wrapper svg {
-    width: 70px;
-    height: 70px;
-  }
-  .dial-value {
-    font-size: 0.85rem;
-  }
-  .dial-label {
-    font-size: 0.7rem;
-  }
-  .total-solved-val {
-    font-size: 2.25rem;
-  }
-  .total-solved-lbl {
-    font-size: 0.75rem;
-  }
-  .dsa-badge {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.75rem;
+  .leetcode-layout,
+  .github-chart-card {
+    padding: 1.5rem;
   }
 }

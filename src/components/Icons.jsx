@@ -1,7 +1,12 @@
-// src/components/Icons.jsx
 import React from 'react';
+import { Sparkles, GraduationCap, Trophy, FileText } from 'lucide-react';
 
-export const Github = ({ size = 20, className = '', ...props }) => (
+export const SparklesIcon = Sparkles;
+export const GraduationIcon = GraduationCap;
+export const TrophyIcon = Trophy;
+export const FileTextIcon = FileText;
+
+export const Github = ({ size = 20, ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -12,7 +17,6 @@ export const Github = ({ size = 20, className = '', ...props }) => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={className}
     {...props}
   >
     <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
@@ -20,7 +24,7 @@ export const Github = ({ size = 20, className = '', ...props }) => (
   </svg>
 );
 
-export const Instagram = ({ size = 20, className = '', ...props }) => (
+export const Linkedin = ({ size = 20, ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
@@ -31,31 +35,27 @@ export const Instagram = ({ size = 20, className = '', ...props }) => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={className}
-    {...props}
-  >
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-  </svg>
-);
-
-export const Linkedin = ({ size = 20, className = '', ...props }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
     {...props}
   >
     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-    <rect width="4" height="12" x="2" y="9" />
+    <rect width="4" height="12" x="2" y="9" rx="1" />
     <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+export const Leetcode = ({ size = 20, ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm1 14.5v-1.25l2-1.75h-2v-1.5h3.5v1.25l-2 1.75h2v1.5H13zm-5.5-1.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm4.5-4h-5v-1.5h5V11z" />
   </svg>
 );

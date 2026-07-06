@@ -1,135 +1,193 @@
-// src/components/Hero.jsx
 import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, FolderGit, Award, Code2, Download } from 'lucide-react';
-import { Github } from './Icons';
+import { ArrowUpRight, ArrowDown, FileText, CheckCircle2, MapPin } from 'lucide-react';
+import { Github, Linkedin, Leetcode } from './Icons';
+import { profile, stats } from '../data/portfolio';
 import './Hero.css';
 
-const Hero = () => {
-  const words = ['Java Developer', 'Full-Stack Engineer', 'DSA Problem Solver'];
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [currentText, setCurrentText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [typingSpeed, setTypingSpeed] = useState(150);
+const trustItems = [
+  'React',
+  'Node.js',
+  'PostgreSQL',
+  'Docker',
+  'Java (DSA)'
+];
+
+const Counter = ({ end, duration = 1500, suffix = "" }) => {
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const handleType = () => {
-      const fullWord = words[currentWordIndex];
-      if (!isDeleting) {
-        // Typing
-        setCurrentText(fullWord.substring(0, currentText.length + 1));
-        setTypingSpeed(100);
-
-        if (currentText === fullWord) {
-          // Pause before deleting
-          setIsDeleting(true);
-          setTypingSpeed(2000); // Wait 2s
-        }
-      } else {
-        // Deleting
-        setCurrentText(fullWord.substring(0, currentText.length - 1));
-        setTypingSpeed(50);
-
-        if (currentText === '') {
-          setIsDeleting(false);
-          setCurrentWordIndex((prev) => (prev + 1) % words.length);
-          setTypingSpeed(500); // Pause before next word
-        }
-      }
-    };
-
-    const timer = setTimeout(handleType, typingSpeed);
-    return () => clearTimeout(timer);
-  }, [currentText, isDeleting, currentWordIndex]);
-
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = el.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
+    let start = 0;
+    // Extract number from string like "7+" or "60+"
+    const numericEnd = parseInt(end.replace(/\D/g, ''));
+    if (isNaN(numericEnd)) {
+      setCount(end);
+      return;
     }
+
+    const totalSteps = 60;
+    const stepTime = duration / totalSteps;
+    const increment = numericEnd / totalSteps;
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= numericEnd) {
+        clearInterval(timer);
+        setCount(end); // Set to final format with "+"
+      } else {
+        setCount(Math.floor(start) + (end.includes('+') ? '+' : ''));
+      }
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, [end, duration]);
+
+  return <span>{count}</span>;
+};
+
+const Hero = () => {
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) window.scrollTo({ top: el.offsetTop - 72, behavior: 'smooth' });
+  };
+
+  const handleResumeClick = () => {
+    window.open('/resume/Resume.pdf', '_blank');
   };
 
   return (
     <section id="home" className="hero-section">
-      {/* Animated Gradient Mesh Background */}
-      <div className="hero-mesh-bg">
-        <div className="mesh-gradient mesh-1"></div>
-        <div className="mesh-gradient mesh-2"></div>
-        <div className="mesh-gradient mesh-3"></div>
-      </div>
-
-      {/* Decorative Orbs */}
-      <div className="glow-orb glow-orb-purple"></div>
-      <div className="glow-orb glow-orb-blue" style={{ top: '60%', left: '5%' }}></div>
-
-      {/* Animated Floating Code Particles */}
-      <div className="floating-code code-particle-1">{"{ class Java }"}</div>
-      <div className="floating-code code-particle-2">{"public static void"}</div>
-      <div className="floating-code code-particle-3">{"O(N log N)"}</div>
-      <div className="floating-code code-particle-4">{"ArrayList<T>"}</div>
-      <div className="floating-code code-particle-5">{"[]"}</div>
-      <div className="floating-code code-particle-6">{"const React"}</div>
-
-      {/* Decorative Floating Cards */}
-      <div className="hero-deco-card hero-deco-card-1">
-        <FolderGit size={16} />
-        <span>7+ Projects Live</span>
-      </div>
-      <div className="hero-deco-card hero-deco-card-2">
-        <Github size={16} />
-        <span>700+ Github Contributions</span>
-      </div>
-      <div className="hero-deco-card hero-deco-card-3">
-        <Award size={16} />
-        <span>Java Developer</span>
-      </div>
-      <div className="hero-deco-card hero-deco-card-4">
-        <Code2 size={16} />
-        <span>200+ LeetCode Submissions</span>
-      </div>
+      {/* Decorative Grid and Ambient Lights */}
+      <div className="grid-overlay" />
+      <div className="ambient-glow glow-1" />
+      <div className="ambient-glow glow-2" />
 
       <div className="container">
-        <div className="hero-content">
-          <div className="hero-greeting reveal">
-            <span className="hero-greeting-line"></span>
-            <span>Welcome to my universe</span>
+        <div className="hero-grid">
+          <div className="hero-main">
+            {/* Availability Pill */}
+            <div className="status-pill reveal-fade">
+              {profile.available}
+            </div>
+
+            {/* Redesigned Hero Name & Typography */}
+            <h1 className="hero-name reveal-fade reveal-delay-1">
+              Hi, I'm <span className="highlight-text">{profile.shortName}</span>
+            </h1>
+
+            {/* Focused Core Role Titles */}
+            <h2 className="hero-roles reveal-fade reveal-delay-2">
+              <span>Full Stack Developer</span>
+              <span className="bullet-dot" />
+              <span>Backend Engineer</span>
+            </h2>
+
+            <p className="hero-bio reveal-fade reveal-delay-2">
+              I specialize in taking products from database schemas to fully deployed user interfaces. I build robust auth flows, optimized REST APIs, and responsive frontends that tie the entire user journey together.
+            </p>
+
+            {/* Quick Trust Checks */}
+            <div className="trust-checks-row reveal-fade reveal-delay-3">
+              {trustItems.map((tech) => (
+                <div key={tech} className="trust-badge">
+                  <CheckCircle2 size={14} className="trust-icon" />
+                  <span>{tech}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Actions */}
+            <div className="hero-actions reveal-fade reveal-delay-3">
+              <button type="button" className="btn btn-primary btn-cta-main" onClick={() => scrollTo('projects')}>
+                See my work
+                <ArrowUpRight size={16} className="btn-arrow" />
+              </button>
+              <button type="button" className="btn btn-outline btn-resume" onClick={handleResumeClick}>
+                <FileText size={16} />
+                Get Resume
+              </button>
+              <a href={profile.links.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-github-hero">
+                <Github size={16} />
+                GitHub
+              </a>
+            </div>
+
+            {/* Social Connects */}
+            <div className="hero-socials reveal-fade reveal-delay-4">
+              <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn">
+                <Linkedin size={18} />
+              </a>
+              <a href={profile.links.leetcode} target="_blank" rel="noopener noreferrer" className="social-link" title="LeetCode">
+                <Leetcode size={18} />
+              </a>
+              <div className="divider-vertical" />
+              <a href={`mailto:${profile.email}`} className="social-link email-link">
+                {profile.email}
+              </a>
+            </div>
           </div>
 
-          <h1 className="hero-title reveal reveal-delay-1">
-            Hey, I'm <span className="gradient-text">Akash Yatin Jain</span>
-          </h1>
+          <div className="hero-side reveal-right">
+            {/* Revamped Profile Card with Visual Personality */}
+            <div className="hero-profile card">
+              <div className="card-ambient-light" />
+              <div className="profile-badge-overlay">Active</div>
+              
+              <div className="avatar-wrapper">
+                <img src={profile.avatar} alt={profile.name} className="hero-avatar" width={92} height={92} />
+                <div className="avatar-ring-glow" />
+              </div>
 
-          <div className="hero-subtitle reveal reveal-delay-2">
-            <span>I'm a</span>
-            <span className="typed-text">
-              {currentText}
-              <span className="cursor">|</span>
-            </span>
-          </div>
+              <div className="hero-profile-info">
+                <span className="hero-profile-name">{profile.name}</span>
+                <span className="hero-profile-loc">
+                  <MapPin size={13} className="loc-icon" />
+                  {profile.location} · India
+                </span>
+              </div>
+            </div>
 
-          <p className="hero-desc reveal reveal-delay-3">
-            3rd Year IT student with an elite focus on <strong className="text-highlight">Java OOP</strong>, Data Structures & Algorithms, and modern Full-Stack development. 
-            Actively building enterprise-ready solutions with secure cloud pipelines.
-          </p>
+            {/* Animated Stat Blocks */}
+            <div className="hero-stats">
+              <div className="stat-box card">
+                <span className="stat-num">
+                  <Counter end={stats.projects} />
+                </span>
+                <span className="stat-lbl">Live Projects</span>
+                <div className="stat-mini-bar" style={{ width: '80%' }} />
+              </div>
+              
+              <div className="stat-box card">
+                <span className="stat-num">
+                  <Counter end={stats.cgpa} />
+                </span>
+                <span className="stat-lbl">CGPA (IT)</span>
+                <div className="stat-mini-bar" style={{ width: '85%', background: 'linear-gradient(90deg, #10B981, #34D399)' }} />
+              </div>
 
-          <div className="hero-cta reveal reveal-delay-4">
-            <button className="btn btn-primary" onClick={() => scrollToSection('projects')}>
-              Explore Work
-              <ArrowUpRight size={18} />
-            </button>
-            <button className="btn btn-secondary" onClick={() => scrollToSection('contact')}>
-              Let's Connect
-            </button>
+              <div className="stat-box card">
+                <span className="stat-num">
+                  <Counter end={stats.leetcodeDefault} />
+                </span>
+                <span className="stat-lbl">LeetCode Solved</span>
+                <div className="stat-mini-bar" style={{ width: '70%', background: 'linear-gradient(90deg, #F59E0B, #FBBF24)' }} />
+              </div>
+
+              <div className="stat-box card stat-box-wide">
+                <div className="stat-currently-header">
+                  <span className="stat-lbl-currently">CURRENT FOCUS</span>
+                  <span className="status-dot-green animate-pulse-slow" />
+                </div>
+                <span className="stat-current">
+                  Building Cloud Storage apps & mastering Docker orchestrations.
+                </span>
+              </div>
+            </div>
           </div>
         </div>
+
+        <button type="button" className="scroll-hint" onClick={() => scrollTo('about')} aria-label="Scroll down">
+          <ArrowDown size={18} />
+        </button>
       </div>
     </section>
   );

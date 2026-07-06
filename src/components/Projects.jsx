@@ -1,156 +1,206 @@
-// src/components/Projects.jsx
 import React, { useState } from 'react';
-import { ExternalLink, HardDrive, CircleDollarSign, ShieldAlert, FileText, Layout, Play } from 'lucide-react';
+import { ExternalLink, ArrowUpRight, Play, X, ShieldAlert } from 'lucide-react';
 import { Github } from './Icons';
+import { projects } from '../data/portfolio';
 import './Projects.css';
 
+const filters = [
+  { id: 'all', label: 'All Projects' },
+  { id: 'fullstack', label: 'Full-Stack' },
+  { id: 'frontend', label: 'Frontend' },
+  { id: 'others', label: 'Other' },
+];
+
 const Projects = () => {
-  const [activeFilter, setActiveFilter] = useState('all');
+  const [active, setActive] = useState('all');
+  const [activeVideo, setActiveVideo] = useState(null);
 
-  const categories = [
-    { label: 'All', id: 'all' },
-    { label: 'Full-Stack', id: 'fullstack' },
-    { label: 'Frontend', id: 'frontend' },
-    { label: 'Games/Others', id: 'others' },
-  ];
+  const featured = projects.filter((p) => p.featured);
+  const filtered =
+    active === 'all' ? projects.filter((p) => !p.featured) : projects.filter((p) => p.category === active && !p.featured);
 
-  const projectsData = [
-    {
-      title: 'DataStock',
-      category: 'fullstack',
-      date: 'March 2026',
-      description: 'A cloud storage platform with secure Google OAuth/Email OTP authentication, file and folder management, starring, sharing, and storage analytics.',
-      tech: ['React', 'Node.js', 'Express', 'PostgreSQL', 'Prisma', 'Tailwind CSS', 'Cloudinary', 'JWT'],
-      liveUrl: 'https://data-stock.vercel.app/',
-      githubUrl: 'https://github.com/Akashyatinjain',
-      icon: <HardDrive size={22} />,
-    },
-    {
-      title: 'Finance Tracker',
-      category: 'fullstack',
-      date: 'Oct 2025',
-      description: 'Full-stack personal finance tracker featuring budget automation, transaction reports, trend insights, email/SMS notifications, and security modules.',
-      tech: ['React.js', 'Node.js', 'Express.js', 'PostgreSQL', 'Prisma'],
-      liveUrl: 'https://budget-tracker-no3.vercel.app/',
-      githubUrl: 'https://github.com/Akashyatinjain',
-      icon: <CircleDollarSign size={22} />,
-    },
-    {
-      title: 'SWASTHYA',
-      category: 'frontend',
-      date: 'Sept 2025',
-      description: 'Ayurveda-based health platform calculating protein and wellness values through an interactive UI. Created in a 2-member team.',
-      tech: ['JavaScript', 'React', 'Context API', 'CSS Grid'],
-      liveUrl: 'https://sih-rho-liard.vercel.app/',
-      githubUrl: 'https://github.com/Akashyatinjain',
-      icon: <ShieldAlert size={22} />,
-    },
-    {
-      title: 'Keeper Note',
-      category: 'frontend',
-      date: 'Aug 2025',
-      description: 'Sticky note-taking application supporting full CRUD operations, dynamic state management, custom tags, search filters, and persistent local storage.',
-      tech: ['JavaScript', 'React', 'HTML5', 'CSS Modules'],
-      liveUrl: 'https://keeper-not-app.vercel.app/',
-      githubUrl: 'https://github.com/Akashyatinjain',
-      icon: <FileText size={22} />,
-    },
-    {
-      title: 'UI Redesign - C++ Website',
-      category: 'frontend',
-      date: 'July 2025',
-      description: 'Modern, highly responsive UI/UX redesign of a documentation site, improving accessibility, navigation tree-view, and mobile styling.',
-      tech: ['HTML', 'CSS', 'Flexbox', 'Transitions'],
-      liveUrl: 'https://akashyatinjain.github.io/Redesign-off-Cplus-plus-/video.html',
-      githubUrl: 'https://github.com/Akashyatinjain',
-      icon: <Layout size={22} />,
-    },
-    {
-      title: 'Developer Portfolio',
-      category: 'frontend',
-      date: 'July 2026',
-      description: 'A premium, highly interactive personal portfolio website showcasing software engineering capabilities, built using React, Vite, and custom CSS with smooth transitions and floating elements.',
-      tech: ['React', 'Vite', 'Lucide React', 'CSS3', 'JavaScript'],
-      liveUrl: 'https://akashyatinjain.github.io/',
-      githubUrl: 'https://github.com/Akashyatinjain/profolio',
-      icon: <Layout size={22} />,
-    },
-    {
-      title: 'Simon Game',
-      category: 'others',
-      description: 'An interactive memory sequence game implementing sound cues, DOM event-listeners, record score-tracking, and dynamic CSS level animations.',
-      tech: ['HTML', 'CSS', 'JavaScript', 'Audio API'],
-      liveUrl: 'https://akashyatinjain.github.io/Simon-Game/',
-      githubUrl: 'https://github.com/Akashyatinjain',
-      icon: <Play size={22} />,
-    },
-  ];
+  const showFeatured = active === 'all';
 
-  const filteredProjects = activeFilter === 'all'
-    ? projectsData
-    : projectsData.filter(p => p.category === activeFilter);
+  const getProjectImage = (title) => {
+    switch (title) {
+      case 'DataStock':
+        return '/projects/datastock.png';
+      case 'Finance Tracker':
+        return '/projects/finance-tracker.png';
+      case 'SWASTHYA':
+        return '/projects/swasthya.png';
+      case 'Keeper Notes':
+        return '/projects/keeper.png';
+      case 'Simon Game':
+        return '/projects/simon.png';
+      default:
+        return '/projects/datastock.png';
+    }
+  };
 
   return (
-    <section id="projects" className="projects-section">
-      <div className="glow-orb glow-orb-blue" style={{ bottom: '40%', right: '-150px' }}></div>
+    <section id="projects" className="projects">
       <div className="container">
-        <h2 className="section-title reveal">My Projects</h2>
-        <p className="section-subtitle reveal reveal-delay-1">
-          A showcase of full-stack systems, dynamic frontend layouts, and interactive games built with modern tech principles.
-        </p>
+        <div className="projects-header">
+          <p className="section-label reveal">Portfolio</p>
+          <h2 className="section-title reveal reveal-delay-1">Things I've built</h2>
+          <p className="section-desc reveal reveal-delay-2">
+            Full-stack applications and interactive frontends. I focus on clean state management, modular APIs, and intuitive layouts.
+          </p>
+        </div>
 
-        {/* Filter Bar */}
-        <div className="filter-bar reveal reveal-delay-2">
-          {categories.map(cat => (
+        <div className="filter-row reveal reveal-delay-2">
+          {filters.map((f) => (
             <button
-              key={cat.id}
-              className={`filter-btn ${activeFilter === cat.id ? 'active' : ''}`}
-              onClick={() => setActiveFilter(cat.id)}
+              key={f.id}
+              type="button"
+              className={`filter-btn ${active === f.id ? 'active' : ''}`}
+              onClick={() => setActive(f.id)}
             >
-              {cat.label}
+              {f.label}
             </button>
           ))}
         </div>
 
-        {/* Projects Grid */}
+        {showFeatured && (
+          <div className="featured-list">
+            {featured.map((project, i) => (
+              <article
+                key={project.title}
+                className={`featured-card card reveal-scale ${i % 2 === 1 ? 'featured-reverse' : ''}`}
+                style={{ transitionDelay: `${i * 0.1}s` }}
+              >
+                <div className="featured-accent" style={{ background: project.accent }} />
+                <div className="featured-content">
+                  <div className="featured-top">
+                    <span className="featured-date">{project.date}</span>
+                    <span className="featured-live">Featured Project</span>
+                  </div>
+                  <h3 className="featured-title">{project.title}</h3>
+                  <p className="featured-desc">{project.description}</p>
+                  {project.highlights && (
+                    <ul className="featured-highlights">
+                      {project.highlights.map((h) => (
+                        <li key={h}>{h}</li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="featured-tags">
+                    {project.tech.map((t) => (
+                      <span key={t} className="tag">{t}</span>
+                    ))}
+                  </div>
+                  <div className="featured-actions">
+                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                      Live Demo
+                      <ExternalLink size={14} />
+                    </a>
+                    {project.demoVideo && (
+                      <button 
+                        type="button" 
+                        className="btn btn-outline" 
+                        onClick={() => setActiveVideo(project.demoVideo)}
+                        style={{ borderColor: 'var(--accent-light)', color: 'var(--accent)' }}
+                      >
+                        <Play size={14} fill="var(--accent)" />
+                        Watch Demo
+                      </button>
+                    )}
+                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
+                      <Github size={14} />
+                      Source Code
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="featured-image-wrapper">
+                  <img
+                    src={getProjectImage(project.title)}
+                    alt={`${project.title} Screenshot`}
+                    className="featured-screenshot"
+                  />
+                  <div className="screenshot-overlay" />
+                  
+                  {project.demoVideo ? (
+                    <button
+                      type="button"
+                      className="featured-preview-link"
+                      onClick={() => setActiveVideo(project.demoVideo)}
+                      aria-label={`Watch Video Demo for ${project.title}`}
+                    >
+                      <Play size={24} fill="currentColor" />
+                    </button>
+                  ) : (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="featured-preview-link"
+                      aria-label={`View Live ${project.title}`}
+                    >
+                      <ArrowUpRight size={32} className="preview-arrow-icon" />
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
         <div className="projects-grid">
-          {filteredProjects.map((project, idx) => (
-            <div key={idx} className="glass-card project-card reveal-scale" style={{ transitionDelay: `${idx * 0.1}s` }}>
-              <div className="project-card-header">
-                <div className="project-icon-wrapper">
-                  {project.icon}
+          {(active === 'all' ? filtered : projects.filter((p) => p.category === active)).map((project, i) => (
+            <article key={project.title} className="project-card card reveal-scale" style={{ transitionDelay: `${i * 0.06}s` }}>
+              <div className="grid-project-image-wrapper">
+                <img
+                  src={getProjectImage(project.title)}
+                  alt={`${project.title} Screenshot`}
+                  className="grid-project-screenshot"
+                />
+              </div>
+              <div className="project-card-content">
+                <div className="project-top">
+                  <span className="project-dot" style={{ background: project.accent }} />
+                  {project.date && <span className="project-date">{project.date}</span>}
                 </div>
-                <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
-                  <span className="project-date" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{project.date}</span>
-                  <span className="project-status">Live</span>
+                <h3 className="project-title">{project.title}</h3>
+                <p className="project-desc">{project.description}</p>
+                <div className="project-tags">
+                  {project.tech.slice(0, 3).map((t) => (
+                    <span key={t} className="tag">{t}</span>
+                  ))}
+                  {project.tech.length > 3 && <span className="tag">+{project.tech.length - 3}</span>}
+                </div>
+                <div className="project-links">
+                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="project-link">
+                    Demo <ExternalLink size={12} />
+                  </a>
+                  <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="project-link">
+                    Code <Github size={12} />
+                  </a>
                 </div>
               </div>
-
-              <h3 className="project-title">{project.title}</h3>
-              <p className="project-desc">{project.description}</p>
-
-              <div className="project-tags">
-                {project.tech.map((tag, tIdx) => (
-                  <span key={tIdx} className="project-tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="project-actions">
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="project-link">
-                  <span>Live Demo</span>
-                  <ExternalLink size={14} />
-                </a>
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="project-link">
-                  <span>Source Code</span>
-                  <Github size={14} />
-                </a>
-              </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>
+
+      {/* Video Modal Overlay */}
+      {activeVideo && (
+        <div className="video-modal-overlay" onClick={() => setActiveVideo(null)}>
+          <div className="video-modal-content card" onClick={(e) => e.stopPropagation()}>
+            <button type="button" className="video-modal-close" onClick={() => setActiveVideo(null)}>
+              <X size={20} />
+            </button>
+            <div className="video-aspect-wrapper">
+              <video src={activeVideo} controls autoPlay className="modal-video-element" />
+            </div>
+            <div className="video-modal-footer">
+              <ShieldAlert size={14} className="video-info-icon" />
+              <span>Demo interaction walkthrough video file.</span>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
