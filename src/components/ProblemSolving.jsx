@@ -25,6 +25,8 @@ const ProblemSolving = () => {
     }
   });
 
+  const [submissionCalendar, setSubmissionCalendar] = useState(null);
+
   useEffect(() => {
     const fetchLC = async () => {
       try {
@@ -49,6 +51,14 @@ const ProblemSolving = () => {
         };
         setStats(newStats);
         localStorage.setItem('portfolio_leetcode_stats', JSON.stringify(newStats));
+
+        if (data.submissionCalendar) {
+          // Parse the stringified JSON calendar if returned as a string
+          const calendar = typeof data.submissionCalendar === 'string'
+            ? JSON.parse(data.submissionCalendar)
+            : data.submissionCalendar;
+          setSubmissionCalendar(calendar);
+        }
       } catch {
         /* keep defaults */
       }
@@ -121,26 +131,53 @@ const ProblemSolving = () => {
             </div>
           </div>
 
-          {/* GitHub Contribution Graph Display */}
-          <div className="github-chart-card card reveal-scale">
-            <div className="chart-header">
-              <Github size={20} className="github-accent-icon" />
-              <div>
-                <span className="chart-title">GitHub Contributions</span>
-                <span className="chart-subtitle">Commit heat map</span>
+          {/* GitHub & LeetCode Heatmaps Display */}
+          <div className="charts-column">
+            {/* LeetCode Heatmap */}
+            <div className="github-chart-card card reveal-scale">
+              <div className="chart-header">
+                <Leetcode size={20} className="github-accent-icon" />
+                <div>
+                  <span className="chart-title">LeetCode Heatmap</span>
+                  <span className="chart-subtitle">Submission frequency tracker</span>
+                </div>
+              </div>
+
+              <div className="chart-container">
+                <img
+                  src="https://leetcode-stats-six.vercel.app/api?username=Akashyatinjain&theme=light"
+                  alt="Akash Jain's LeetCode Submissions Heatmap"
+                  className="leetcode-stats-img"
+                  style={{ maxWidth: '100%', height: 'auto' }}
+                />
+              </div>
+
+              <div className="chart-footer">
+                <span className="chart-legend-text">Real-time submissions statistics</span>
               </div>
             </div>
 
-            <div className="chart-container">
-              <img
-                src="https://ghchart.rshah.org/2563EB/Akashyatinjain"
-                alt="Akash Jain's GitHub Contributions Chart"
-                className="github-chart-img"
-              />
-            </div>
+            {/* GitHub Contribution Graph Display */}
+            <div className="github-chart-card card reveal-scale" style={{ transitionDelay: '0.05s' }}>
+              <div className="chart-header">
+                <Github size={20} className="github-accent-icon" />
+                <div>
+                  <span className="chart-title">GitHub Contributions</span>
+                  <span className="chart-subtitle">Commit heat map</span>
+                </div>
+              </div>
 
-            <div className="chart-footer">
-              <span className="chart-legend-text">Real-time commit frequency visualization</span>
+              <div className="chart-container">
+                <i mg
+                  src="https://ghchart.rshah.org/2563EB/Akashyatinjai n"
+                  alt="Akash Jain's GitHub Contributions Char t"
+                  className="github-chart-img"
+                />
+              </div>
+
+              <div className="chart-footer">
+                <span className="chart-legend-text">Real-time commit frequency visualization</span>
+              </div>
             </div>
           </div>
         </div>

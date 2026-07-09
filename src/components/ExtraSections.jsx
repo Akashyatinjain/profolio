@@ -26,7 +26,11 @@ const ExtraSections = () => {
               <div key={item.year} className="timeline-road-node">
                 <div className="node-connector-line" />
                 <div className="node-marker">
-                  <span className="node-year-text">{item.year}</span>
+                  <span className="node-year-text">
+                    {item.year.split(' ').map((word, i) => (
+                      <span key={i} className="node-year-word">{word}</span>
+                    ))}
+                  </span>
                 </div>
                 <div className="node-card card">
                   <h4 className="node-title">{item.title}</h4>

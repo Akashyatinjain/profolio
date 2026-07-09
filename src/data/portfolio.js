@@ -8,7 +8,7 @@ export const profile = {
   email: 'aj0881871@gmail.com',
   studentEmail: 'aj0881871@student.sfit.ac.in',
   phone: '+91 7710926977',
-  available: 'Available for Internships · Graduating May 2026',
+  available: 'Available for Internships · Graduating May 2028',
   links: {
     github: 'https://github.com/Akashyatinjain',
     linkedin: 'https://www.linkedin.com/in/akash-yatin-jain',
@@ -55,7 +55,7 @@ export const education = [
     school: 'St Francis Institute of Technology',
     degree: 'B.Tech in Information Technology',
     period: '2023 – Present',
-    note: 'Expected graduation May 2026 · CGPA 8.50',
+    note: 'Expected graduation May 2028 · CGPA 8.50',
     detail:
       'Core engineering, database management systems, and algorithms. Actively building full-stack projects alongside coursework.',
   },
@@ -96,12 +96,12 @@ export const growthTimeline = [
   {
     year: '2024',
     title: 'Foundations & OOP',
-    description: 'Mastered C, Java OOP principles, and Core DSA fundamentals.'
+    description: 'Learned C, Java OOP principles, and Core DSA fundamentals.'
   },
   {
     year: '2025',
     title: 'React & Frontend Dev',
-    description: 'Built SWASTHYA dashboard and custom responsive UI frameworks.'
+    description: 'Built SWASTHYA,Redesign of C++ website dashboard and custom responsive UI frameworks.'
   },
   {
     year: 'Late 2025',
