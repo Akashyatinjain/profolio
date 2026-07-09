@@ -13,7 +13,7 @@ export const profile = {
     github: 'https://github.com/Akashyatinjain',
     linkedin: 'https://www.linkedin.com/in/akash-yatin-jain',
     leetcode: 'https://leetcode.com/u/Akashyatinjain/',
-    portfolio: 'https://profolio-psi-blue.vercel.app/',
+    portfolio: 'https://profolio-AkashJain.vercel.app/',
   },
 };
 
