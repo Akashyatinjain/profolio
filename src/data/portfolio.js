@@ -3,7 +3,7 @@ export const profile = {
   shortName: 'Akash Jain',
   title: 'Full-Stack Developer',
   tagline: 'Full-Stack Developer & Backend Engineer | React • Node • PostgreSQL • Docker',
-  avatar: 'https://avatars.githubusercontent.com/u/193562176?v=4',
+  avatar: '/avatar.png',
   location: 'Mumbai',
   email: 'aj0881871@gmail.com',
   studentEmail: 'aj0881871@student.sfit.ac.in',
