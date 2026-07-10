@@ -1,6 +1,6 @@
 import React from 'react';
-import { growthTimeline, experience, technicalHighlights } from '../data/portfolio';
-import { Calendar, Milestone, Briefcase, Shield, Server, Database, Cloud, Lock, Zap } from 'lucide-react';
+import { experience, technicalHighlights, engineeringHighlights } from '../data/portfolio';
+import { Calendar, Briefcase, Shield, Server, Database, Cloud, Lock, Zap, CheckCircle2 } from 'lucide-react';
 import './ExtraSections.css';
 
 const highlightIcons = {
@@ -16,35 +16,27 @@ const ExtraSections = () => {
   return (
     <section className="extra-sections">
       <div className="container">
-        
-        {/* Growth Timeline Section */}
-        <div className="growth-timeline-wrapper">
-          <div className="extra-header">
+
+        {/* Engineering Highlights Section */}
+        <div className="engineering-highlights-wrapper">
+          <div className="extra-header highlights-header">
             <p className="section-label reveal">
-              <Milestone size={14} style={{ color: 'var(--accent-light)' }} />
-              Growth Roadmap
+              <Shield size={14} style={{ color: 'var(--accent-light)' }} />
+              Highlights
             </p>
-            <h2 className="section-title reveal reveal-delay-1">Developer Journey</h2>
+            <h2 className="section-title highlights-title reveal reveal-delay-1">
+              Engineering Highlights
+            </h2>
             <p className="section-desc reveal reveal-delay-2">
-              A brief walkthrough of how my technical focus shifted from computer fundamentals to system orchestration.
+              Core backend development capabilities, system designs, security layers, and devops integrations.
             </p>
           </div>
 
-          <div className="timeline-horizontal">
-            {growthTimeline.map((item, idx) => (
-              <div key={item.year} className="timeline-road-node reveal-scale" style={{ transitionDelay: `${idx * 0.08}s` }}>
-                <div className="node-connector-line" />
-                <div className="node-marker">
-                  <span className="node-year-text">
-                    {item.year.split(' ').map((word, i) => (
-                      <span key={i} className="node-year-word">{word}</span>
-                    ))}
-                  </span>
-                </div>
-                <div className="node-card card">
-                  <h4 className="node-title">{item.title}</h4>
-                  <p className="node-desc">{item.description}</p>
-                </div>
+          <div className="highlights-checklist-grid">
+            {engineeringHighlights.map((item, idx) => (
+              <div key={item} className="checklist-item reveal-scale" style={{ transitionDelay: `${idx * 0.04}s` }}>
+                <CheckCircle2 size={18} className="check-icon" />
+                <span className="checklist-text">{item}</span>
               </div>
             ))}
           </div>
@@ -97,7 +89,7 @@ const ExtraSections = () => {
 
         <div className="divider" />
 
-        {/* Technical Highlights Section (Replaces Testimonials) */}
+        {/* Technical Highlights Section */}
         <div className="tech-highlights-wrapper">
           <div className="extra-header">
             <p className="section-label reveal">

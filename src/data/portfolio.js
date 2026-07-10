@@ -369,3 +369,17 @@ export const tufStats = {
   }
 };
 
+export const engineeringHighlights = [
+  '7 Production Projects',
+  '25+ REST APIs',
+  'JWT + Google OAuth + OTP',
+  'Dockerized Deployments',
+  'PostgreSQL Database Design',
+  'Rate Limiting',
+  'Helmet',
+  'Input Validation',
+  'Cloudinary Integration',
+  'Prisma ORM',
+  'GitHub CI',
+];
+
