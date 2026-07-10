@@ -1,7 +1,16 @@
 import React from 'react';
-import { growthTimeline, experience, testimonials } from '../data/portfolio';
-import { Calendar, Award, Quote, Milestone, Briefcase } from 'lucide-react';
+import { growthTimeline, experience, technicalHighlights } from '../data/portfolio';
+import { Calendar, Milestone, Briefcase, Shield, Server, Database, Cloud, Lock, Zap } from 'lucide-react';
 import './ExtraSections.css';
+
+const highlightIcons = {
+  shield: Shield,
+  server: Server,
+  database: Database,
+  cloud: Cloud,
+  lock: Lock,
+  zap: Zap,
+};
 
 const ExtraSections = () => {
   return (
@@ -21,9 +30,9 @@ const ExtraSections = () => {
             </p>
           </div>
 
-          <div className="timeline-horizontal reveal-scale">
+          <div className="timeline-horizontal">
             {growthTimeline.map((item, idx) => (
-              <div key={item.year} className="timeline-road-node">
+              <div key={item.year} className="timeline-road-node reveal-scale" style={{ transitionDelay: `${idx * 0.08}s` }}>
                 <div className="node-connector-line" />
                 <div className="node-marker">
                   <span className="node-year-text">
@@ -43,7 +52,7 @@ const ExtraSections = () => {
 
         <div className="divider" />
 
-        {/* Experience / Leadership Activity Section */}
+        {/* Experience / Leadership Activity Section (Vertical Timeline) */}
         <div className="experience-activities-wrapper">
           <div className="extra-header">
             <p className="section-label reveal">
@@ -56,24 +65,30 @@ const ExtraSections = () => {
             </p>
           </div>
 
-          <div className="experience-cards-grid">
+          <div className="experience-timeline">
+            <div className="timeline-vertical-line" />
             {experience.map((exp, idx) => (
-              <div key={exp.role} className="exp-card card reveal-scale" style={{ transitionDelay: `${idx * 0.08}s` }}>
-                <div className="exp-card-header">
-                  <div className="exp-header-info">
-                    <h3 className="exp-role">{exp.role}</h3>
-                    <span className="exp-org">{exp.organization}</span>
-                  </div>
-                  <div className="exp-period-badge">
-                    <Calendar size={13} />
-                    <span>{exp.period}</span>
-                  </div>
+              <div key={exp.role} className={`timeline-row reveal ${idx % 2 === 0 ? 'left-row' : 'right-row'}`}>
+                <div className="timeline-dot-badge">
+                  <Briefcase size={14} />
                 </div>
-                <p className="exp-desc">{exp.description}</p>
-                <div className="exp-tags-row">
-                  {exp.tags.map((t) => (
-                    <span key={t} className="tag">{t}</span>
-                  ))}
+                <div className="timeline-content card">
+                  <div className="timeline-content-header">
+                    <div>
+                      <h3 className="timeline-role">{exp.role}</h3>
+                      <span className="timeline-org">{exp.organization}</span>
+                    </div>
+                    <div className="timeline-period-badge">
+                      <Calendar size={13} />
+                      <span>{exp.period}</span>
+                    </div>
+                  </div>
+                  <p className="timeline-desc">{exp.description}</p>
+                  <div className="timeline-tags">
+                    {exp.tags.map((t) => (
+                      <span key={t} className="tag">{t}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
@@ -82,35 +97,34 @@ const ExtraSections = () => {
 
         <div className="divider" />
 
-        {/* Testimonials Quote Blocks */}
-        <div className="testimonials-wrapper">
+        {/* Technical Highlights Section (Replaces Testimonials) */}
+        <div className="tech-highlights-wrapper">
           <div className="extra-header">
             <p className="section-label reveal">
-              <Award size={14} style={{ color: 'var(--accent-light)' }} />
-              Testimonials
+              <Shield size={14} style={{ color: 'var(--accent-light)' }} />
+              Technical Highlights
             </p>
-            <h2 className="section-title reveal reveal-delay-1">What colleagues say</h2>
+            <h2 className="section-title reveal reveal-delay-1">Architecture & Capabilities</h2>
             <p className="section-desc reveal reveal-delay-2">
-              Collaborative feedback from technical chairs, peers, and team partners.
+              A quick checklist of core backend competencies, database design, and optimization techniques.
             </p>
           </div>
 
-          <div className="testimonials-grid">
-            {testimonials.map((t, idx) => (
-              <div key={t.author} className="testimonial-card card reveal-scale" style={{ transitionDelay: `${idx * 0.1}s` }}>
-                <Quote size={24} className="testimonial-quote-icon" />
-                <p className="testimonial-quote-text">"{t.quote}"</p>
-                <div className="testimonial-author-row">
-                  <div className="author-dot-avatar">
-                    {t.author.charAt(0)}
+          <div className="tech-highlights-grid">
+            {technicalHighlights.map((highlight, idx) => {
+              const IconComp = highlightIcons[highlight.icon] || Shield;
+              return (
+                <div key={highlight.label} className="tech-highlight-card reveal-scale" style={{ transitionDelay: `${idx * 0.06}s` }}>
+                  <div className="tech-highlight-icon-wrap">
+                    <IconComp size={18} />
                   </div>
-                  <div>
-                    <h4 className="testimonial-author-name">{t.author}</h4>
-                    <span className="testimonial-author-role">{t.role}</span>
+                  <div className="tech-highlight-info">
+                    <h4 className="tech-highlight-label">{highlight.label}</h4>
+                    <p className="tech-highlight-detail">{highlight.detail}</p>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

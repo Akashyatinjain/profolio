@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, ArrowUpRight, Play, X, ShieldAlert, ChevronDown } from 'lucide-react';
+import { ExternalLink, ArrowUpRight, Play, X, ShieldAlert, ChevronDown, ChevronUp } from 'lucide-react';
 import { Github } from './Icons';
 import { projects, miniProjects } from '../data/portfolio';
 import './Projects.css';
@@ -15,12 +15,20 @@ const Projects = () => {
   const [active, setActive] = useState('all');
   const [activeVideo, setActiveVideo] = useState(null);
   const [showMiniProjects, setShowMiniProjects] = useState(false);
+  const [expandedProjects, setExpandedProjects] = useState({});
 
   const featured = projects.filter((p) => p.featured);
   const filtered =
     active === 'all' ? projects.filter((p) => !p.featured) : projects.filter((p) => p.category === active && !p.featured);
 
   const showFeatured = active === 'all';
+
+  const toggleProjectExpand = (title) => {
+    setExpandedProjects((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
 
   const getProjectImage = (title) => {
     switch (title) {
@@ -46,7 +54,6 @@ const Projects = () => {
         return '/projects/datastock.png';
     }
   };
-
 
   return (
     <section id="projects" className="projects">
@@ -74,104 +81,148 @@ const Projects = () => {
 
         {showFeatured && (
           <div className="featured-list">
-            {featured.map((project, i) => (
-              <article
-                key={project.title}
-                className={`featured-card card reveal-scale ${i % 2 === 1 ? 'featured-reverse' : ''}`}
-                style={{ transitionDelay: `${i * 0.1}s` }}
-              >
-                <div className="featured-accent" style={{ background: project.accent }} />
-                <div className="featured-content">
-                  <div className="featured-top">
-                    <span className="featured-date">{project.date}</span>
-                    <span className="featured-live">Featured Project</span>
-                  </div>
-                  <h3 className="featured-title">{project.title}</h3>
-                  {project.problem && (
-                    <div className="featured-problem">
-                      <span className="featured-problem-label">Problem</span>
-                      <p className="featured-problem-text">{project.problem}</p>
-                    </div>
-                  )}
-                  <p className="featured-desc">{project.description}</p>
-                  {project.architecture && (
-                    <div className="featured-architecture">
-                      <span className="featured-arch-label">Architecture</span>
-                      <code className="featured-arch-code">{project.architecture}</code>
-                    </div>
-                  )}
-                  {project.highlights && (
-                    <ul className="featured-highlights">
-                      {project.highlights.map((h) => (
-                        <li key={h}>{h}</li>
-                      ))}
-                    </ul>
-                  )}
-                  {project.challenges && (
-                    <div className="featured-challenges">
-                      <span className="featured-challenge-label">Key Challenge</span>
-                      <p className="featured-challenge-text">{project.challenges}</p>
-                    </div>
-                  )}
-                  <div className="featured-tags">
-                    {project.tech.map((t) => (
-                      <span key={t} className="tag">{t}</span>
-                    ))}
-                  </div>
-                  <div className="featured-actions">
-                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                      Live Demo
-                      <ExternalLink size={14} />
-                    </a>
-                    {project.demoVideo && (
-                      <button 
-                        type="button" 
-                        className="btn btn-outline" 
-                        onClick={() => setActiveVideo(project.demoVideo)}
-                        style={{ borderColor: 'var(--accent-light)', color: 'var(--accent)' }}
-                      >
-                        <Play size={14} fill="var(--accent)" />
-                        Watch Demo
-                      </button>
-                    )}
-                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-                      <Github size={14} />
-                      Source Code
-                    </a>
-                  </div>
-                </div>
-                
-                <div className="featured-image-wrapper">
-                  <img
-                    src={getProjectImage(project.title)}
-                    alt={`${project.title} Screenshot`}
-                    className="featured-screenshot"
-                  />
-                  <div className="screenshot-overlay" />
+            {featured.map((project, i) => {
+              const isExpanded = !!expandedProjects[project.title];
+              return (
+                <article
+                  key={project.title}
+                  className={`featured-card card reveal-scale ${i % 2 === 1 ? 'featured-reverse' : ''}`}
+                  style={{ transitionDelay: `${i * 0.1}s` }}
+                >
+                  <div className="featured-accent" style={{ background: project.accent }} />
                   
-                  {project.demoVideo ? (
-                    <button
-                      type="button"
-                      className="featured-preview-link"
-                      onClick={() => setActiveVideo(project.demoVideo)}
-                      aria-label={`Watch Video Demo for ${project.title}`}
-                    >
-                      <Play size={24} fill="currentColor" />
-                    </button>
-                  ) : (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="featured-preview-link"
-                      aria-label={`View Live ${project.title}`}
-                    >
-                      <ArrowUpRight size={32} className="preview-arrow-icon" />
-                    </a>
-                  )}
-                </div>
-              </article>
-            ))}
+                  <div className="featured-content">
+                    <div className="featured-top">
+                      <span className="featured-date">{project.date}</span>
+                      <span className="featured-live">Featured Project</span>
+                    </div>
+                    
+                    <h3 className="featured-title">{project.title}</h3>
+                    <p className="featured-desc">{project.description}</p>
+
+                    {/* Expandable Case Study Details */}
+                    {isExpanded && (
+                      <div className="featured-collapsible-details">
+                        {project.problem && (
+                          <div className="featured-problem">
+                            <span className="featured-problem-label">Problem</span>
+                            <p className="featured-problem-text">{project.problem}</p>
+                          </div>
+                        )}
+                        {project.architecture && (
+                          <div className="featured-architecture">
+                            <span className="featured-arch-label">Architecture</span>
+                            <code className="featured-arch-code">{project.architecture}</code>
+                          </div>
+                        )}
+                        {project.highlights && (
+                          <ul className="featured-highlights">
+                            {project.highlights.map((h) => (
+                              <li key={h}>{h}</li>
+                            ))}
+                          </ul>
+                        )}
+                        {project.challenges && (
+                          <div className="featured-challenges">
+                            <span className="featured-challenge-label">Key Challenge</span>
+                            <p className="featured-challenge-text">{project.challenges}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="featured-toggle-wrapper">
+                      <button
+                        type="button"
+                        className="featured-toggle-btn"
+                        onClick={() => toggleProjectExpand(project.title)}
+                      >
+                        <span>{isExpanded ? 'Hide Details' : 'Read Case Study'}</span>
+                        {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                      </button>
+                    </div>
+
+                    <div className="featured-tags">
+                      {project.tech.map((t) => (
+                        <span key={t} className="tag">{t}</span>
+                      ))}
+                    </div>
+
+                    <div className="featured-actions">
+                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                        Live Demo
+                        <ExternalLink size={14} />
+                      </a>
+                      {project.demoVideo && (
+                        <button 
+                          type="button" 
+                          className="btn btn-outline" 
+                          onClick={() => setActiveVideo(project.demoVideo)}
+                          style={{ borderColor: 'var(--accent-light)', color: 'var(--accent)' }}
+                        >
+                          <Play size={14} fill="var(--accent)" />
+                          Watch Demo
+                        </button>
+                      )}
+                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
+                        <Github size={14} />
+                        Source Code
+                      </a>
+                    </div>
+                  </div>
+                  
+                  <div className="featured-image-wrapper" onClick={() => !project.demoVideo && window.open(project.liveUrl, '_blank')}>
+                    {/* Browser Chrome Frame */}
+                    <div className="browser-chrome-frame">
+                      <div className="browser-chrome-header">
+                        <div className="browser-chrome-dots">
+                          <span className="chrome-dot dot-red" />
+                          <span className="chrome-dot dot-yellow" />
+                          <span className="chrome-dot dot-green" />
+                        </div>
+                        <div className="browser-chrome-address-bar">
+                          <span>{project.liveUrl.replace('https://', '')}</span>
+                        </div>
+                      </div>
+                      <div className="browser-chrome-body">
+                        <img
+                          src={getProjectImage(project.title)}
+                          alt={`${project.title} Screenshot`}
+                          className="featured-screenshot"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="screenshot-overlay" />
+                    
+                    {project.demoVideo ? (
+                      <button
+                        type="button"
+                        className="featured-preview-link"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveVideo(project.demoVideo);
+                        }}
+                        aria-label={`Watch Video Demo for ${project.title}`}
+                      >
+                        <Play size={24} fill="currentColor" />
+                      </button>
+                    ) : (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="featured-preview-link"
+                        aria-label={`View Live ${project.title}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ArrowUpRight size={32} className="preview-arrow-icon" />
+                      </a>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
 
@@ -179,11 +230,23 @@ const Projects = () => {
           {(active === 'all' ? filtered : projects.filter((p) => p.category === active)).map((project, i) => (
             <article key={project.title} className="project-card card reveal-scale" style={{ transitionDelay: `${i * 0.06}s` }}>
               <div className="grid-project-image-wrapper">
-                <img
-                  src={getProjectImage(project.title)}
-                  alt={`${project.title} Screenshot`}
-                  className="grid-project-screenshot"
-                />
+                {/* Browser Frame for standard cards */}
+                <div className="browser-chrome-frame mini-frame">
+                  <div className="browser-chrome-header">
+                    <div className="browser-chrome-dots">
+                      <span className="chrome-dot dot-red" />
+                      <span className="chrome-dot dot-yellow" />
+                      <span className="chrome-dot dot-green" />
+                    </div>
+                  </div>
+                  <div className="browser-chrome-body">
+                    <img
+                      src={getProjectImage(project.title)}
+                      alt={`${project.title} Screenshot`}
+                      className="grid-project-screenshot"
+                    />
+                  </div>
+                </div>
               </div>
               <div className="project-card-content">
                 <div className="project-top">
@@ -240,11 +303,22 @@ const Projects = () => {
                   style={{ animationDelay: `${i * 0.08}s` }}
                 >
                   <div className="grid-project-image-wrapper">
-                    <img
-                      src={getProjectImage(project.title)}
-                      alt={`${project.title} Screenshot`}
-                      className="grid-project-screenshot"
-                    />
+                    <div className="browser-chrome-frame mini-frame">
+                      <div className="browser-chrome-header">
+                        <div className="browser-chrome-dots">
+                          <span className="chrome-dot dot-red" />
+                          <span className="chrome-dot dot-yellow" />
+                          <span className="chrome-dot dot-green" />
+                        </div>
+                      </div>
+                      <div className="browser-chrome-body">
+                        <img
+                          src={getProjectImage(project.title)}
+                          alt={`${project.title} Screenshot`}
+                          className="grid-project-screenshot"
+                        />
+                      </div>
+                    </div>
                   </div>
                   <div className="project-card-content">
                     <div className="project-top">
@@ -273,7 +347,6 @@ const Projects = () => {
           </div>
         )}
       </div>
-
 
       {/* Video Modal Overlay */}
       {activeVideo && (

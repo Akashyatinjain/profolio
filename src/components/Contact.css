@@ -170,6 +170,7 @@ a.contact-row:hover .contact-icon-wrapper {
   padding: 0.85rem 1.15rem;
   border-radius: 8px;
   font-weight: 600;
+  width: 100%;
 }
 
 .form-msg-success {
@@ -182,6 +183,94 @@ a.contact-row:hover .contact-icon-wrapper {
   color: #EF4444;
   background: #FEF2F2;
   border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.clickable-contact-row {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickable-contact-row:hover {
+  background: var(--bg-hover) !important;
+  transform: translateX(4px);
+}
+
+.resume-chip {
+  background: var(--accent-pale) !important;
+  border-color: var(--accent-soft) !important;
+  color: var(--accent) !important;
+}
+
+.resume-chip:hover {
+  background: var(--accent) !important;
+  color: #FFFFFF !important;
+  border-color: var(--accent) !important;
+}
+
+.form-success-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #EFF6FF;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 8px;
+  padding: 0.3rem 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.form-success-wrapper .form-msg-success {
+  border: none;
+  background: transparent;
+  padding: 0.5rem 0;
+  margin: 0;
+}
+
+.success-check-icon {
+  color: #10B981;
+  animation: checkScaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  flex-shrink: 0;
+}
+
+/* Slide-up Toast Notification */
+.contact-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0F172A;
+  color: #FFFFFF;
+  padding: 0.85rem 1.75rem;
+  border-radius: 50px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  animation: toastSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+@keyframes toastSlideUp {
+  from {
+    bottom: 0rem;
+    opacity: 0;
+  }
+  to {
+    bottom: 2rem;
+    opacity: 1;
+  }
+}
+
+@keyframes checkScaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 768px) {

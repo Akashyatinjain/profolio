@@ -167,7 +167,6 @@ section {
 
 .card:hover {
   border-color: var(--border-strong);
-  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 

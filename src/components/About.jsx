@@ -113,11 +113,11 @@ const About = () => {
 
             <div className="skills-grid">
               {skills.map((group) => (
-                <div key={group.label} className="skill-group card">
+                <div key={group.label} className={`skill-group ${group.primary ? 'primary-stack' : 'secondary-stack'}`}>
                   <span className="skill-group-label">{group.label}</span>
                   <div className="skill-items">
                     {group.items.map((s) => (
-                      <span key={s} className={`tag ${s === 'Java' || s === 'React' || s === 'Node.js' ? 'tag-accent' : ''}`}>{s}</span>
+                      <span key={s} className={`tag ${group.primary ? 'tag-accent' : ''}`}>{s}</span>
                     ))}
                   </div>
                 </div>

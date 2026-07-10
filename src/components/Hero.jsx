@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowUpRight, ArrowDown, FileText, CheckCircle2, MapPin, Copy, Check, Trophy, Users, GitBranch, Briefcase, Code2, Database, Container, Coffee, Cloud, Cpu, BookOpen, Zap } from 'lucide-react';
+import { ArrowUpRight, ArrowDown, FileText, CheckCircle2, MapPin, Copy, Check, Trophy, Users, GitBranch, Briefcase, Code2, Database, Container, Coffee, Cloud, Cpu, BookOpen, Zap, Shield, Globe, Server } from 'lucide-react';
 import { Github, Linkedin, Leetcode } from './Icons';
 import { profile, stats, achievements, availableFor } from '../data/portfolio';
 import './Hero.css';
@@ -106,16 +106,11 @@ const Hero = () => {
               <span>Backend-Focused Dev</span>
             </h2>
 
-            {/* Rewritten bio — Problem 2 */}
+            {/* Rewritten bio — engineering-focused, punchier */}
             <p className="hero-bio reveal-fade reveal-delay-2">
-              Built 7+ full-stack production apps with React, Node.js, PostgreSQL & Docker.
-              IEEE Technical Lead mentoring 100+ students. Passionate about scalable backend
-              systems and currently exploring cloud engineering & system design.
-            </p>
-
-            {/* Personality quote — Problem 18 */}
-            <p className="hero-quote reveal-fade reveal-delay-2">
-              "I enjoy turning complex backend problems into clean, deployed products."
+              Building products that scale — from database schema to production deployment.
+              7+ full-stack apps shipped with React, Node.js, PostgreSQL & Docker.
+              IEEE Technical Lead · Hackathon Runner-up.
             </p>
 
             {/* Tech Stack with Icons — Problem 4 */}
@@ -269,6 +264,44 @@ const Hero = () => {
         <button type="button" className="scroll-hint" onClick={() => scrollTo('about')} aria-label="Scroll down">
           <ArrowDown size={18} />
         </button>
+
+        {/* Resume Highlights Strip */}
+        <div className="resume-highlights-strip reveal-fade reveal-delay-4">
+          <div className="highlight-item">
+            <Code2 size={14} />
+            <span>180+ DSA Problems</span>
+          </div>
+          <div className="highlight-divider" />
+          <div className="highlight-item">
+            <Server size={14} />
+            <span>7+ Production Projects</span>
+          </div>
+          <div className="highlight-divider" />
+          <div className="highlight-item">
+            <Users size={14} />
+            <span>IEEE Tech Lead</span>
+          </div>
+          <div className="highlight-divider" />
+          <div className="highlight-item">
+            <Trophy size={14} />
+            <span>Hackathon Runner-up</span>
+          </div>
+          <div className="highlight-divider" />
+          <div className="highlight-item">
+            <Container size={14} />
+            <span>Docker</span>
+          </div>
+          <div className="highlight-divider" />
+          <div className="highlight-item">
+            <Database size={14} />
+            <span>PostgreSQL</span>
+          </div>
+          <div className="highlight-divider" />
+          <div className="highlight-item">
+            <Cpu size={14} />
+            <span>Node.js</span>
+          </div>
+        </div>
       </div>
     </section>
   );

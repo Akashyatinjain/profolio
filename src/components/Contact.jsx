@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, FileText, CheckCircle2 } from 'lucide-react';
 import { Github, Linkedin, Leetcode } from './Icons';
 import { profile } from '../data/portfolio';
 import confetti from 'canvas-confetti';
@@ -8,10 +8,19 @@ import './Contact.css';
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState(null);
+  const [showToast, setShowToast] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const copyEmail = (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(profile.email).then(() => {
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    });
   };
 
   const triggerConfetti = () => {
@@ -75,15 +84,15 @@ const Contact = () => {
         <div className="contact-layout">
           <div className="contact-info reveal-left">
             <div className="contact-card card">
-              <a href={`mailto:${profile.email}`} className="contact-row">
+              <div onClick={copyEmail} className="contact-row clickable-contact-row" title="Click to copy email">
                 <div className="contact-icon-wrapper">
                   <Mail size={18} />
                 </div>
-                <div>
-                  <span className="contact-row-label">Email</span>
+                <div style={{ flex: 1 }}>
+                  <span className="contact-row-label">Email (Click to copy)</span>
                   <span className="contact-row-val">{profile.email}</span>
                 </div>
-              </a>
+              </div>
               <a href={`tel:${profile.phone.replace(/\s/g, '')}`} className="contact-row">
                 <div className="contact-icon-wrapper">
                   <Phone size={18} />
@@ -107,6 +116,9 @@ const Contact = () => {
             <div className="contact-socials">
               <span className="contact-socials-label">Connect Elsewhere</span>
               <div className="contact-socials-row">
+                <a href="/resume/Resume.pdf" download className="social-chip resume-chip" title="Download Resume">
+                  <FileText size={16} /> Resume PDF
+                </a>
                 <a href={profile.links.github} target="_blank" rel="noopener noreferrer" className="social-chip" title="GitHub">
                   <Github size={16} /> GitHub
                 </a>
@@ -178,7 +190,10 @@ const Contact = () => {
             </button>
 
             {status === 'success' && (
-              <p className="form-msg form-msg-success">Got it — I'll get back to you soon.</p>
+              <div className="form-success-wrapper">
+                <CheckCircle2 className="success-check-icon animate-success" size={20} />
+                <p className="form-msg form-msg-success">Got it — I'll get back to you soon.</p>
+              </div>
             )}
             {status === 'error' && (
               <p className="form-msg form-msg-error">Something went wrong. Try emailing me directly.</p>
@@ -186,6 +201,13 @@ const Contact = () => {
           </form>
         </div>
       </div>
+
+      {/* Copy Email Toast Notification */}
+      {showToast && (
+        <div className="contact-toast">
+          <span>Email copied to clipboard!</span>
+        </div>
+      )}
     </section>
   );
 };

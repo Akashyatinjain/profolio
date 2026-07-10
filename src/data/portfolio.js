@@ -33,7 +33,7 @@ export const achievements = [
   {
     icon: 'users',
     label: 'IEEE Tech Lead',
-    detail: 'Mentored 100+ students',
+    detail: 'Organizing tech workshops',
   },
   {
     icon: 'gitBranch',
@@ -51,28 +51,22 @@ export const availableFor = [
 
 export const bio = {
   intro:
-    "I'm a 3rd-year IT student at St. Francis Institute of Technology. I specialize in building products from database schema to a deployed UI, including auth flows, REST APIs, and responsive frontends.",
+    "I build scalable full-stack applications with authentication systems, cloud storage, REST APIs, and PostgreSQL \u2014 from database schema to deployed UI. Currently deepening backend skills in Docker orchestration, security patterns, and system design.",
   currently:
-    "Right now I'm building DataStock (cloud storage), Finance Tracker v2, and mastering backend Docker orchestration, security protocols, and system design.",
+    "Currently shipping DataStock (cloud storage with OAuth + OTP) and Finance Tracker v2, while exploring Docker containers, microservices, and API performance optimization.",
   interests: ['Full-Stack Dev', 'Backend Engineering', 'DSA & Algorithms'],
 };
 
 export const skills = [
   {
-    label: 'Languages',
-    items: ['Java', 'JavaScript', 'SQL', 'HTML5/CSS3'],
+    label: 'Primary Stack',
+    primary: true,
+    items: ['React', 'Node.js', 'Express.js', 'PostgreSQL', 'Prisma ORM', 'Docker', 'JWT'],
   },
   {
-    label: 'Frontend',
-    items: ['React', 'Vite', 'Tailwind CSS'],
-  },
-  {
-    label: 'Backend & DB',
-    items: ['Node.js', 'Express.js', 'PostgreSQL', 'Prisma ORM'],
-  },
-  {
-    label: 'Auth & Cloud',
-    items: ['JWT', 'Google OAuth', 'Docker', 'Vercel/Render'],
+    label: 'Also Experienced',
+    primary: false,
+    items: ['Java', 'JavaScript', 'SQL', 'Vite', 'Tailwind CSS', 'Google OAuth', 'Vercel/Render', 'HTML5/CSS3'],
   },
 ];
 
@@ -98,8 +92,8 @@ export const experience = [
   {
     role: 'IEEE Technical Committee Lead',
     organization: 'SFIT Student Branch',
-    period: '2025 - Present',
-    description: 'Organized and mentored 100+ students in web development bootcamps, workshops, and hackathons.',
+    period: '2026 - Present',
+    description: 'Responsible for leading technical workshops, planning bootcamps, and organizing project hackathons to mentor students in full-stack development.',
     tags: ['Leadership', 'Mentoring', 'Event Management']
   },
   {
@@ -146,17 +140,37 @@ export const growthTimeline = [
   }
 ];
 
-export const testimonials = [
+export const technicalHighlights = [
   {
-    quote: "Akash is exceptionally skilled at turning complex requirements into structured database schemas and clean React code. His drive to master full-stack applications is inspiring.",
-    author: "IEEE SFIT Technical Chair",
-    role: "Colleague & Mentor"
+    label: 'Authentication Systems',
+    detail: 'JWT + OAuth + OTP',
+    icon: 'shield',
   },
   {
-    quote: "Akash was a standout teammate during our Hackathon sprint. His capability to deliver fully functional authentication systems and API routing in hours was crucial to our win.",
-    author: "Hackathon Teammate",
-    role: "IT Student at SFIT"
-  }
+    label: 'REST APIs',
+    detail: '25+ endpoints built',
+    icon: 'server',
+  },
+  {
+    label: 'Databases',
+    detail: 'PostgreSQL + Prisma ORM + Neon + MongoDB',
+    icon: 'database',
+  },
+  {
+    label: 'Deployment',
+    detail: 'Docker + Render + Vercel',
+    icon: 'cloud',
+  },
+  {
+    label: 'Security',
+    detail: 'Helmet, Rate Limiting, Input Validation',
+    icon: 'lock',
+  },
+  {
+    label: 'Performance',
+    detail: 'Lazy Loading, Code Splitting, Caching',
+    icon: 'zap',
+  },
 ];
 
 export const certifications = [
@@ -169,10 +183,7 @@ export const certifications = [
     name: 'The Complete Full-Stack Web Development Bootcamp',
     issuer: 'Udemy',
   },
-  {
-    name: 'Participation Certificate — Frontend Frontier',
-    issuer: 'Development Workshop',
-  },
+
 ];
 
 export const projects = [
@@ -186,9 +197,9 @@ export const projects = [
     description:
       'Google Drive-inspired cloud storage with secure authentication, file/folder organization, starred files, and real-time cloud storage tracking.',
     highlights: [
-      'Built secure Google OAuth & Email OTP sign-ins.',
-      'Implemented file uploads via Cloudinary API hooks.',
-      'Designed real-time interactive user storage usage charts.'
+      '3 auth methods: JWT + Google OAuth + Email OTP.',
+      'Uploads up to 100 MB per file via Cloudinary API.',
+      '6 interactive storage analytics charts.'
     ],
     challenges: 'Handling concurrent file uploads with progress tracking and implementing secure OTP verification flow.',
     tech: ['React', 'Node.js', 'Express', 'PostgreSQL', 'Prisma', 'Cloudinary', 'JWT'],
@@ -207,9 +218,9 @@ export const projects = [
     description:
       'Automated personal finance tracker with custom monthly budget limits, interactive analytics, and transactional trend summaries.',
     highlights: [
-      'Built budget thresholds triggers & alert systems.',
-      'Engineered CSV transactions imports parsing engine.',
-      'Secured backend endpoints with custom JWT layers.'
+      'Custom budget threshold alerts across 5+ categories.',
+      'CSV import engine parsing 3 Indian bank formats.',
+      'Secured 15+ API endpoints with custom JWT layers.'
     ],
     challenges: 'Parsing varied CSV formats from different banks and building real-time budget threshold alerts.',
     tech: ['React', 'Node.js', 'Express', 'PostgreSQL', 'Prisma'],
