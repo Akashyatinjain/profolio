@@ -95,7 +95,7 @@ const getTufCalendarData = () => {
 };
 
 const ProblemSolving = () => {
-  const [activeTab, setActiveTab] = useState('leetcode');
+  const [activeTab, setActiveTab] = useState('tuf');
   const [stats, setStats] = useState(() => {
     try {
       const cached = localStorage.getItem('portfolio_leetcode_stats');
@@ -157,14 +157,14 @@ const ProblemSolving = () => {
             <h2 className="section-title">Problem Solving & Code Activity</h2>
             <div className="dsa-profile-tabs">
               <button 
-                className={`dsa-tab-btn ${activeTab === 'leetcode' ? 'active' : ''}`}
+                className={`dsa-tab-btn leetcode-tab-btn ${activeTab === 'leetcode' ? 'active' : ''}`}
                 onClick={() => setActiveTab('leetcode')}
               >
                 <Leetcode size={16} />
                 <span>LeetCode</span>
               </button>
               <button 
-                className={`dsa-tab-btn ${activeTab === 'tuf' ? 'active' : ''}`}
+                className={`dsa-tab-btn tuf-tab-btn ${activeTab === 'tuf' ? 'active' : ''}`}
                 onClick={() => setActiveTab('tuf')}
               >
                 <TUF size={16} />
@@ -199,7 +199,7 @@ const ProblemSolving = () => {
                     ))}
                   </div>
 
-                  <a href={profile.links.leetcode} target="_blank" rel="noopener noreferrer" className="btn btn-outline leetcode-btn">
+                  <a href={profile.links.leetcode} target="_blank" rel="noopener noreferrer" className="btn btn-primary leetcode-btn leetcode-btn-highlighted">
                     <Leetcode size={16} />
                     View my LeetCode
                     <ArrowUpRight size={14} />
@@ -348,7 +348,7 @@ const ProblemSolving = () => {
                     <p className="leetcode-text">
                       Following the structured DSA path of takeuforward (TUF). Doing these challenges strengthens my core fundamentals in complexity scaling and algorithm designs.
                     </p>
-                    <a href={tufStats.profileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline leetcode-btn tuf-brand-btn">
+                    <a href={tufStats.profileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary leetcode-btn tuf-brand-btn-highlighted">
                       <TUF size={16} />
                       View Striver Profile
                       <ArrowUpRight size={14} />

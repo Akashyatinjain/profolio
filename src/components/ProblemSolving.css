@@ -254,10 +254,22 @@
 }
 
 .dsa-tab-btn.active {
-  color: var(--text);
-  background: var(--bg-card);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border: 1px solid var(--border);
+}
+
+.dsa-tab-btn.active.leetcode-tab-btn {
+  color: #ffffff;
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.dsa-tab-btn.active.tuf-tab-btn {
+  color: #ffffff;
+  background: #FF5E13;
+  border-color: #FF5E13;
+  box-shadow: 0 4px 12px rgba(255, 94, 19, 0.3);
 }
 
 /* Striver TUF Brand Classes */
@@ -665,5 +677,35 @@
   font-weight: 800;
   font-size: 1rem;
 }
+
+/* Highlighted brand buttons */
+.tuf-brand-btn-highlighted {
+  background: #FF5E13 !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(255, 94, 19, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+.tuf-brand-btn-highlighted:hover {
+  background: #ff7530 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(255, 94, 19, 0.45) !important;
+}
+
+.leetcode-btn-highlighted {
+  background: var(--accent) !important;
+  color: var(--accent-text) !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.18) !important;
+  transition: all 0.2s ease !important;
+}
+
+.leetcode-btn-highlighted:hover {
+  background: var(--accent-hover) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.28) !important;
+}
+
 
 
