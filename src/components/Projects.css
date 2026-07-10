@@ -497,3 +497,126 @@
     padding: 1.5rem;
   }
 }
+
+/* Mini Projects Section */
+.mini-projects-toggle {
+  display: flex;
+  justify-content: center;
+  margin-top: 3.5rem;
+}
+
+.mini-projects-toggle .btn {
+  font-size: 0.95rem;
+  padding: 0.9rem 2.5rem;
+  border-radius: 12px;
+  gap: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mini-projects-toggle .btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: shine-sweep 4s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes shine-sweep {
+  0% {
+    left: -150%;
+  }
+  50% {
+    left: 150%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+.mini-projects-toggle .btn-outline {
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  background: var(--accent-pale);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.12), 0 0 0 1px rgba(37, 99, 235, 0.05);
+}
+
+.mini-projects-toggle .btn-outline:hover {
+  border-color: var(--accent-hover);
+  color: var(--accent-hover);
+  background: var(--accent-pale);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2), 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.mini-projects-toggle .btn-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  color: var(--accent-text);
+  border: none;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25), 0 0 0 1px rgba(37, 99, 235, 0.1);
+}
+
+.mini-projects-toggle .btn-primary:hover {
+  background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent-light) 100%);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35), 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.mini-projects-container {
+  margin-top: 3.5rem;
+  padding-top: 3.5rem;
+  border-top: 1px dashed var(--border);
+  animation: fadeInGrid 0.5s ease forwards;
+}
+
+.mini-projects-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.mini-projects-header h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+.mini-projects-header p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+.toggle-arrow {
+  transition: transform 0.3s ease;
+}
+
+.toggle-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+@keyframes fadeInGrid {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

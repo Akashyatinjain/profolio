@@ -253,6 +253,50 @@ export const projects = [
   },
 ];
 
+export const miniProjects = [
+  {
+    title: 'World Tracker',
+    category: 'frontend',
+    date: '2025',
+    description: 'An interactive world explorer application using the REST Countries API to search, filter, and fetch details of countries globally.',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    liveUrl: 'https://world-tracker-dusky.vercel.app/',
+    githubUrl: 'https://github.com/Akashyatinjain/World-tracker-',
+    accent: '#3B82F6',
+  },
+  {
+    title: 'World Capital Quiz',
+    category: 'frontend',
+    date: '2025',
+    description: 'An interactive geographic quiz game testing players on world capitals with score tracking and card animations.',
+    tech: ['React', 'CSS Modules', 'JavaScript'],
+    liveUrl: 'https://world-capital-quiz-vgnj.vercel.app/',
+    githubUrl: 'https://github.com/Akashyatinjain/world-capital-quiz',
+    accent: '#10B981',
+  },
+  {
+    title: 'C++ Website Redesign',
+    category: 'frontend',
+    date: '2025',
+    description: 'A modern, clean, and responsive redesign of the C++ reference website, optimizing layout, navigation, and code readability.',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    liveUrl: 'https://redesign-off-cplus-plus.vercel.app/',
+    githubUrl: 'https://github.com/Akashyatinjain/Redesign-off-Cplus-plus-',
+    accent: '#EF4444',
+  },
+  {
+    title: 'Drum Kit',
+    category: 'frontend',
+    date: '2025',
+    description: 'An interactive virtual drum kit web application that plays corresponding sound samples on key presses or clicks with active pad animations.',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    liveUrl: 'https://akashyatinjain.github.io/Drums/',
+    githubUrl: 'https://github.com/Akashyatinjain/Drums',
+    accent: '#EC4899',
+  },
+];
+
+
 export const dsaTopics = [
   'Arrays & Hashing',
   'Two Pointers',

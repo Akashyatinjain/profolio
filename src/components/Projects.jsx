@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ExternalLink, ArrowUpRight, Play, X, ShieldAlert } from 'lucide-react';
+import { ExternalLink, ArrowUpRight, Play, X, ShieldAlert, ChevronDown } from 'lucide-react';
 import { Github } from './Icons';
-import { projects } from '../data/portfolio';
+import { projects, miniProjects } from '../data/portfolio';
 import './Projects.css';
 
 const filters = [
@@ -14,6 +14,7 @@ const filters = [
 const Projects = () => {
   const [active, setActive] = useState('all');
   const [activeVideo, setActiveVideo] = useState(null);
+  const [showMiniProjects, setShowMiniProjects] = useState(false);
 
   const featured = projects.filter((p) => p.featured);
   const filtered =
@@ -33,10 +34,19 @@ const Projects = () => {
         return '/projects/keeper.png';
       case 'Simon Game':
         return '/projects/simon.png';
+      case 'World Tracker':
+        return '/projects/world-tracker.png';
+      case 'World Capital Quiz':
+        return '/projects/capital-quiz.png';
+      case 'C++ Website Redesign':
+        return '/projects/cpp-redesign.png';
+      case 'Drum Kit':
+        return '/projects/drums.png';
       default:
         return '/projects/datastock.png';
     }
   };
+
 
   return (
     <section id="projects" className="projects">
@@ -200,7 +210,70 @@ const Projects = () => {
             </article>
           ))}
         </div>
+
+        {/* Mini Projects Section Toggle */}
+        <div className="mini-projects-toggle reveal">
+          <button
+            type="button"
+            className={`btn ${showMiniProjects ? 'btn-primary' : 'btn-outline'}`}
+            onClick={() => setShowMiniProjects(!showMiniProjects)}
+          >
+            <span>{showMiniProjects ? 'Hide Mini Projects' : 'Mini Projects'}</span>
+            <ChevronDown size={16} className={`toggle-arrow ${showMiniProjects ? 'rotated' : ''}`} />
+          </button>
+        </div>
+
+        {/* Collapsible Mini Projects Grid */}
+        {showMiniProjects && (
+          <div className="mini-projects-container">
+            <div className="mini-projects-header">
+              <h3>Frontend Mini Projects</h3>
+              <p>
+                A collection of client-side projects showcasing interactive UI features, api integrations, and clean codebases.
+              </p>
+            </div>
+            <div className="projects-grid">
+              {miniProjects.map((project, i) => (
+                <article
+                  key={project.title}
+                  className="project-card card"
+                  style={{ animationDelay: `${i * 0.08}s` }}
+                >
+                  <div className="grid-project-image-wrapper">
+                    <img
+                      src={getProjectImage(project.title)}
+                      alt={`${project.title} Screenshot`}
+                      className="grid-project-screenshot"
+                    />
+                  </div>
+                  <div className="project-card-content">
+                    <div className="project-top">
+                      <span className="project-dot" style={{ background: project.accent }} />
+                      {project.date && <span className="project-date">{project.date}</span>}
+                    </div>
+                    <h3 className="project-title">{project.title}</h3>
+                    <p className="project-desc">{project.description}</p>
+                    <div className="project-tags">
+                      {project.tech.map((t) => (
+                        <span key={t} className="tag">{t}</span>
+                      ))}
+                    </div>
+                    <div className="project-links">
+                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="project-link">
+                        Demo <ExternalLink size={12} />
+                      </a>
+                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="project-link">
+                        Code <Github size={12} />
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
+
 
       {/* Video Modal Overlay */}
       {activeVideo && (
