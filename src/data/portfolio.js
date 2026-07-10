@@ -2,7 +2,7 @@ export const profile = {
   name: 'Akash Yatin Jain',
   shortName: 'Akash Jain',
   title: 'Full-Stack Developer',
-  tagline: 'Full-Stack Developer & Backend Engineer | React • Node • PostgreSQL • Docker',
+  tagline: 'Backend-Focused Full Stack Developer | React • Node • PostgreSQL • Docker',
   avatar: '/avatar.png',
   location: 'Mumbai',
   email: 'aj0881871@gmail.com',
@@ -20,8 +20,34 @@ export const profile = {
 export const stats = {
   cgpa: '8.50',
   projects: '7+',
-  leetcodeDefault: '60+',
+  problemsSolved: '180+',
+  studentsMentored: '100+',
 };
+
+export const achievements = [
+  {
+    icon: 'trophy',
+    label: 'Hackathon Runner-up',
+    detail: 'Colloquium SFIT 2026',
+  },
+  {
+    icon: 'users',
+    label: 'IEEE Tech Lead',
+    detail: 'Mentored 100+ students',
+  },
+  {
+    icon: 'gitBranch',
+    label: 'Open Source',
+    detail: 'Active GitHub Contributor',
+  },
+];
+
+export const availableFor = [
+  'Internship',
+  'Full-Time',
+  'Remote',
+  'Open Source',
+];
 
 export const bio = {
   intro:
@@ -155,6 +181,8 @@ export const projects = [
     category: 'fullstack',
     featured: true,
     date: 'Mar 2026',
+    problem: 'Users needed a secure, self-hosted alternative to Google Drive with granular access controls and storage analytics.',
+    architecture: 'React SPA → Express REST API → PostgreSQL (Prisma ORM) → Cloudinary CDN',
     description:
       'Google Drive-inspired cloud storage with secure authentication, file/folder organization, starred files, and real-time cloud storage tracking.',
     highlights: [
@@ -162,6 +190,7 @@ export const projects = [
       'Implemented file uploads via Cloudinary API hooks.',
       'Designed real-time interactive user storage usage charts.'
     ],
+    challenges: 'Handling concurrent file uploads with progress tracking and implementing secure OTP verification flow.',
     tech: ['React', 'Node.js', 'Express', 'PostgreSQL', 'Prisma', 'Cloudinary', 'JWT'],
     liveUrl: 'https://data-stock.vercel.app/',
     githubUrl: 'https://github.com/Akashyatinjain/DataStock',
@@ -173,6 +202,8 @@ export const projects = [
     category: 'fullstack',
     featured: true,
     date: 'Oct 2025',
+    problem: 'Personal budgeting apps lacked custom threshold alerts and CSV import support for Indian bank statements.',
+    architecture: 'React Dashboard → Express API → PostgreSQL (Prisma) → JWT Auth Layer',
     description:
       'Automated personal finance tracker with custom monthly budget limits, interactive analytics, and transactional trend summaries.',
     highlights: [
@@ -180,6 +211,7 @@ export const projects = [
       'Engineered CSV transactions imports parsing engine.',
       'Secured backend endpoints with custom JWT layers.'
     ],
+    challenges: 'Parsing varied CSV formats from different banks and building real-time budget threshold alerts.',
     tech: ['React', 'Node.js', 'Express', 'PostgreSQL', 'Prisma'],
     liveUrl: 'https://budget-tracker-no3.vercel.app/',
     githubUrl: 'https://github.com/Akashyatinjain/Budget-tracker-no3',

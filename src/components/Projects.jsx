@@ -77,13 +77,31 @@ const Projects = () => {
                     <span className="featured-live">Featured Project</span>
                   </div>
                   <h3 className="featured-title">{project.title}</h3>
+                  {project.problem && (
+                    <div className="featured-problem">
+                      <span className="featured-problem-label">Problem</span>
+                      <p className="featured-problem-text">{project.problem}</p>
+                    </div>
+                  )}
                   <p className="featured-desc">{project.description}</p>
+                  {project.architecture && (
+                    <div className="featured-architecture">
+                      <span className="featured-arch-label">Architecture</span>
+                      <code className="featured-arch-code">{project.architecture}</code>
+                    </div>
+                  )}
                   {project.highlights && (
                     <ul className="featured-highlights">
                       {project.highlights.map((h) => (
                         <li key={h}>{h}</li>
                       ))}
                     </ul>
+                  )}
+                  {project.challenges && (
+                    <div className="featured-challenges">
+                      <span className="featured-challenge-label">Key Challenge</span>
+                      <p className="featured-challenge-text">{project.challenges}</p>
+                    </div>
                   )}
                   <div className="featured-tags">
                     {project.tech.map((t) => (

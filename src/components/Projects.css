@@ -141,6 +141,55 @@
   font-weight: bold;
 }
 
+/* Problem 19 — Project depth: problem, architecture, challenges */
+.featured-problem {
+  margin-bottom: 0.75rem;
+}
+
+.featured-problem-label,
+.featured-arch-label,
+.featured-challenge-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.featured-problem-text,
+.featured-challenge-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.featured-architecture {
+  margin-bottom: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.featured-arch-code {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+.featured-challenges {
+  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--accent-soft);
+}
+
 .featured-tags {
   display: flex;
   flex-wrap: wrap;
