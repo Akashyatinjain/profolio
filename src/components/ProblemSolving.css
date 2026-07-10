@@ -14,7 +14,7 @@
   background: var(--bg-card);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .leetcode-layout {
     flex-direction: row;
     align-items: center;
@@ -140,6 +140,8 @@
   justify-content: space-between;
   gap: 1.25rem;
   flex: 1;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .chart-header {
@@ -178,6 +180,8 @@
   border-radius: var(--radius);
   border: 1px solid var(--border);
   overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 .github-chart-img {
@@ -209,6 +213,17 @@
   .leetcode-layout,
   .github-chart-card {
     padding: 1.25rem;
+  }
+  .dsa-comparison-table {
+    font-size: 0.8rem;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  }
+  .dsa-comparison-table th {
+    font-size: 0.65rem;
+    padding: 0.6rem 0.35rem;
+  }
+  .dsa-comparison-table td {
+    padding: 0.7rem 0.35rem;
   }
 }
 
@@ -472,6 +487,7 @@
   padding-bottom: 0.5rem;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+  min-width: 0;
 }
 
 .tuf-heatmap-scroll::-webkit-scrollbar {
@@ -615,30 +631,50 @@
   padding: 0 !important;
   background: transparent !important;
   border: none !important;
+  width: 100%;
+  max-width: 100%;
 }
 
 .dsa-comparison-table {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
   width: 100%;
-  border-collapse: collapse;
   font-family: var(--font-display);
   font-size: 0.9rem;
 }
 
+.dsa-comparison-table thead,
+.dsa-comparison-table tbody,
+.dsa-comparison-table tr {
+  display: contents;
+}
+
 .dsa-comparison-table th {
+  display: flex;
+  align-items: center;
   text-align: left;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.75rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--text-secondary);
   text-transform: uppercase;
   border-bottom: 1px solid var(--border);
+  font-weight: 600;
 }
 
 .dsa-comparison-table td {
-  padding: 0.85rem 1rem;
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 0.75rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   color: var(--text);
   font-weight: 500;
+}
+
+.dsa-comparison-table th:not(:first-child),
+.dsa-comparison-table td:not(:first-child) {
+  justify-content: flex-end;
+  text-align: right;
 }
 
 .dsa-comparison-table tr:last-child td {
