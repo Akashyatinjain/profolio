@@ -59,3 +59,24 @@ export const Leetcode = ({ size = 20, ...props }) => (
     <path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm1 14.5v-1.25l2-1.75h-2v-1.5h3.5v1.25l-2 1.75h2v1.5H13zm-5.5-1.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0zm4.5-4h-5v-1.5h5V11z" />
   </svg>
 );
+
+export const TUF = ({ size = 20, ...props }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M4 15h16" />
+    <path d="M4 9h16" />
+    <path d="M14 4l5 5-5 5" />
+    <path d="M8 10l5 5-5 5" />
+  </svg>
+);
+

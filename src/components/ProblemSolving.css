@@ -129,6 +129,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  height: 100%;
 }
 
 .github-chart-card {
@@ -138,6 +139,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 1.25rem;
+  flex: 1;
 }
 
 .chart-header {
@@ -209,3 +211,459 @@
     padding: 1.25rem;
   }
 }
+
+/* Header Row & Profile Tabs */
+.section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.dsa-profile-tabs {
+  display: flex;
+  align-items: center;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  padding: 0.25rem;
+  border-radius: var(--radius-sm, 8px);
+  gap: 0.25rem;
+}
+
+.dsa-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: calc(var(--radius-sm, 8px) - 2px);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dsa-tab-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.dsa-tab-btn.active {
+  color: var(--text);
+  background: var(--bg-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border);
+}
+
+/* Striver TUF Brand Classes */
+.tuf-brand-accent-color {
+  color: #FF5E13 !important;
+}
+
+.tuf-brand-btn {
+  border-color: rgba(255, 94, 19, 0.3) !important;
+  color: var(--text) !important;
+}
+
+.tuf-brand-btn:hover {
+  background: rgba(255, 94, 19, 0.1) !important;
+  border-color: #FF5E13 !important;
+}
+
+/* TUF layout customization */
+.tuf-layout {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 1.5rem !important;
+}
+
+.tuf-info-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.tuf-sheet-progress-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tuf-sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tuf-title-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tuf-sheet-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.tuf-sheet-numbers {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.tuf-progress-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.tuf-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FF5E13, #FF8E53);
+  border-radius: 4px;
+  transition: width 1s ease-out;
+}
+
+.tuf-progress-bar-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  margin-top: -0.25rem;
+}
+
+.tuf-progress-bar-pct {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: #FF5E13;
+}
+
+.tuf-progress-bar-desc {
+  color: var(--text-muted);
+}
+
+.tuf-sheet-categories {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+.tuf-category-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tuf-cat-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.tuf-cat-count {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.tuf-profile-meta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* TUF dials alignment */
+.tuf-dials {
+  width: 100% !important;
+  flex-direction: column;
+  align-items: stretch !important;
+  gap: 1rem !important;
+}
+
+.tuf-dials-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+}
+
+.tuf-dials-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.tuf-dials-solved-text {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: #FF5E13;
+  font-weight: 700;
+}
+
+.tuf-dials-list {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+/* TUF Calendar Heatmap Layout */
+.tuf-chart-container {
+  padding: 1.25rem 1rem !important;
+}
+
+.tuf-heatmap-wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.tuf-heatmap-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  padding: 1.2rem 0.25rem 0.2rem 0;
+  height: 96px;
+}
+
+.tuf-heatmap-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.tuf-heatmap-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tuf-heatmap-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.tuf-heatmap-months {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 14px;
+  height: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.tuf-month-label-col {
+  position: relative;
+  width: 14px;
+}
+
+.tuf-month-name {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.tuf-heatmap-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 14px;
+  gap: 3px;
+  height: 96px;
+}
+
+.tuf-heatmap-week-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tuf-heatmap-cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.tuf-heatmap-cell:hover {
+  transform: scale(1.3);
+  z-index: 10;
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+}
+
+.tuf-heatmap-cell.level-0 {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.tuf-heatmap-cell.level-1 {
+  background-color: #1b5e20;
+}
+
+.tuf-heatmap-cell.level-2 {
+  background-color: #2e7d32;
+}
+
+.tuf-heatmap-cell.level-3 {
+  background-color: #00e676; /* Vibrant TUF green */
+}
+
+.tuf-heatmap-legend-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.tuf-activity-details {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.tuf-activity-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.tuf-stat-num {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.tuf-stat-lbl {
+  color: var(--text-muted);
+}
+
+.tuf-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.legend-label {
+  color: var(--text-muted);
+}
+
+.legend-box {
+  cursor: default;
+}
+
+.legend-box:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .tuf-sheet-categories {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* DSA Comparison Table */
+.stats-table-container {
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.dsa-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+}
+
+.dsa-comparison-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+
+.dsa-comparison-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.dsa-comparison-table tr:last-child td {
+  border-bottom: none;
+}
+
+.dsa-comparison-table td.diff-easy {
+  color: var(--lc-easy);
+  font-weight: 600;
+}
+
+.dsa-comparison-table td.diff-medium {
+  color: var(--lc-medium);
+  font-weight: 600;
+}
+
+.dsa-comparison-table td.diff-hard {
+  color: var(--lc-hard);
+  font-weight: 600;
+}
+
+.dsa-comparison-table td.combined-val {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.dsa-comparison-table tr.total-row td {
+  font-weight: 700;
+  border-top: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dsa-comparison-table td.combined-total-val {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+

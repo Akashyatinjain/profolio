@@ -229,3 +229,36 @@ export const dsaTopics = [
   'Trees & Graphs',
   'Dynamic Programming',
 ];
+
+export const tufStats = {
+  username: 'Akashyatinjain',
+  profileUrl: 'https://takeuforward.org/profile/Akashyatinjain',
+  a2zSheet: {
+    title: "Striver's A2Z Sheet",
+    solved: 121,
+    total: 474,
+    pct: 26,
+    categories: [
+      { label: 'Easy', count: 79, total: 152, color: 'var(--lc-easy)' },
+      { label: 'Medium', count: 35, total: 186, color: 'var(--lc-medium)' },
+      { label: 'Hard', count: 7, total: 136, color: 'var(--lc-hard)' },
+    ]
+  },
+  tufProfile: {
+    title: 'TUF Platform Progress',
+    solved: 113,
+    total: 1121,
+    pct: 10,
+    categories: [
+      { label: 'Easy', count: 78, total: 374, color: 'var(--lc-easy)', pct: 21 },
+      { label: 'Medium', count: 28, total: 477, color: 'var(--lc-medium)', pct: 6 },
+      { label: 'Hard', count: 7, total: 253, color: 'var(--lc-hard)', pct: 3 },
+    ],
+    activity: {
+      totalSubmissions: 95,
+      activeDays: 41,
+      maxStreak: 6
+    }
+  }
+};
+
