@@ -75,7 +75,7 @@ export const education = [
     school: 'St Francis Institute of Technology',
     degree: 'B.Tech in Information Technology',
     period: '2023 – Present',
-    note: 'Expected graduation May 2026 · CGPA 8.50',
+    note: 'May 2026 · CGPA 8.50',
     detail:
       'Core engineering, database management systems, and algorithms. Actively building full-stack projects alongside coursework.',
   },
