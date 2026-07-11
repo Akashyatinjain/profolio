@@ -6,7 +6,8 @@ import './Header.css';
 const navItems = [
   { label: 'About', id: 'about' },
   { label: 'Work', id: 'projects' },
-  { label: 'DSA & Stats', id: 'leetcode' },
+  { label: 'Experience', id: 'experience' },
+  { label: 'DSA', id: 'leetcode' },
   { label: 'Contact', id: 'contact' },
 ];
 

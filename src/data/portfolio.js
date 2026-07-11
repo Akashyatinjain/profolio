@@ -8,7 +8,7 @@ export const profile = {
   email: 'aj0881871@gmail.com',
   studentEmail: 'aj0881871@student.sfit.ac.in',
   phone: '+91 7710926977',
-  available: 'Available for Internships · Graduating May 2028',
+  available: 'Open to internships · graduating May 2028',
   links: {
     github: 'https://github.com/Akashyatinjain',
     linkedin: 'https://www.linkedin.com/in/akash-yatin-jain',
@@ -51,10 +51,10 @@ export const availableFor = [
 
 export const bio = {
   intro:
-    "I build scalable full-stack applications with authentication systems, cloud storage, REST APIs, and PostgreSQL \u2014 from database schema to deployed UI. Currently deepening backend skills in Docker orchestration, security patterns, and system design.",
+    "I'm a 3rd-year IT student at SFIT who builds full-stack web apps — auth flows, REST APIs, PostgreSQL schemas, and React frontends deployed on Vercel.",
   currently:
-    "Currently shipping DataStock (cloud storage with OAuth + OTP) and Finance Tracker v2, while exploring Docker containers, microservices, and API performance optimization.",
-  interests: ['Full-Stack Dev', 'Backend Engineering', 'DSA & Algorithms'],
+    "Shipping DataStock (cloud storage) and Finance Tracker v2. Deepening Docker, system design, and backend security patterns alongside coursework.",
+  interests: ['Full-Stack Development', 'Backend Engineering', 'DSA & Algorithms'],
 };
 
 export const skills = [
@@ -75,7 +75,7 @@ export const education = [
     school: 'St Francis Institute of Technology',
     degree: 'B.Tech in Information Technology',
     period: '2023 – Present',
-    note: 'Expected graduation May 2028 · CGPA 8.50',
+    note: 'Expected graduation May 2026 · CGPA 8.50',
     detail:
       'Core engineering, database management systems, and algorithms. Actively building full-stack projects alongside coursework.',
   },
@@ -104,11 +104,11 @@ export const experience = [
     tags: ['Full-stack React', 'SIH Hackathon', 'Ayurveda platform']
   },
   {
-    role: 'Open-Source Contributor',
-    organization: 'GitHub Community',
+    role: 'Open-Source & Personal Projects',
+    organization: 'GitHub',
     period: 'Ongoing',
-    description: 'Active contributor to Web Development utilities, sharing templates, and code scaffolding boilerplate.',
-    tags: ['Git & GitHub', 'Boilerplate Dev', 'Community Help']
+    description: '34 public repos — full-stack apps, frontend mini-projects, and DSA practice. Pinned: DataStock, Budget Tracker, SIH.',
+    tags: ['Git & GitHub', 'React', 'Node.js']
   }
 ];
 
@@ -142,34 +142,24 @@ export const growthTimeline = [
 
 export const technicalHighlights = [
   {
-    label: 'Authentication Systems',
-    detail: 'JWT + OAuth + OTP',
+    label: 'Authentication',
+    detail: 'JWT · Google OAuth · Email OTP',
     icon: 'shield',
   },
   {
     label: 'REST APIs',
-    detail: '25+ endpoints built',
+    detail: 'Express.js endpoints with validation',
     icon: 'server',
   },
   {
     label: 'Databases',
-    detail: 'PostgreSQL + Prisma ORM + Neon + MongoDB',
+    detail: 'PostgreSQL · Prisma ORM · Neon',
     icon: 'database',
   },
   {
     label: 'Deployment',
-    detail: 'Docker + Render + Vercel',
+    detail: 'Vercel · Render · Docker',
     icon: 'cloud',
-  },
-  {
-    label: 'Security',
-    detail: 'Helmet, Rate Limiting, Input Validation',
-    icon: 'lock',
-  },
-  {
-    label: 'Performance',
-    detail: 'Lazy Loading, Code Splitting, Caching',
-    icon: 'zap',
   },
 ];
 
@@ -370,16 +360,11 @@ export const tufStats = {
 };
 
 export const engineeringHighlights = [
-  '7 Production Projects',
-  '25+ REST APIs',
-  'JWT + Google OAuth + OTP',
-  'Dockerized Deployments',
-  'PostgreSQL Database Design',
-  'Rate Limiting',
-  'Helmet',
-  'Input Validation',
-  'Cloudinary Integration',
-  'Prisma ORM',
+  '7+ Deployed Projects',
+  'JWT + Google OAuth + Email OTP',
+  'PostgreSQL + Prisma ORM',
+  'Cloudinary File Uploads',
+  'Docker & Vercel Deployment',
   'GitHub CI',
 ];
 
