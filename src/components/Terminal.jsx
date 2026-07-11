@@ -24,16 +24,14 @@ const Terminal = () => {
   const [cmdHistory, setCmdHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isMinimized, setIsMinimized] = useState(false);
-  const terminalEndRef = useRef(null);
+  const historyRef = useRef(null);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    scrollToBottom();
+    if (historyRef.current) {
+      historyRef.current.scrollTop = historyRef.current.scrollHeight;
+    }
   }, [history, isMinimized]);
-
-  const scrollToBottom = () => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -223,13 +221,12 @@ const Terminal = () => {
           {/* Terminal Screen */}
           {!isMinimized && (
             <div className="terminal-screen">
-              <div className="terminal-history">
+              <div ref={historyRef} className="terminal-history">
                 {history.map((line, idx) => (
                   <div key={idx} className={`terminal-line type-${line.type}`}>
                     {line.text}
                   </div>
                 ))}
-                <div ref={terminalEndRef} />
               </div>
 
               {/* Input Row */}
