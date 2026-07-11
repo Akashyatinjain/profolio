@@ -1,0 +1,242 @@
+.terminal-section {
+  padding: 5rem 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.terminal-window {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-mono);
+  border: 1px solid var(--border-strong);
+  background: #0f172a;
+}
+
+[data-theme="matrix"] .terminal-window {
+  border-color: #00ff41;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+  background: #000000;
+}
+
+[data-theme="light"] .terminal-window {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+/* Title Bar */
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+[data-theme="matrix"] .terminal-bar {
+  background: #050a05;
+  border-bottom: 1px solid #00ff41;
+  color: #00ff41;
+}
+
+[data-theme="light"] .terminal-bar {
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  color: #64748b;
+}
+
+.terminal-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.terminal-bar-icon {
+  color: var(--accent-light);
+}
+
+[data-theme="matrix"] .terminal-bar-icon {
+  color: #00ff41;
+}
+
+.terminal-title {
+  font-weight: 600;
+}
+
+.terminal-actions {
+  display: flex;
+  align-items: center;
+}
+
+.terminal-btn-action {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.terminal-btn-action:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+[data-theme="matrix"] .terminal-btn-action:hover {
+  background: rgba(0, 255, 65, 0.15);
+  color: #00ff41;
+}
+
+/* Terminal Screen */
+.terminal-screen {
+  padding: 1.5rem;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  color: #e2e8f0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+[data-theme="matrix"] .terminal-screen {
+  color: #00ff41;
+}
+
+.terminal-history {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Custom Scrollbar for terminal history */
+.terminal-history::-webkit-scrollbar {
+  width: 6px;
+}
+.terminal-history::-webkit-scrollbar-track {
+  background: transparent;
+}
+.terminal-history::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+.terminal-history::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="matrix"] .terminal-history::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 65, 0.25);
+}
+
+.terminal-line {
+  white-space: pre-wrap;
+  margin-bottom: 0.5rem;
+}
+
+.type-input {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+[data-theme="matrix"] .type-input {
+  color: #00ff41;
+}
+
+.type-system {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+[data-theme="matrix"] .type-system {
+  color: #00aa2a;
+}
+
+.type-output {
+  color: #cbd5e1;
+}
+
+[data-theme="matrix"] .type-output {
+  color: #00ff41;
+}
+
+.type-error {
+  color: #f87171;
+}
+
+[data-theme="matrix"] .type-error {
+  color: #ff3333;
+}
+
+.type-success {
+  color: #4ade80;
+}
+
+[data-theme="matrix"] .type-success {
+  color: #33ff66;
+}
+
+/* Input Row */
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 0.75rem;
+}
+
+[data-theme="matrix"] .terminal-input-row {
+  border-top-color: rgba(0, 255, 65, 0.15);
+}
+
+.terminal-prompt {
+  color: #38bdf8;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+[data-theme="matrix"] .terminal-prompt {
+  color: #00ff41;
+}
+
+.terminal-input-field {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  caret-color: #38bdf8;
+}
+
+.terminal-input-field::placeholder {
+  color: #475569;
+}
+
+[data-theme="matrix"] .terminal-input-field {
+  color: #00ff41;
+  caret-color: #00ff41;
+}
+
+[data-theme="matrix"] .terminal-input-field::placeholder {
+  color: #00330a;
+}
+
+@media (max-width: 768px) {
+  .terminal-screen {
+    height: 320px;
+    font-size: 0.8rem;
+  }
+}

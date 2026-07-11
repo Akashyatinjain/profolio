@@ -35,7 +35,7 @@ const Hero = () => {
       <div className="container">
         <div className="hero-grid">
           <div className="hero-main">
-            <div className="status-pill reveal">Open to internships · graduating May 2027</div>
+            <div className="status-pill reveal">Open to internships · graduating May 2028</div>
 
             <h1 className="hero-name reveal reveal-delay-1">
               Hi, I'm <span className="highlight-text">{profile.shortName}</span>

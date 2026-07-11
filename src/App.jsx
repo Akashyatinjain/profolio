@@ -6,6 +6,7 @@ import About from './components/About';
 import Projects from './components/Projects';
 import ExtraSections from './components/ExtraSections';
 import ProblemSolving from './components/ProblemSolving';
+import Terminal from './components/Terminal';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import './App.css';
@@ -69,6 +70,7 @@ function App() {
         <Projects />
         <ExtraSections />
         <ProblemSolving />
+        <Terminal />
         <Contact />
       </main>
       <Footer />

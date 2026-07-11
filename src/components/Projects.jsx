@@ -22,6 +22,7 @@ const Projects = () => {
     active === 'all' ? projects.filter((p) => !p.featured) : projects.filter((p) => p.category === active && !p.featured);
 
   const showFeatured = active === 'all';
+  const filteredMini = active === 'all' ? miniProjects : miniProjects.filter((p) => p.category === active);
 
   const toggleProjectExpand = (title) => {
     setExpandedProjects((prev) => ({
@@ -275,19 +276,21 @@ const Projects = () => {
         </div>
 
         {/* Mini Projects Section Toggle */}
-        <div className="mini-projects-toggle reveal">
-          <button
-            type="button"
-            className={`btn ${showMiniProjects ? 'btn-primary' : 'btn-outline'}`}
-            onClick={() => setShowMiniProjects(!showMiniProjects)}
-          >
-            <span>{showMiniProjects ? 'Hide Mini Projects' : 'Mini Projects'}</span>
-            <ChevronDown size={16} className={`toggle-arrow ${showMiniProjects ? 'rotated' : ''}`} />
-          </button>
-        </div>
+        {filteredMini.length > 0 && (
+          <div className="mini-projects-toggle reveal">
+            <button
+              type="button"
+              className={`btn ${showMiniProjects ? 'btn-primary' : 'btn-outline'}`}
+              onClick={() => setShowMiniProjects(!showMiniProjects)}
+            >
+              <span>{showMiniProjects ? 'Hide Mini Projects' : 'Mini Projects'}</span>
+              <ChevronDown size={16} className={`toggle-arrow ${showMiniProjects ? 'rotated' : ''}`} />
+            </button>
+          </div>
+        )}
 
         {/* Collapsible Mini Projects Grid */}
-        {showMiniProjects && (
+        {showMiniProjects && filteredMini.length > 0 && (
           <div className="mini-projects-container">
             <div className="mini-projects-header">
               <h3>Frontend Mini Projects</h3>
@@ -296,7 +299,7 @@ const Projects = () => {
               </p>
             </div>
             <div className="projects-grid">
-              {miniProjects.map((project, i) => (
+              {filteredMini.map((project, i) => (
                 <article
                   key={project.title}
                   className="project-card card"

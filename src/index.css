@@ -1,7 +1,7 @@
-/* src/index.css — Premium Blue-White design system */
+/* src/index.css — Multi-theme design system */
 
-:root {
-  /* Colors — user palette */
+:root, [data-theme="light"] {
+  /* Colors — light palette */
   --bg: #FFFFFF;
   --bg-raised: #F9FAFB;
   --bg-card: #FFFFFF;
@@ -44,7 +44,84 @@
   --shadow-md: 0 10px 30px rgba(37, 99, 235, 0.06);
   --shadow-lg: 0 20px 40px rgba(15, 23, 42, 0.08);
 
+  --header-bg: rgba(255, 255, 255, 0.75);
+  --header-border: rgba(226, 232, 240, 0.8);
+  --header-scrolled-bg: rgba(255, 255, 255, 0.85);
+  --header-scrolled-border: rgba(37, 99, 235, 0.15);
+
   scroll-behavior: smooth;
+}
+
+[data-theme="dark"] {
+  /* Colors — Developer Dark palette */
+  --bg: #0D1117;
+  --bg-raised: #161B22;
+  --bg-card: #1F2937;
+  --bg-hover: #21262d;
+
+  --border: #30363D;
+  --border-strong: #484F58;
+  --border-focus: #3B82F6;
+
+  --text: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #6e7681;
+  --text-light: #484f58;
+
+  --accent: #3B82F6;
+  --accent-light: #58a6ff;
+  --accent-soft: #60A5FA;
+  --accent-pale: #161b22;
+  --accent-dim: rgba(59, 130, 246, 0.1);
+  --accent-text: #FFFFFF;
+  --accent-hover: #60A5FA;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+
+  --header-bg: rgba(13, 17, 23, 0.75);
+  --header-border: rgba(48, 54, 61, 0.8);
+  --header-scrolled-bg: rgba(22, 27, 34, 0.85);
+  --header-scrolled-border: rgba(59, 130, 246, 0.25);
+}
+
+[data-theme="matrix"] {
+  /* Colors — Classic Matrix hacker palette */
+  --bg: #050505;
+  --bg-raised: #0B0B0B;
+  --bg-card: #080808;
+  --bg-hover: #1A1A1A;
+
+  --border: #1A1A1A;
+  --border-strong: #333333;
+  --border-focus: #00FF41;
+
+  --text: #E5E5E5;
+  --text-secondary: #AAAAAA;
+  --text-muted: #777777;
+  --text-light: #333333;
+
+  --accent: #00FF41;
+  --accent-light: #00C853;
+  --accent-soft: #80FF99;
+  --accent-pale: #0D0D0D;
+  --accent-dim: rgba(0, 255, 65, 0.08);
+  --accent-text: #000000;
+  --accent-hover: #00E63B;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 10px 30px rgba(0, 255, 65, 0.1);
+  --shadow-lg: 0 20px 40px rgba(0, 255, 65, 0.15);
+
+  --header-bg: rgba(5, 5, 5, 0.75);
+  --header-border: rgba(26, 26, 26, 0.8);
+  --header-scrolled-bg: rgba(11, 11, 11, 0.85);
+  --header-scrolled-border: rgba(0, 255, 65, 0.25);
+}
+
+body, header, section, .card, .btn, .tag, input, textarea, a, .browser-chrome-header, .browser-chrome-address {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
 
 * {

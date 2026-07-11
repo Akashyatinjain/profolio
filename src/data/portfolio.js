@@ -295,26 +295,6 @@ export const miniProjects = [
     githubUrl: 'https://github.com/Akashyatinjain/Drums',
     accent: '#EC4899',
   },
-  {
-    title: 'Keeper Notes',
-    category: 'frontend',
-    date: 'Aug 2025',
-    description: 'Sticky note application supporting full CRUD tasks, tag grouping, searching, and local storage retention.',
-    tech: ['React', 'JavaScript', 'CSS Modules'],
-    liveUrl: 'https://keeper-not-app.vercel.app/',
-    githubUrl: 'https://github.com/Akashyatinjain',
-    accent: '#8b5cf6',
-  },
-  {
-    title: 'Simon Game',
-    category: 'others',
-    date: '2025',
-    description: 'Retro audio-visual memory game with sequence patterns, score histories, and level-up CSS animations.',
-    tech: ['HTML', 'CSS', 'JavaScript'],
-    liveUrl: 'https://akashyatinjain.github.io/Simon-Game/',
-    githubUrl: 'https://github.com/Akashyatinjain/Simon-Game',
-    accent: '#ef4444',
-  },
 ];
 
 

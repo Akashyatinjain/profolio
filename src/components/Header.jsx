@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X, FileText } from 'lucide-react';
+import { Menu, X, FileText, Sun, Moon, Monitor } from 'lucide-react';
 import { profile } from '../data/portfolio';
 import './Header.css';
 
@@ -15,6 +15,44 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('portfolio_theme') || 'light';
+  });
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('portfolio_theme', theme);
+    window.dispatchEvent(new Event('theme-changed'));
+  }, [theme]);
+
+  useEffect(() => {
+    const handleThemeChange = () => {
+      const currentTheme = localStorage.getItem('portfolio_theme') || 'light';
+      if (currentTheme !== theme) {
+        setTheme(currentTheme);
+      }
+    };
+    window.addEventListener('theme-changed', handleThemeChange);
+    return () => window.removeEventListener('theme-changed', handleThemeChange);
+  }, [theme]);
+
+  useEffect(() => {
+    if (!themeDropdownOpen) return;
+    const handleOutsideClick = (e) => {
+      if (!e.target.closest('.theme-selector-container')) {
+        setThemeDropdownOpen(false);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, [themeDropdownOpen]);
+
+  const getThemeIcon = () => {
+    if (theme === 'light') return <Sun size={15} />;
+    if (theme === 'dark') return <Moon size={15} />;
+    return <Monitor size={15} />;
+  };
 
   const closeMobile = useCallback(() => {
     setMobileOpen(false);
@@ -89,6 +127,53 @@ const Header = () => {
         </nav>
 
         <div className="header-actions">
+          <div className="theme-selector-container">
+            <button
+              type="button"
+              className="btn btn-outline theme-selector-btn"
+              onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
+              title="Switch Theme"
+              aria-expanded={themeDropdownOpen}
+            >
+              {getThemeIcon()}
+              <span className="theme-btn-text">{theme}</span>
+            </button>
+            {themeDropdownOpen && (
+              <div className="theme-dropdown card">
+                <button
+                  type="button"
+                  className={`theme-option ${theme === 'light' ? 'active' : ''}`}
+                  onClick={() => {
+                    setTheme('light');
+                    setThemeDropdownOpen(false);
+                  }}
+                >
+                  <Sun size={14} /> <span>Light</span>
+                </button>
+                <button
+                  type="button"
+                  className={`theme-option ${theme === 'dark' ? 'active' : ''}`}
+                  onClick={() => {
+                    setTheme('dark');
+                    setThemeDropdownOpen(false);
+                  }}
+                >
+                  <Moon size={14} /> <span>Dark</span>
+                </button>
+                <button
+                  type="button"
+                  className={`theme-option ${theme === 'matrix' ? 'active' : ''}`}
+                  onClick={() => {
+                    setTheme('matrix');
+                    setThemeDropdownOpen(false);
+                  }}
+                >
+                  <Monitor size={14} /> <span>Matrix</span>
+                </button>
+              </div>
+            )}
+          </div>
+
           <button type="button" className="btn btn-outline resume-header-btn" onClick={handleResumeClick}>
             <FileText size={15} />
             Resume
@@ -120,6 +205,34 @@ const Header = () => {
             {item.label}
           </button>
         ))}
+        
+        <div className="theme-selector-mobile">
+          <span className="theme-mobile-label">Theme</span>
+          <div className="theme-mobile-chips">
+            <button
+              type="button"
+              className={`theme-chip-mobile ${theme === 'light' ? 'active' : ''}`}
+              onClick={() => setTheme('light')}
+            >
+              <Sun size={13} /> Light
+            </button>
+            <button
+              type="button"
+              className={`theme-chip-mobile ${theme === 'dark' ? 'active' : ''}`}
+              onClick={() => setTheme('dark')}
+            >
+              <Moon size={13} /> Dark
+            </button>
+            <button
+              type="button"
+              className={`theme-chip-mobile ${theme === 'matrix' ? 'active' : ''}`}
+              onClick={() => setTheme('matrix')}
+            >
+              <Monitor size={13} /> Matrix
+            </button>
+          </div>
+        </div>
+
         <button type="button" className="btn btn-outline" onClick={handleResumeClick} style={{ marginTop: '1rem' }}>
           <FileText size={15} /> Resume
         </button>
