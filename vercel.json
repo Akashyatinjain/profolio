@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/tuf/:path*",
+      "destination": "/api/tuf"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
