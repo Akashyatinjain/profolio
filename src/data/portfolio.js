@@ -219,6 +219,9 @@ export const projects = [
     accent: '#10b981',
     demoVideo: '/videos/financetracker.mp4'
   },
+];
+
+export const miniProjects = [
   {
     title: 'SWASTHYA',
     category: 'frontend',
@@ -252,9 +255,6 @@ export const projects = [
     githubUrl: 'https://github.com/Akashyatinjain/Simon-Game',
     accent: '#ef4444',
   },
-];
-
-export const miniProjects = [
   {
     title: 'World Tracker',
     category: 'frontend',
