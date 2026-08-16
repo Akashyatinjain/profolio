@@ -124,7 +124,7 @@ a.contact-row:hover .contact-icon-wrapper {
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-secondary);
-  background: #FFFFFF;
+  background: var(--bg-card);
   transition: all 0.25s;
   box-shadow: var(--shadow-sm);
 }
@@ -182,13 +182,13 @@ a.contact-row:hover .contact-icon-wrapper {
 .form-field input:focus,
 .form-field textarea:focus {
   border-color: var(--accent-light);
-  background: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 3px var(--accent-dim);
 }
 
 .form-field input::placeholder,
 .form-field textarea::placeholder {
-  color: var(--text-light);
+  color: var(--text-muted);
 }
 
 .btn-submit-contact {
@@ -207,7 +207,7 @@ a.contact-row:hover .contact-icon-wrapper {
 
 .form-msg-success {
   color: #10B981;
-  background: #EFF6FF;
+  background: var(--accent-pale);
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
@@ -235,7 +235,7 @@ a.contact-row:hover .contact-icon-wrapper {
 
 .resume-chip:hover {
   background: var(--accent) !important;
-  color: #FFFFFF !important;
+  color: var(--accent-text) !important;
   border-color: var(--accent) !important;
 }
 
@@ -243,7 +243,7 @@ a.contact-row:hover .contact-icon-wrapper {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: #EFF6FF;
+  background: var(--accent-pale);
   border: 1px solid rgba(16, 185, 129, 0.25);
   border-radius: 8px;
   padding: 0.3rem 0.85rem;

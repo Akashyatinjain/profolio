@@ -75,18 +75,19 @@ const Hero = () => {
             </div>
 
             <div className="hero-socials reveal reveal-delay-4">
-              <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn">
+              <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn" aria-label="LinkedIn Profile">
                 <Linkedin size={18} />
               </a>
-              <a href={profile.links.leetcode} target="_blank" rel="noopener noreferrer" className="social-link" title="LeetCode">
+              <a href={profile.links.leetcode} target="_blank" rel="noopener noreferrer" className="social-link" title="LeetCode" aria-label="LeetCode Profile">
                 <Leetcode size={18} />
               </a>
-              <a href={`mailto:${profile.email}`} className="social-link email-link">
+              <a href={`mailto:${profile.email}`} className="social-link email-link" aria-label="Email Akash Jain">
                 {profile.email}
               </a>
-              <button type="button" className="copy-email-btn" onClick={copyEmail} title="Copy email">
+              <button type="button" className="copy-email-btn" onClick={copyEmail} title="Copy email address" aria-label={emailCopied ? "Email copied" : "Copy email address"}>
                 {emailCopied ? <Check size={14} className="copy-icon copied" /> : <Copy size={14} className="copy-icon" />}
               </button>
+              {emailCopied && <span className="sr-only" role="status">Email copied to clipboard</span>}
             </div>
           </div>
 

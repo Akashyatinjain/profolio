@@ -169,7 +169,7 @@ const About = () => {
                 <span className="github-title">GitHub Activity</span>
                 <span className="github-handle">@Akashyatinjain</span>
               </div>
-              <a href={profile.links.github} target="_blank" rel="noopener noreferrer" className="github-link">
+              <a href={profile.links.github} target="_blank" rel="noopener noreferrer" className="github-link" aria-label="View Akash's GitHub Profile">
                 View profile
                 <ArrowUpRight size={14} />
               </a>
@@ -178,19 +178,19 @@ const About = () => {
             <div className="github-stats-row">
               <div className="github-stat">
                 <span className="github-stat-val">
-                  {loading ? <span className="stat-skeleton" /> : (githubStats?.contributions || '0')}
+                  {loading ? <span className="stat-skeleton" aria-hidden="true" /> : (githubStats?.contributions || '0')}
                 </span>
                 <span className="github-stat-lbl">Contributions</span>
               </div>
               <div className="github-stat">
                 <span className="github-stat-val">
-                  {loading ? <span className="stat-skeleton" /> : (githubStats?.commits || '0')}
+                  {loading ? <span className="stat-skeleton" aria-hidden="true" /> : (githubStats?.commits || '0')}
                 </span>
                 <span className="github-stat-lbl">Year Commits</span>
               </div>
               <div className="github-stat">
                 <span className="github-stat-val">
-                  {loading ? <span className="stat-skeleton" /> : (githubStats?.streak || '0d')}
+                  {loading ? <span className="stat-skeleton" aria-hidden="true" /> : (githubStats?.streak || '0d')}
                 </span>
                 <span className="github-stat-lbl">Streak</span>
               </div>
@@ -199,7 +199,7 @@ const About = () => {
             <div className="github-langs">
               <span className="github-langs-title">Top Languages</span>
               {loading ? (
-                <div className="lang-skeleton-group">
+                <div className="lang-skeleton-group" aria-hidden="true">
                   <div className="lang-skeleton-bar" />
                   <div className="lang-skeleton-bar" />
                   <div className="lang-skeleton-bar" />

@@ -520,6 +520,7 @@
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
   min-width: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tuf-heatmap-scroll::-webkit-scrollbar {

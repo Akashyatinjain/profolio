@@ -63,8 +63,9 @@ function App() {
 
   return (
     <>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <Header />
-      <main>
+      <main id="main-content">
         <Hero />
         <About />
         <Projects />

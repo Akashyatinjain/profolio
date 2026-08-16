@@ -23,10 +23,10 @@ const ExtraSections = () => {
             <div className="timeline-vertical-line" />
             {experience.map((exp, idx) => (
               <div key={exp.role} className={`timeline-row reveal ${idx % 2 === 0 ? 'left-row' : 'right-row'}`}>
-                <div className="timeline-dot-badge">
+                <div className="timeline-dot-badge" aria-hidden="true">
                   <Briefcase size={14} />
                 </div>
-                <div className="timeline-content card">
+                <article className="timeline-content card">
                   <div className="timeline-content-header">
                     <div>
                       <h3 className="timeline-role">{exp.role}</h3>
@@ -43,7 +43,7 @@ const ExtraSections = () => {
                       <span key={t} className="tag">{t}</span>
                     ))}
                   </div>
-                </div>
+                </article>
               </div>
             ))}
           </div>

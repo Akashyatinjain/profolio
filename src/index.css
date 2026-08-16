@@ -29,6 +29,11 @@
   --lc-medium: #F59E0B;
   --lc-hard: #EF4444;
 
+  /* Browser Mockup Chrome Tokens */
+  --chrome-header-bg: #EFF6FF;
+  --chrome-address-bg: #FFFFFF;
+  --chrome-body-bg: #FFFFFF;
+
   /* Fonts */
   --font-display: 'Syne', sans-serif;
   --font-body: 'IBM Plex Sans', sans-serif;
@@ -84,6 +89,11 @@
   --header-border: rgba(48, 54, 61, 0.8);
   --header-scrolled-bg: rgba(22, 27, 34, 0.85);
   --header-scrolled-border: rgba(59, 130, 246, 0.25);
+
+  /* Browser Mockup Chrome Tokens */
+  --chrome-header-bg: #161B22;
+  --chrome-address-bg: #0D1117;
+  --chrome-body-bg: #1F2937;
 }
 
 [data-theme="matrix"] {
@@ -118,9 +128,14 @@
   --header-border: rgba(26, 26, 26, 0.8);
   --header-scrolled-bg: rgba(11, 11, 11, 0.85);
   --header-scrolled-border: rgba(0, 255, 65, 0.25);
+
+  /* Browser Mockup Chrome Tokens */
+  --chrome-header-bg: #0B0B0B;
+  --chrome-address-bg: #050505;
+  --chrome-body-bg: #080808;
 }
 
-body, header, section, .card, .btn, .tag, input, textarea, a, .browser-chrome-header, .browser-chrome-address {
+body, header, section, .card, .btn, .tag, input, textarea, a, .browser-chrome-header, .browser-chrome-address-bar {
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -371,3 +386,62 @@ section {
     margin-bottom: 2.5rem;
   }
 }
+
+/* Accessibility: Consistent focus-visible ring */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip to content helper */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  background: var(--accent);
+  color: var(--accent-text);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  z-index: 99999;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Screen-reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+
+

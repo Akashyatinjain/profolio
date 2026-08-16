@@ -204,7 +204,7 @@ const Contact = () => {
 
       {/* Copy Email Toast Notification */}
       {showToast && (
-        <div className="contact-toast">
+        <div className="contact-toast" role="status" aria-live="polite">
           <span>Email copied to clipboard!</span>
         </div>
       )}

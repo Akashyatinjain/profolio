@@ -123,7 +123,7 @@ const Terminal = () => {
       case 'contact':
         newOutput.push({
           type: 'output',
-          text: `Email: AJ0881871@gmail.com\nPhone: +91 7710926977\nGitHub: https://github.com/Akashyatinjain\nLinkedIn: https://www.linkedin.com/in/akash-yatin-jain`,
+          text: `Email: ${profile.email}\nPhone: ${profile.phone}\nGitHub: ${profile.links.github}\nLinkedIn: ${profile.links.linkedin}`,
         });
         break;
       case 'theme':
@@ -211,7 +211,9 @@ const Terminal = () => {
                   e.stopPropagation();
                   setIsMinimized(!isMinimized);
                 }}
-                title={isMinimized ? "Maximize" : "Minimize"}
+                title={isMinimized ? "Maximize terminal" : "Minimize terminal"}
+                aria-label={isMinimized ? "Maximize terminal" : "Minimize terminal"}
+                aria-expanded={!isMinimized}
               >
                 {isMinimized ? <Maximize2 size={10} /> : <Minimize2 size={10} />}
               </button>

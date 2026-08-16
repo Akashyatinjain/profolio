@@ -19,12 +19,12 @@ const Footer = () => {
         {/* Column 2: Navigation Links */}
         <div className="footer-nav">
           <span className="footer-title">Navigation</span>
-          <div className="footer-links-grid">
+          <nav className="footer-links-grid" aria-label="Footer Navigation">
             <a href="#home">Home</a>
             <a href="#about">About</a>
             <a href="#projects">Projects</a>
             <a href="#contact">Contact</a>
-          </div>
+          </nav>
         </div>
 
         {/* Column 3: Tech & Metadata Info */}

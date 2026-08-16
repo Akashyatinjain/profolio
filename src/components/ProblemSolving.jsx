@@ -366,8 +366,13 @@ const ProblemSolving = () => {
           <p className="section-label">DSA & Activity</p>
           <div className="section-header-row">
             <h2 className="section-title">Problem Solving & Code Activity</h2>
-            <div className="dsa-profile-tabs">
+            <div className="dsa-profile-tabs" role="tablist" aria-label="Problem Solving Platforms">
               <button 
+                type="button"
+                role="tab"
+                id="tab-leetcode"
+                aria-selected={activeTab === 'leetcode'}
+                aria-controls="dsa-tabpanel"
                 className={`dsa-tab-btn leetcode-tab-btn ${activeTab === 'leetcode' ? 'active' : ''}`}
                 onClick={() => setActiveTab('leetcode')}
               >
@@ -375,6 +380,11 @@ const ProblemSolving = () => {
                 <span>LeetCode</span>
               </button>
               <button 
+                type="button"
+                role="tab"
+                id="tab-tuf"
+                aria-selected={activeTab === 'tuf'}
+                aria-controls="dsa-tabpanel"
                 className={`dsa-tab-btn tuf-tab-btn ${activeTab === 'tuf' ? 'active' : ''}`}
                 onClick={() => setActiveTab('tuf')}
               >
@@ -388,7 +398,7 @@ const ProblemSolving = () => {
           </p>
         </div>
 
-        <div className="leetcode-grid">
+        <div className="leetcode-grid" id="dsa-tabpanel" role="tabpanel" aria-labelledby={activeTab === 'leetcode' ? 'tab-leetcode' : 'tab-tuf'}>
           {activeTab === 'leetcode' ? (
             /* LeetCode Tab Active */
             <>

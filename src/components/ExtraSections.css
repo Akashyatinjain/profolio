@@ -1,5 +1,5 @@
 .extra-sections {
-  background: #FFFFFF;
+  background: var(--bg);
   border-bottom: 1px solid var(--border);
   padding: 6.5rem 0;
 }
@@ -47,7 +47,7 @@
 
 .checklist-item:hover {
   border-color: var(--accent-soft);
-  background: #FFFFFF;
+  background: var(--bg-hover);
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
@@ -205,7 +205,7 @@
 
 .tech-highlight-card:hover {
   border-color: var(--accent-soft);
-  background: #FFFFFF;
+  background: var(--bg-hover);
   box-shadow: var(--shadow-sm);
   transform: translateY(-2px);
 }

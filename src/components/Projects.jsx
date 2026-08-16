@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ExternalLink, ArrowUpRight, Play, X, ShieldAlert, ChevronDown, ChevronUp } from 'lucide-react';
 import { Github } from './Icons';
 import { projects, miniProjects } from '../data/portfolio';
@@ -16,6 +16,20 @@ const Projects = () => {
   const [activeVideo, setActiveVideo] = useState(null);
   const [showMiniProjects, setShowMiniProjects] = useState(false);
   const [expandedProjects, setExpandedProjects] = useState({});
+
+  // Close video modal on Escape and prevent body scrolling
+  useEffect(() => {
+    if (!activeVideo) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setActiveVideo(null);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeVideo]);
 
   const featured = projects.filter((p) => p.featured);
   const filtered =
@@ -91,19 +105,19 @@ const Projects = () => {
                   style={{ transitionDelay: `${i * 0.1}s` }}
                 >
                   <div className="featured-accent" style={{ background: project.accent }} />
-                  
+
                   <div className="featured-content">
                     <div className="featured-top">
                       <span className="featured-date">{project.date}</span>
                       <span className="featured-live">Featured Project</span>
                     </div>
-                    
+
                     <h3 className="featured-title">{project.title}</h3>
                     <p className="featured-desc">{project.description}</p>
 
                     {/* Expandable Case Study Details */}
                     {isExpanded && (
-                      <div className="featured-collapsible-details">
+                      <div id={`case-study-${project.title.replace(/\s+/g, '-').toLowerCase()}`} className="featured-collapsible-details">
                         {project.problem && (
                           <div className="featured-problem">
                             <span className="featured-problem-label">Problem</span>
@@ -137,6 +151,8 @@ const Projects = () => {
                         type="button"
                         className="featured-toggle-btn"
                         onClick={() => toggleProjectExpand(project.title)}
+                        aria-expanded={isExpanded}
+                        aria-controls={`case-study-${project.title.replace(/\s+/g, '-').toLowerCase()}`}
                       >
                         <span>{isExpanded ? 'Hide Details' : 'Read Case Study'}</span>
                         {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -155,9 +171,9 @@ const Projects = () => {
                         <ExternalLink size={14} />
                       </a>
                       {project.demoVideo && (
-                        <button 
-                          type="button" 
-                          className="btn btn-outline" 
+                        <button
+                          type="button"
+                          className="btn btn-outline"
                           onClick={() => setActiveVideo(project.demoVideo)}
                           style={{ borderColor: 'var(--accent-light)', color: 'var(--accent)' }}
                         >
@@ -171,7 +187,7 @@ const Projects = () => {
                       </a>
                     </div>
                   </div>
-                  
+
                   <div className="featured-image-wrapper" onClick={() => !project.demoVideo && window.open(project.liveUrl, '_blank')}>
                     {/* Browser Chrome Frame */}
                     <div className="browser-chrome-frame">
@@ -193,9 +209,9 @@ const Projects = () => {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="screenshot-overlay" />
-                    
+
                     {project.demoVideo ? (
                       <button
                         type="button"
@@ -353,9 +369,9 @@ const Projects = () => {
 
       {/* Video Modal Overlay */}
       {activeVideo && (
-        <div className="video-modal-overlay" onClick={() => setActiveVideo(null)}>
+        <div className="video-modal-overlay" onClick={() => setActiveVideo(null)} role="dialog" aria-modal="true" aria-label="Demo video player">
           <div className="video-modal-content card" onClick={(e) => e.stopPropagation()}>
-            <button type="button" className="video-modal-close" onClick={() => setActiveVideo(null)}>
+            <button type="button" className="video-modal-close" onClick={() => setActiveVideo(null)} aria-label="Close demo video">
               <X size={20} />
             </button>
             <div className="video-aspect-wrapper">
@@ -363,7 +379,7 @@ const Projects = () => {
             </div>
             <div className="video-modal-footer">
               <ShieldAlert size={14} className="video-info-icon" />
-              <span>Demo interaction walkthrough video file.</span>
+              <span>Interactive demo recording. Press Escape or click outside to close.</span>
             </div>
           </div>
         </div>

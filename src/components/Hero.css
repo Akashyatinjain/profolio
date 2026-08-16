@@ -176,12 +176,18 @@
 }
 
 /* Project preview (right column) */
+.hero-preview {
+  perspective: 1200px;
+}
+
 .hero-preview-card {
   display: block;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 .hero-preview-card:hover {
@@ -194,7 +200,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.65rem 1rem;
-  background: var(--bg-raised);
+  background: var(--chrome-header-bg);
   border-bottom: 1px solid var(--border);
 }
 
@@ -204,8 +210,8 @@
 }
 
 .chrome-dot {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
 }
 
@@ -218,7 +224,7 @@
   font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--text-secondary);
-  background: var(--bg);
+  background: var(--chrome-address-bg);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 0.25rem 0.6rem;
@@ -237,6 +243,11 @@
   object-fit: cover;
   object-position: top;
   display: block;
+  transition: transform 0.4s ease;
+}
+
+.hero-preview-card:hover .hero-preview-image {
+  transform: scale(1.02);
 }
 
 .hero-preview-caption {
@@ -245,6 +256,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
+  background: var(--bg-card);
 }
 
 .hero-preview-label {
@@ -253,6 +265,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--accent);
+  font-weight: 600;
 }
 
 .hero-preview-title {
@@ -264,7 +277,7 @@
 @media (max-width: 900px) {
   .hero-grid {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
   }
   .hero-preview {
     order: -1;
@@ -274,9 +287,11 @@
 @media (max-width: 480px) {
   .hero-section {
     padding-top: 5.5rem;
+    padding-bottom: 3rem;
   }
   .hero-actions {
     flex-direction: column;
+    gap: 0.65rem;
   }
   .hero-actions .btn {
     width: 100%;
@@ -285,4 +300,8 @@
   .hero-stats-bar {
     gap: 0.75rem 1.25rem;
   }
+  .email-link {
+    font-size: 0.72rem;
+  }
 }
+

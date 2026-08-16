@@ -207,16 +207,17 @@
   position: fixed;
   top: 0;
   right: -100%;
-  width: min(300px, 80vw);
+  width: min(320px, 85vw);
   height: 100dvh;
   background: var(--bg-card);
   border-left: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
   z-index: 102;
   flex-direction: column;
-  padding: 5.5rem 1.5rem 2rem;
+  padding: 5.5rem 1.5rem max(2rem, env(safe-area-inset-bottom));
   gap: 0.5rem;
-  transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
 }
 
 .nav-mobile.open {
@@ -225,15 +226,18 @@
 
 .nav-mobile .nav-link {
   font-size: 1.05rem;
-  padding: 0.85rem 0.75rem;
+  padding: 0.85rem 1rem;
   text-align: left;
   width: 100%;
   border-radius: 8px;
+  display: flex;
+  align-items: center;
 }
 
 .nav-mobile .nav-link.active {
   background: var(--bg-raised);
   color: var(--accent);
+  font-weight: 700;
 }
 
 @media (max-width: 768px) {

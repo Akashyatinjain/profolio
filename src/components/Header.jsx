@@ -64,6 +64,18 @@ const Header = () => {
     document.body.classList.add('menu-open');
   }, []);
 
+  // Handle Escape key to close mobile menu and dropdown
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (themeDropdownOpen) setThemeDropdownOpen(false);
+        if (mobileOpen) closeMobile();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [themeDropdownOpen, mobileOpen, closeMobile]);
+
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 40);
@@ -79,7 +91,7 @@ const Header = () => {
       }
     };
 
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -133,15 +145,18 @@ const Header = () => {
               className="btn btn-outline theme-selector-btn"
               onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
               title="Switch Theme"
+              aria-label="Switch Theme"
+              aria-haspopup="true"
               aria-expanded={themeDropdownOpen}
             >
               {getThemeIcon()}
               <span className="theme-btn-text">{theme}</span>
             </button>
             {themeDropdownOpen && (
-              <div className="theme-dropdown card">
+              <div className="theme-dropdown card" role="menu">
                 <button
                   type="button"
+                  role="menuitem"
                   className={`theme-option ${theme === 'light' ? 'active' : ''}`}
                   onClick={() => {
                     setTheme('light');
@@ -152,6 +167,7 @@ const Header = () => {
                 </button>
                 <button
                   type="button"
+                  role="menuitem"
                   className={`theme-option ${theme === 'dark' ? 'active' : ''}`}
                   onClick={() => {
                     setTheme('dark');
@@ -162,6 +178,7 @@ const Header = () => {
                 </button>
                 <button
                   type="button"
+                  role="menuitem"
                   className={`theme-option ${theme === 'matrix' ? 'active' : ''}`}
                   onClick={() => {
                     setTheme('matrix');
@@ -185,7 +202,9 @@ const Header = () => {
             type="button"
             className="burger"
             onClick={() => (mobileOpen ? closeMobile() : openMobile())}
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -194,7 +213,7 @@ const Header = () => {
 
       <div className={`nav-overlay ${mobileOpen ? 'open' : ''}`} onClick={closeMobile} aria-hidden="true" />
 
-      <nav className={`nav-mobile ${mobileOpen ? 'open' : ''}`} aria-label="Mobile">
+      <nav id="mobile-navigation" className={`nav-mobile ${mobileOpen ? 'open' : ''}`} aria-label="Mobile Navigation">
         {navItems.map((item) => (
           <button
             key={item.id}
