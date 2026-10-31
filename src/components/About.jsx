@@ -1,6 +1,6 @@
 // src/components/About.jsx
 import React from 'react';
-import { ArrowUpRight, Award, GraduationCap, Code2, MapPin } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { profile } from '../data/portfolio';
 import './About.css';
@@ -35,13 +35,14 @@ const About = () => {
 
           <motion.div className="about-body-text" variants={fadeUp}>
             <p>
-              I am a 3rd-year Information Technology engineer at SFIT, Mumbai, obsessed with building
-              systems that perform as reliably under heavy load as a precision-tuned sports engine.
+              I am an Information Technology undergraduate at St. Francis Institute of Technology (SFIT), Mumbai,
+              and an active freelance full-stack developer focused on building production-ready web applications.
             </p>
             <p>
-              From architecting relational database schemas with Prisma and PostgreSQL to engineering
-              interactive WebGL 3D viewports in React, I treat digital product design with the same
-              discipline found in motorsport engineering: clean structure, zero bloat, and uncompromising craft.
+              I work across the full application lifecycle: React frontend design, Express REST API architecture,
+              PostgreSQL schema design with Prisma ORM, and cloud deployment with Docker, Render, and Vercel.
+              Alongside client delivery, I solve DSA in Java with 212+ problems completed across LeetCode and
+              Striver A2Z, while serving as Technical Executive in the IEEE Student Branch at SFIT.
             </p>
           </motion.div>
 
@@ -49,26 +50,46 @@ const About = () => {
           <motion.div className="about-spec-grid" variants={fadeUp}>
             <div className="spec-item">
               <span className="spec-label">EDUCATION</span>
-              <span className="spec-value">B.E. INFORMATION TECHNOLOGY</span>
-              <span className="spec-sub">SFIT, MUMBAI · CGPA 8.50</span>
+              <span className="spec-value">B.TECH IN INFORMATION TECHNOLOGY</span>
+              <span className="spec-sub">SFIT, MUMBAI · CGPA 8.50 / 10 (2024–2028)</span>
             </div>
 
             <div className="spec-item">
               <span className="spec-label">LEADERSHIP</span>
               <span className="spec-value">IEEE SFIT TECHNICAL EXECUTIVE</span>
-              <span className="spec-sub">ORGANIZING TECH WORKSHOPS & HACKATHONS</span>
+              <span className="spec-sub">TECH WORKSHOPS, HACKATHONS & LOGISTICS</span>
             </div>
 
             <div className="spec-item">
               <span className="spec-label">ALGORITHMS</span>
-              <span className="spec-value">195+ LEETCODE SOLVED</span>
-              <span className="spec-sub">JAVA · ARRAYS, DP, TREES & GRAPHS</span>
+              <span className="spec-value">212+ DSA COMPLETED</span>
+              <span className="spec-sub">84 LEETCODE · 128 STRIVER A2Z (JAVA)</span>
             </div>
 
             <div className="spec-item">
               <span className="spec-label">LOCATION</span>
-              <span className="spec-value">MUMBAI, INDIA</span>
-              <span className="spec-sub">OPEN TO GLOBAL REMOTE & RELOCATION</span>
+              <span className="spec-value">MUMBAI, MAHARASHTRA</span>
+              <span className="spec-sub">OPEN TO INTERNSHIPS & FREELANCE</span>
+            </div>
+          </motion.div>
+
+          {/* Developer Activity Telemetry */}
+          <motion.div className="about-telemetry-bar" variants={fadeUp}>
+            <div className="telemetry-pill">
+              <span className="tel-val">{profile.developerActivity?.contributions || '1,376'}</span>
+              <span className="tel-lbl">CONTRIBUTIONS</span>
+            </div>
+            <div className="telemetry-pill">
+              <span className="tel-val">{profile.developerActivity?.yearCommits || '1,122'}</span>
+              <span className="tel-lbl">YEAR COMMITS</span>
+            </div>
+            <div className="telemetry-pill">
+              <span className="tel-val">{profile.developerActivity?.maxStreak || '72d'}</span>
+              <span className="tel-lbl">MAX STREAK</span>
+            </div>
+            <div className="telemetry-pill">
+              <span className="tel-val">{profile.developerActivity?.publicRepos || '40+'}</span>
+              <span className="tel-lbl">PUBLIC REPOS</span>
             </div>
           </motion.div>
 

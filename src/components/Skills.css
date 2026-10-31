@@ -107,13 +107,10 @@
   color: var(--porsche-white);
 }
 
-/* 5th and 4th card span nicely on 3-col grid */
+/* 5th, 6th and 7th card span nicely */
 @media (min-width: 1024px) {
-  .skill-spec-card:nth-child(4) {
-    grid-column: span 1;
-  }
-  .skill-spec-card:nth-child(5) {
-    grid-column: span 2;
+  .skill-spec-card:nth-child(7) {
+    grid-column: span 3;
   }
 }
 
@@ -125,6 +122,146 @@
 
 @media (max-width: 680px) {
   .skills-spec-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── What He Builds & Process Sub-Blocks ─────────────────── */
+.skills-sub-block {
+  margin-top: clamp(3.5rem, 7vw, 5rem);
+  padding-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--border);
+}
+
+.sub-block-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: var(--space-xl);
+}
+
+.sub-block-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--porsche-champagne);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.sub-block-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  letter-spacing: 0.02em;
+  color: var(--porsche-white);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.builds-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+.build-card {
+  background: var(--porsche-charcoal);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.build-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.build-icon {
+  color: var(--porsche-champagne);
+  margin-bottom: 0.25rem;
+}
+
+.build-title {
+  font-family: var(--font-subhead);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--porsche-white);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.build-desc {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--porsche-steel);
+  margin: 0;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.process-card {
+  background: var(--porsche-charcoal);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.process-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.process-step-num {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: rgba(220, 207, 176, 0.2);
+  line-height: 1;
+}
+
+.process-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.06em;
+  color: var(--porsche-champagne);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.process-lead {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--porsche-steel);
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .builds-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .builds-grid {
     grid-template-columns: 1fr;
   }
 }

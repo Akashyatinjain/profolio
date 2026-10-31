@@ -35,9 +35,12 @@ const Header = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [mobileOpen, closeMobile]);
 
-  // Scroll tracking
+  // Scroll tracking — coalesced into one rAF so a fast fling cannot trigger
+  // dozens of React updates (and layout reads) per frame.
   useEffect(() => {
-    const onScroll = () => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
       setScrolled(window.scrollY > 40);
 
       const pos = window.scrollY + 120;
@@ -50,9 +53,16 @@ const Header = () => {
         }
       }
     };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
 
+    update();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   // Close mobile on resize

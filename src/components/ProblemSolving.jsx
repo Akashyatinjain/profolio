@@ -12,10 +12,10 @@ const fadeUp = {
 };
 
 const defaultStats = {
-  totalSolved: 77,
+  totalSolved: 84,
   categories: [
-    { label: 'Easy', count: 39, color: 'var(--lc-easy)', pct: 51 },
-    { label: 'Medium', count: 35, color: 'var(--lc-medium)', pct: 45 },
+    { label: 'Easy', count: 44, color: 'var(--lc-easy)', pct: 52 },
+    { label: 'Medium', count: 37, color: 'var(--lc-medium)', pct: 44 },
     { label: 'Hard', count: 3, color: 'var(--lc-hard)', pct: 4 },
   ],
 };
@@ -93,7 +93,7 @@ const ProblemSolving = () => {
       const cached = localStorage.getItem('portfolio_leetcode_stats');
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (parsed && parsed.totalSolved && parsed.totalSolved >= 77) {
+        if (parsed && parsed.totalSolved && parsed.totalSolved >= 84) {
           return parsed;
         }
       }
@@ -200,7 +200,7 @@ const ProblemSolving = () => {
         }
 
         if (progressData) {
-          const solved = progressData.total_solved || 108;
+          const solved = progressData.total_solved || 128;
           setTufData((prev) => ({
             ...prev,
             tufProfile: {

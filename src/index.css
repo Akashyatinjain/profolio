@@ -3,6 +3,45 @@
    Portfolio of Akash Yatin Jain · Creative Developer & Full-Stack Engineer
    ═══════════════════════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════════════════════
+   Self-hosted variable fonts (latin subset).
+   Serving these from our own origin removes a render-blocking
+   third-party stylesheet and two extra connection handshakes on
+   mobile. Each family ships one file covering every weight used.
+   ═══════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/oswald.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/manrope.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/space-grotesk.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono.woff2') format('woff2');
+}
+
 :root {
   /* ── 1. The Heritage Motorsport Palette ────────────────────── */
   --porsche-graphite:   #0e1012; /* 70% Primary background - Seamless Automotive Studio */

@@ -88,6 +88,46 @@
   color: var(--porsche-steel);
 }
 
+/* ── Telemetry Bar ───────────────────────────────────────── */
+.about-telemetry-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.telemetry-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.85rem 1rem;
+  background: rgba(25, 27, 29, 0.7);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  transition: border-color var(--transition-fast);
+}
+
+.telemetry-pill:hover {
+  border-color: var(--porsche-champagne);
+}
+
+.tel-val {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--porsche-champagne);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.tel-lbl {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--porsche-steel);
+  text-transform: uppercase;
+}
+
 .about-actions {
   display: flex;
   align-items: center;
@@ -147,6 +187,9 @@
   }
   .about-spec-grid {
     grid-template-columns: 1fr;
+  }
+  .about-telemetry-bar {
+    grid-template-columns: repeat(2, 1fr);
   }
   .about-model-stage {
     display: none;

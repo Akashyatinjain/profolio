@@ -168,6 +168,13 @@
 }
 
 @media (max-width: 868px) {
+  /* A live backdrop blur over the fixed WebGL canvas is one of the most
+     expensive things a mobile compositor can do on every frame. */
+  .header.scrolled {
+    background: rgba(17, 19, 21, 0.97);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
   .nav-desktop {
     display: none;
   }

@@ -272,3 +272,176 @@
   .spec-row-value { text-align: right; }
   .project-cta-actions .btn { min-width: 0; }
 }
+
+.project-date-pill {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: var(--porsche-champagne);
+  background: rgba(220, 207, 176, 0.08);
+  border: 1px solid rgba(220, 207, 176, 0.2);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+}
+
+/* ── Additional Projects Archive ─────────────────────────── */
+.additional-projects-wrapper {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--border);
+}
+
+.archive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+  margin-bottom: var(--space-2xl);
+  flex-wrap: wrap;
+}
+
+.archive-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--porsche-champagne);
+  text-transform: uppercase;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.archive-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  letter-spacing: 0.02em;
+  color: var(--porsche-white);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.archive-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--porsche-steel);
+  max-width: 480px;
+  margin: 0;
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.archive-card {
+  background: var(--porsche-charcoal);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.archive-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.archive-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.archive-card-title {
+  font-family: var(--font-subhead);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--porsche-white);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.archive-link-icon {
+  color: var(--porsche-steel);
+  transition: color var(--transition-fast);
+}
+
+.archive-link-icon:hover {
+  color: var(--porsche-champagne);
+}
+
+.archive-card-desc {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--porsche-steel);
+  margin: 0;
+  flex: 1;
+}
+
+.archive-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.archive-tag-pill {
+  font-family: var(--font-subhead);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--porsche-ivory);
+  background: rgba(17, 19, 21, 0.6);
+  border: 1px solid rgba(119, 123, 120, 0.2);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+}
+
+.archive-card-actions {
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(119, 123, 120, 0.15);
+}
+
+.archive-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-subhead);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--porsche-champagne);
+  text-transform: uppercase;
+  transition: color var(--transition-fast);
+}
+
+.archive-cta-btn:hover {
+  color: var(--porsche-white);
+}
+
+@media (max-width: 1024px) {
+  .archive-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .archive-grid {
+    grid-template-columns: 1fr;
+  }
+  .archive-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}

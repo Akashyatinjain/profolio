@@ -1,7 +1,6 @@
 // src/components/Journey.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
 import './Journey.css';
 
 const fadeUp = {
@@ -11,39 +10,46 @@ const fadeUp = {
 
 const timelineMilestones = [
   {
+    period: 'JUL 2026 — PRESENT',
+    phase: 'FREELANCE & CLIENT DELIVERY',
+    title: 'Freelance Full-Stack Developer',
+    lead: 'Designs, builds, and deploys responsive websites and full-stack apps for clients. Works with Next.js and React frontends, builds REST APIs and database architecture, and handles authentication and cloud deployment.',
+    tags: ['Freelance', 'Full-Stack', 'Client Delivery', 'Next.js', 'React', 'Node.js', 'PostgreSQL'],
+  },
+  {
+    period: 'JUL 2026 — PRESENT',
+    phase: 'STUDENT TECHNICAL LEADERSHIP',
+    title: 'Technical Executive — IEEE SFIT Student Branch',
+    lead: 'Organizes technical workshops, coding events, and hackathons. Coordinates technical activities, campus logistics, and participant engagement across the engineering student community.',
+    tags: ['Technical Leadership', 'Hackathons', 'Event Logistics', 'Collaboration'],
+  },
+  {
+    period: '2026',
+    phase: 'HACKATHON RECOGNITION',
+    title: '2nd Runner-Up — SFIT Colloquium Hackathon 2026',
+    lead: 'Awarded Certificate of Achievement at the SFIT Colloquium Hackathon 2026 technical exhibition for competitive full-stack software prototyping.',
+    tags: ['Hackathon 2nd Runner-Up', 'Technical Exhibition', 'SFIT Colloquium'],
+  },
+  {
     period: '2026 — PRESENT',
-    phase: 'LEADERSHIP & DISTRIBUTED SYSTEMS',
-    title: 'IEEE SFIT Executive & Container Architecture',
-    lead: 'Appointed Technical Executive at IEEE SFIT Student Branch. Organizing engineering hackathons and workshops while mastering Docker containerization, microservice decoupling, and system design.',
-    tags: ['IEEE SFIT', 'Docker', 'System Design', 'Microservices'],
+    phase: 'ALGORITHMIC PROBLEM SOLVING',
+    title: '212+ DSA Problems Completed in Java',
+    lead: 'Completed 84 LeetCode problems (44 Easy, 37 Medium, 3 Hard) and 128 Striver A2Z problems (83 Easy, 33 Medium, 12 Hard). Focused on arrays, two pointers, binary search, trees, graphs, and dynamic programming.',
+    tags: ['Java', '212+ Completed', '84 LeetCode', '128 Striver A2Z'],
   },
   {
-    period: 'EARLY 2026',
-    phase: 'PRODUCTION CLOUD DEPLOYMENTS',
-    title: 'DataStock & GPT Agent Deployments',
-    lead: 'Architected and shipped DataStock (cloud asset management platform with Prisma ORM, PostgreSQL, and Cloudinary) and GPT Agent (real-time SSE streaming AI interface).',
-    tags: ['PostgreSQL', 'Prisma ORM', 'OpenAI API', 'Cloudinary CDN'],
+    period: '2024 — 2028',
+    phase: 'UNDERGRADUATE DEGREE',
+    title: 'B.Tech in Information Technology — SFIT Mumbai',
+    lead: 'Maintaining current CGPA of 8.50 / 10 at St. Francis Institute of Technology with focused coursework in Data Structures & Algorithms, DBMS, and Software Engineering.',
+    tags: ['SFIT Mumbai', 'B.Tech IT', 'CGPA 8.50 / 10', 'Expected Mar 2028'],
   },
   {
-    period: 'LATE 2025',
-    phase: 'BACKEND ARCHITECTURES & SECURITY',
-    title: 'Stateless Authentication & Database Modeling',
-    lead: 'Engineered Finance Tracker v2. Designed relational data schemas, bcrypt password hashing, and stateless JWT authorization pipelines handling multi-user financial transactions.',
-    tags: ['Node.js', 'Express.js', 'JWT Auth', 'MongoDB', 'REST APIs'],
-  },
-  {
-    period: '2025',
-    phase: 'FULL-STACK SPRINT & HACKATHON',
-    title: 'Colloquium 2026 Runner-Up & SWASTHYA',
-    lead: 'Awarded 2nd Runner Up at Colloquium SFIT technical exhibition for pitching and engineering SWASTHYA full-stack health platform under intense 24-hour sprint constraints.',
-    tags: ['Hackathon Runner-Up', 'React SPA', 'Component Architecture'],
-  },
-  {
-    period: '2024',
-    phase: 'ALGORITHMIC FOUNDATIONS',
-    title: '195+ LeetCode Solutions & Computer Science Core',
-    lead: 'Built foundational software engineering discipline in Java. Mastered arrays, two-pointer algorithms, dynamic programming, binary trees, and graph traversal at SFIT Mumbai.',
-    tags: ['Java', 'Data Structures', '195+ LeetCode', 'SFIT Mumbai (CGPA 8.50)'],
+    period: '2022 — 2024',
+    phase: 'HIGHER SECONDARY EDUCATION',
+    title: 'Class XII HSC (Science) — Sudarshan Jr. College',
+    lead: 'Completed Class XII Higher Secondary Certificate in the Science stream with 76.2%, emphasizing mathematics, physical sciences, and computer fundamentals.',
+    tags: ['Class XII Science', '76.2%', 'Sudarshan Jr. College'],
   },
 ];
 
@@ -63,7 +69,7 @@ const Journey = () => {
           <h2 className="journey-headline">ENGINEERING CHRONOLOGY.</h2>
           <p>
             The deliberate progression from core algorithmic fundamentals to production-grade
-            cloud systems and technical leadership.
+            client systems, hackathon wins, and technical leadership.
           </p>
         </motion.div>
 
@@ -72,9 +78,9 @@ const Journey = () => {
           <div className="timeline-spine-line" aria-hidden="true" />
 
           <div className="timeline-entries-list">
-            {timelineMilestones.map((item, index) => (
+            {timelineMilestones.map((item) => (
               <motion.article
-                key={item.period}
+                key={item.title}
                 className="timeline-entry-row"
                 initial="hidden"
                 whileInView="visible"

@@ -33,7 +33,7 @@
   gap: var(--space-lg);
 }
 
-.hero-model-preview { display: contents; }
+.hero-model-preview { display: block; position: relative; }
 .hero-model-caption { display: none; }
 .hero-loading-card {
   position: fixed;
@@ -53,7 +53,7 @@
     linear-gradient(135deg, rgba(27, 31, 30, 0.94), rgba(14, 16, 18, 0.84));
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.26), inset 0 1px rgba(255, 255, 255, 0.035);
   transform: translateY(-50%);
-  pointer-events: none;
+  pointer-events: auto;
   transition: opacity 0.35s ease, visibility 0.35s ease;
 }
 .hero-loading-card::before {
@@ -78,6 +78,18 @@
   box-shadow: 0 0 0 24px rgba(220, 207, 176, 0.025), 0 0 0 48px rgba(220, 207, 176, 0.018);
 }
 .hero-loading-card.is-hidden { opacity: 0; visibility: hidden; }
+.hero-loading-card.has-poster { background: #0e1012; }
+.hero-loading-card.has-poster::before,
+.hero-loading-card.has-poster::after { display: none; }
+.hero-car-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center;
+}
 .loader-card-top, .loader-card-bottom { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .loader-card-top, .loader-status, .loader-progress-copy > span, .loader-progress-number {
   font: 600 0.62rem/1.4 var(--font-mono);
@@ -99,6 +111,16 @@
 .loader-progress-track > span.is-indeterminate { width: 36%; animation: loaderSweep 1.4s ease-in-out infinite; }
 .loader-progress-track.is-error { background: rgba(220, 207, 176, 0.08); }
 .loader-progress-number { margin-left: auto; color: var(--porsche-champagne); }
+.hero-loading-card.has-poster .loader-card-top,
+.hero-loading-card.has-poster .loader-card-bottom { z-index: 2; text-shadow: 0 1px 8px #0e1012; }
+.hero-loading-card.has-poster .loader-car-title { display: none; }
+.hero-loading-card.is-deferred .loader-card-bottom { display: none; }
+.hero-loading-card.has-poster .loader-card-bottom {
+  margin-inline: calc(-1 * clamp(1.25rem, 2.5vw, 2rem));
+  margin-bottom: calc(-1 * clamp(1.25rem, 2.5vw, 2rem));
+  padding: 0.75rem clamp(1.25rem, 2.5vw, 2rem);
+  background: linear-gradient(0deg, rgba(14, 16, 18, 0.94), transparent);
+}
 @keyframes loaderSpin { to { transform: rotate(360deg); } }
 @keyframes loaderSweep { from { transform: translateX(-110%); } to { transform: translateX(290%); } }
 @keyframes loaderPulse { 50% { opacity: 0.4; } }
@@ -210,9 +232,9 @@
 
 /* ── Scroll Cue ──────────────────────────────────────────── */
 .hero-scroll-cue {
-  position: absolute;
-  bottom: 0;
-  left: var(--space-xl);
+  position: relative;
+  align-self: flex-start;
+  margin: 1.5rem 0 0 var(--space-xl);
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -271,9 +293,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.5rem;
     width: 100%;
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
   }
   .hero-loading-card {
     position: relative;
@@ -283,9 +305,17 @@
     left: auto;
     width: 100%;
     max-width: 100%;
-    height: clamp(150px, 42vw, 190px);
-    padding: clamp(1rem, 5vw, 1.5rem);
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 2.5 / 1;
+    padding: clamp(0.75rem, 4vw, 1rem);
     transform: none;
+  }
+  .hero-loading-card.has-poster .loader-card-top { font-size: 0.5rem; }
+  .hero-loading-card.has-poster .loader-card-bottom {
+    margin-inline: calc(-1 * clamp(0.75rem, 4vw, 1rem));
+    margin-bottom: calc(-1 * clamp(0.75rem, 4vw, 1rem));
+    padding: 0.45rem clamp(0.75rem, 4vw, 1rem);
   }
   .hero-loading-card::after { width: 130px; height: 130px; right: 12%; }
   .loader-car-title { font-size: clamp(3.4rem, 18vw, 5rem); }
@@ -298,10 +328,28 @@
     flex-wrap: wrap;
     gap: 0.3rem 1rem;
     width: 100%;
+    margin-top: 0.35rem;
     font: 600 0.58rem/1.4 var(--font-mono);
     letter-spacing: 0.07em;
     color: var(--porsche-champagne);
   }
+  .hero-model-action {
+    display: inline-flex;
+    flex: 1 0 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    margin-top: 0.2rem;
+    border: 1px solid rgba(220, 207, 176, 0.25);
+    background: rgba(220, 207, 176, 0.05);
+    color: var(--porsche-ivory);
+    font: 700 0.62rem/1.4 var(--font-mono);
+    letter-spacing: 0.1em;
+    cursor: pointer;
+  }
+  .hero-model-action:hover { background: rgba(220, 207, 176, 0.1); }
+  .hero-model-action:focus-visible { outline: 2px solid var(--porsche-champagne); outline-offset: 3px; }
   .meta-divider { display: none; }
   .hero-scroll-cue {
     display: none;

@@ -119,12 +119,32 @@
   letter-spacing: 0.04em;
 }
 
+.c-val-link {
+  color: var(--porsche-ivory);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.c-val-link:hover {
+  color: var(--porsche-champagne);
+  text-decoration: underline;
+}
+
+.contact-direct-cta {
+  width: 100%;
+}
+
+.direct-email-btn {
+  width: 100%;
+  justify-content: center;
+}
+
 /* ── Network Buttons ─────────────────────────────────────── */
 .contact-network-links {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 /* ── Right Column: Form ──────────────────────────────────── */
@@ -158,6 +178,7 @@
 }
 
 .form-input,
+.form-select,
 .form-textarea {
   background: var(--porsche-graphite);
   border: 1px solid var(--border);
@@ -169,7 +190,23 @@
   transition: border-color var(--transition-fast);
 }
 
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C3A875' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+.form-select option {
+  background: var(--porsche-charcoal);
+  color: var(--porsche-ivory);
+}
+
 .form-input:focus,
+.form-select:focus,
 .form-textarea:focus {
   outline: none;
   border-color: var(--porsche-guards-red);

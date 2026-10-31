@@ -1,6 +1,6 @@
 // src/components/Contact.jsx
 import React, { useState } from 'react';
-import { Mail, MapPin, Send, FileText, CheckCircle2, Copy, ArrowUpRight } from 'lucide-react';
+import { Send, FileText, CheckCircle2, Copy, ArrowUpRight, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Leetcode } from './Icons';
 import { profile } from '../data/portfolio';
@@ -11,8 +11,21 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
 };
 
+const TOPICS = [
+  'Software Engineering Opportunity',
+  'Freelance Project',
+  'Collaboration',
+  'Open Source',
+  'Other',
+];
+
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    topic: 'Software Engineering Opportunity',
+    message: '',
+  });
   const [status, setStatus] = useState(null);
   const [copied, setCopied] = useState(false);
 
@@ -36,7 +49,7 @@ const Contact = () => {
     if (!accessKey) {
       setTimeout(() => {
         setStatus('success');
-        setFormData({ name: '', email: '', message: '' });
+        setFormData({ name: '', email: '', topic: 'Software Engineering Opportunity', message: '' });
         setTimeout(() => setStatus(null), 5000);
       }, 700);
       return;
@@ -50,15 +63,16 @@ const Contact = () => {
           access_key: accessKey,
           name: formData.name,
           email: formData.email,
+          topic: formData.topic,
           message: formData.message,
-          subject: `Automotive Portfolio Inquiry from ${formData.name}`,
+          subject: `Portfolio Inquiry [${formData.topic}] from ${formData.name}`,
           from_name: 'Akash Jain Portfolio',
         }),
       });
 
       if (res.ok) {
         setStatus('success');
-        setFormData({ name: '', email: '', message: '' });
+        setFormData({ name: '', email: '', topic: 'Software Engineering Opportunity', message: '' });
         setTimeout(() => setStatus(null), 5000);
       } else {
         setStatus('error');
@@ -73,7 +87,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="contact-section" aria-label="Contact - The Final Drive">
+    <section id="contact" className="contact-section" aria-label="Contact - Let's Build Something">
       <div className="container">
         {/* Section Header */}
         <motion.div
@@ -84,10 +98,9 @@ const Contact = () => {
           variants={fadeUp}
         >
           <div className="section-tag">05 // FINAL DRIVE</div>
-          <h2 className="contact-headline">LET'S BUILD SOMETHING EXTRAORDINARY.</h2>
+          <h2 className="contact-headline">LET'S BUILD SOMETHING.</h2>
           <p>
-            Whether you are scouting engineering talent for an internship, looking to deploy
-            a high-performance full-stack system, or discussing architecture—let's talk.
+            {profile.availability || 'Open to Software Engineering Internships & Select Freelance Projects.'}
           </p>
         </motion.div>
 
@@ -115,17 +128,34 @@ const Contact = () => {
             {/* Automotive Spec Sheet Contact Info */}
             <div className="contact-spec-box">
               <div className="contact-spec-row">
-                <span className="c-label">ACADEMIC INBOX</span>
-                <span className="c-val">{profile.studentEmail || 'aj0881871@student.sfit.ac.in'}</span>
+                <span className="c-label">PHONE</span>
+                <a href={`tel:${profile.phone?.replace(/\s+/g, '') || '+917710926977'}`} className="c-val c-val-link">
+                  {profile.phone || '+91 7710926977'}
+                </a>
+              </div>
+              <div className="contact-spec-row">
+                <span className="c-label">STUDENT INBOX</span>
+                <a href={`mailto:${profile.studentEmail}`} className="c-val c-val-link">
+                  {profile.studentEmail || 'aj0881871@student.sfit.ac.in'}
+                </a>
               </div>
               <div className="contact-spec-row">
                 <span className="c-label">LOCATION</span>
-                <span className="c-val">Mumbai, India (IST · UTC +5:30)</span>
+                <span className="c-val">{profile.location || 'Mumbai, Maharashtra'}</span>
               </div>
               <div className="contact-spec-row">
                 <span className="c-label">STATUS</span>
-                <span className="c-val">Open to Internships '28 & Full-Time</span>
+                <span className="c-val">Open for Internships & Projects</span>
               </div>
+            </div>
+
+            {/* Direct Email CTA */}
+            <div className="contact-direct-cta">
+              <a href={`mailto:${profile.email}`} className="btn btn-outline direct-email-btn">
+                <Mail size={15} />
+                SEND DIRECT EMAIL
+                <ArrowUpRight size={14} />
+              </a>
             </div>
 
             {/* Professional Network Links */}
@@ -195,7 +225,7 @@ const Contact = () => {
                   type="text"
                   name="name"
                   className="form-input"
-                  placeholder="e.g. Ferdinand Porsche"
+                  placeholder="e.g. Alex Morgan"
                   value={formData.name}
                   onChange={handleChange}
                   required
@@ -216,6 +246,26 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                 />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="contact-topic" className="form-label">
+                  TOPIC
+                </label>
+                <select
+                  id="contact-topic"
+                  name="topic"
+                  className="form-select"
+                  value={formData.topic}
+                  onChange={handleChange}
+                  required
+                >
+                  {TOPICS.map((topic) => (
+                    <option key={topic} value={topic}>
+                      {topic}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="form-group">

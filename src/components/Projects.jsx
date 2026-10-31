@@ -3,6 +3,7 @@ import React from 'react';
 import { ExternalLink, ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Github } from './Icons';
+import { miniProjects } from '../data/portfolio';
 import './Projects.css';
 
 const fadeUp = {
@@ -12,51 +13,54 @@ const fadeUp = {
 
 const featuredProjects = [
   {
-    id: 'finance-tracker',
-    title: 'FINANCE TRACKER V2',
-    category: 'FINTECH PLATFORM // FULL-STACK',
-    image: '/projects/finance-tracker.png',
-    liveUrl: 'https://budget-tracker-no3.vercel.app/',
-    githubUrl: 'https://github.com/Akashyatinjain/finance-tracker-v2',
-    description:
-      'Full-stack personal finance and expense analytics engine. Features automated balance calculations, category spending visualizations, transaction filtering, and secure stateless JWT authentication.',
-    technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'JWT Auth', 'REST API'],
-    specs: [
-      { label: 'AUTHENTICATION', value: 'Stateless JWT & BCrypt' },
-      { label: 'DATABASE', value: 'MongoDB Document Store' },
-      { label: 'ANALYTICS', value: 'Real-time Category Breakdown' },
-    ],
-  },
-  {
     id: 'datastock',
-    title: 'DATASTOCK CLOUD DRIVE',
-    category: 'DISTRIBUTED CLOUD STORAGE',
+    title: 'DATASTOCK',
+    category: 'CLOUD STORAGE // FULL-STACK',
+    date: 'Mar 2026',
     image: '/projects/datastock.png',
     liveUrl: 'https://data-stock.vercel.app/',
-    githubUrl: 'https://github.com/Akashyatinjain/datastock',
+    githubUrl: 'https://github.com/Akashyatinjain/DataStock',
     description:
-      'Production-ready cloud asset storage platform with multi-file uploads up to 100MB, nested folder hierarchies, starred items, and relational PostgreSQL metadata managed via Prisma ORM.',
-    technologies: ['React', 'Express', 'PostgreSQL', 'Prisma ORM', 'Cloudinary CDN', 'Google OAuth'],
+      'Secure cloud storage with 3-method auth: JWT, Google OAuth, and email OTP. Features folder hierarchy, Cloudinary CDN uploads up to 100 MB, and 6 interactive storage analytics charts.',
+    technologies: ['React', 'Express', 'PostgreSQL', 'Prisma', 'Cloudinary', 'OAuth'],
     specs: [
+      { label: 'AUTHENTICATION', value: 'JWT · Google OAuth · Email OTP' },
       { label: 'STORAGE PIPELINE', value: 'Cloudinary CDN (100MB/file)' },
-      { label: 'ORM SCHEMA', value: 'PostgreSQL with Prisma' },
-      { label: 'AUTH PROTOCOL', value: 'Google OAuth 2.0 & Email' },
+      { label: 'DATABASE & ORM', value: 'PostgreSQL with Prisma' },
     ],
   },
   {
-    id: 'gpt-agent',
-    title: 'AUTONOMOUS GPT AGENT',
-    category: 'AI REASONING SYSTEM',
-    image: '/projects/gptagent.png',
-    liveUrl: 'https://res-gptagent.vercel.app/',
-    githubUrl: 'https://github.com/Akashyatinjain/gpt-agent',
+    id: 'finance-tracker',
+    title: 'FINANCE TRACKER',
+    category: 'FINTECH PLATFORM // FULL-STACK',
+    date: 'Oct 2025',
+    image: '/projects/finance-tracker.png',
+    liveUrl: 'https://budget-tracker-no3.vercel.app/',
+    githubUrl: 'https://github.com/Akashyatinjain/Budget-tracker-no3',
     description:
-      'Conversational AI interface powered by OpenAI language models. Implements Server-Sent Events (SSE) for low-latency token streaming, multi-turn conversational context, and custom prompt workflows.',
-    technologies: ['React', 'Node.js', 'OpenAI API', 'Streaming SSE', 'TailwindCSS'],
+      'Budget automation app with Indian bank CSV import, custom spending thresholds, category-level trend charts, and automated notification alerts.',
+    technologies: ['React', 'Express', 'PostgreSQL', 'Prisma', 'JWT', 'CSV Parser'],
     specs: [
-      { label: 'MODEL INFERENCE', value: 'OpenAI GPT Architecture' },
-      { label: 'DATA STREAMING', value: 'Server-Sent Events (SSE)' },
-      { label: 'STATE RUNTIME', value: 'Client Session Memory' },
+      { label: 'CSV IMPORT ENGINE', value: 'Indian Bank Statements Parser' },
+      { label: 'SPENDING ALERTS', value: 'Custom Category Thresholds' },
+      { label: 'DATABASE SCHEMA', value: 'PostgreSQL Relational Storage' },
+    ],
+  },
+  {
+    id: 'minigpt',
+    title: 'MINIGPT (AGENT AI)',
+    category: 'AI ASSISTANT // FULL-STACK',
+    date: 'Feb 2026',
+    image: '/projects/agent-ai.png',
+    liveUrl: 'https://miniakashagent.vercel.app/',
+    githubUrl: 'https://github.com/Akashyatinjain/Agent',
+    description:
+      'AI assistant with dynamic intent routing: chat, RAG document search using pgvector, and real-time API tools. Multi-LLM abstraction with SSE streaming.',
+    technologies: ['React', 'Express', 'pgvector', 'OpenAI', 'Gemini', 'SSE'],
+    specs: [
+      { label: 'INTENT ROUTING', value: 'Chat, RAG Search & API Tools' },
+      { label: 'VECTOR DATABASE', value: 'pgvector Semantic Search' },
+      { label: 'LLM STREAMING', value: 'Multi-LLM Abstraction with SSE' },
     ],
   },
 ];
@@ -112,6 +116,8 @@ const Projects = () => {
                         src={project.image}
                         alt={`${project.title} live interface preview`}
                         loading="lazy"
+                        decoding="async"
+                        fetchPriority="low"
                         className="mockup-image"
                       />
                     </div>
@@ -123,6 +129,7 @@ const Projects = () => {
                   <div className="project-pre-tag">
                     <span className="project-number">0{index + 1}</span>
                     <span className="project-category">{project.category}</span>
+                    <span className="project-date-pill">{project.date}</span>
                   </div>
 
                   <h3 className="project-title">{project.title}</h3>
@@ -174,6 +181,63 @@ const Projects = () => {
             );
           })}
         </div>
+
+        {/* Additional Projects Archive */}
+        <motion.div
+          className="additional-projects-wrapper"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+          variants={fadeUp}
+        >
+          <div className="archive-header">
+            <div>
+              <span className="archive-tag">FULL ARCHIVE // INTERACTIVE LABS</span>
+              <h3 className="archive-title">ADDITIONAL PROJECTS.</h3>
+            </div>
+            <p className="archive-subtitle">
+              Interactive utility apps, algorithm visualizers, and web platforms built for client needs and open exploration.
+            </p>
+          </div>
+
+          <div className="archive-grid">
+            {miniProjects.map((mini) => (
+              <div key={mini.title} className="archive-card">
+                <div className="archive-card-top">
+                  <h4 className="archive-card-title">{mini.title}</h4>
+                  <a
+                    href={mini.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="archive-link-icon"
+                    aria-label={`Open ${mini.title} live demo`}
+                  >
+                    <ExternalLink size={15} />
+                  </a>
+                </div>
+                <p className="archive-card-desc">{mini.description}</p>
+                <div className="archive-card-tags">
+                  {mini.tech.map((t) => (
+                    <span key={t} className="archive-tag-pill">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <div className="archive-card-actions">
+                  <a
+                    href={mini.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="archive-cta-btn"
+                  >
+                    VIEW LIVE APP
+                    <ArrowUpRight size={13} />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

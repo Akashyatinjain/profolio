@@ -292,13 +292,12 @@ const KineticReactorCanvas = () => {
     const getChoreographyTarget = () => {
       const scrollY = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? Math.min(Math.max(scrollY / docHeight, 0), 1) : 0;
+      const _progress = docHeight > 0 ? Math.min(Math.max(scrollY / docHeight, 0), 1) : 0;
 
       const isMobile = window.innerWidth < 768;
       const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
 
       // Section elements
-      const homeEl = document.getElementById('home');
       const aboutEl = document.getElementById('about');
       const skillsEl = document.getElementById('skills');
       const projectsEl = document.getElementById('projects');
