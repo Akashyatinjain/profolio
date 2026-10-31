@@ -24,7 +24,7 @@ const itemVariants = {
   },
 };
 
-const Hero = ({ modelReady }) => {
+const Hero = ({ modelReady, modelProgress, modelFailed }) => {
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -85,7 +85,23 @@ const Hero = ({ modelReady }) => {
           </motion.div>
 
           <div className="hero-model-preview" aria-label="1975 Porsche 911 Turbo in British Racing Green">
-            <img className={`hero-porsche-poster ${modelReady ? 'is-hidden' : ''}`} src="/porsche-preview.svg" alt="" aria-hidden="true" />
+            <div className={`hero-loading-card ${modelReady ? 'is-hidden' : ''}`} aria-hidden={modelReady}>
+              <div className="loader-card-top">
+                <span>STUTTGART · MODEL 930</span>
+                <span className={`loader-status ${modelFailed ? 'is-error' : ''}`}><i /> {modelFailed ? 'PREVIEW MODE' : 'INITIALIZING'}</span>
+              </div>
+              <div className="loader-car-title">911 <span>TURBO</span></div>
+              <div className="loader-card-bottom">
+                <span className={`loader-ring ${modelFailed ? 'is-error' : ''}`} aria-hidden="true" />
+                <div className="loader-progress-copy">
+                  <span>{modelFailed ? '3D VIEW UNAVAILABLE' : modelProgress == null ? 'PREPARING SHOWROOM' : 'LOADING VEHICLE MODEL'}</span>
+                  <div className={`loader-progress-track ${modelFailed ? 'is-error' : ''}`} role={modelFailed ? undefined : 'progressbar'} aria-label={modelFailed ? undefined : 'Loading 3D car model'} aria-valuemin={modelFailed ? undefined : '0'} aria-valuemax={modelFailed ? undefined : '100'} aria-valuenow={modelFailed ? undefined : modelProgress ?? undefined}>
+                    {!modelFailed && <span className={modelProgress == null ? 'is-indeterminate' : ''} style={modelProgress == null ? undefined : { width: `${modelProgress}%` }} />}
+                  </div>
+                </div>
+                {modelProgress != null && !modelFailed && <span className="loader-progress-number">{modelProgress}%</span>}
+              </div>
+            </div>
             <div className="hero-model-caption">
               <span>1975 PORSCHE 911 (930) TURBO</span>
               <span>BRITISH RACING GREEN</span>

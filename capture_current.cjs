@@ -23,7 +23,8 @@ let executablePath = possiblePaths.find(p => fs.existsSync(p));
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900 });
 
-  await page.goto('http://localhost:5174', { waitUntil: 'networkidle2' });
+  const port = 5173;
+  await page.goto(`http://localhost:${port}`, { waitUntil: 'networkidle2' });
   await page.waitForSelector('.porsche-canvas-container.is-ready', { timeout: 30000 });
   await new Promise(r => setTimeout(r, 2000));
 

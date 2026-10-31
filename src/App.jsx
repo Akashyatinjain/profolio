@@ -12,7 +12,7 @@ import ScrollProgress from './components/ScrollProgress';
 const PorscheCanvas = lazy(() => import('./components/PorscheCanvas'));
 import './App.css';
 
-function DeferredPorscheCanvas({ onReady }) {
+function DeferredPorscheCanvas({ onReady, onProgress, onError }) {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -31,20 +31,22 @@ function DeferredPorscheCanvas({ onReady }) {
     };
   }, []);
 
-  return active ? <Suspense fallback={null}><PorscheCanvas onReady={onReady} /></Suspense> : null;
+  return active ? <Suspense fallback={null}><PorscheCanvas onReady={onReady} onProgress={onProgress} onError={onError} /></Suspense> : null;
 }
 
 function App() {
   const [modelReady, setModelReady] = useState(false);
+  const [modelProgress, setModelProgress] = useState(null);
+  const [modelFailed, setModelFailed] = useState(false);
 
   return (
     <>
       <a href="#main-content" className="skip-link">Skip to main content</a>
-      <DeferredPorscheCanvas onReady={() => setModelReady(true)} />
+      <DeferredPorscheCanvas onReady={() => setModelReady(true)} onProgress={setModelProgress} onError={() => setModelFailed(true)} />
       <ScrollProgress />
       <Header />
       <main id="main-content">
-        <Hero modelReady={modelReady} />
+        <Hero modelReady={modelReady} modelProgress={modelProgress} modelFailed={modelFailed} />
         <About />
         <Skills />
         <Projects />
