@@ -147,26 +147,31 @@ function createHeadlightGlowTexture() {
   return texture;
 }
 
-// Procedural forward headlight beam pool on showroom floor
-function createHeadlightBeamTexture() {
+// Broad soft alpha map for the high-beam spill on the showroom floor
+function createHeadlightBeamTexture(maxAlpha = 0.32) {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#000000';
-  ctx.fillRect(0, 0, 512, 512);
-
-  const grad = ctx.createRadialGradient(256, 180, 20, 256, 256, 240);
-  grad.addColorStop(0, 'rgba(220, 242, 255, 0.38)');
-  grad.addColorStop(0.35, 'rgba(190, 225, 255, 0.18)');
-  grad.addColorStop(0.7, 'rgba(160, 210, 255, 0.05)');
-  grad.addColorStop(1.0, 'rgba(0, 0, 0, 0)');
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.ellipse(256, 256, 200, 240, 0, 0, Math.PI * 2);
-  ctx.fill();
+  const image = ctx.createImageData(512, 512);
+  for (let y = 0; y < 512; y += 1) {
+    for (let x = 0; x < 512; x += 1) {
+      const dx = (x - 255.5) / 255.5;
+      const dy = (y - 255.5) / 255.5;
+      const radius = Math.sqrt(dx * dx + dy * dy);
+      const softFalloff = Math.exp(-radius * radius * 3.5) * Math.min(1, (1 - radius) * 7);
+      const alpha = Math.round(255 * maxAlpha * Math.max(0, softFalloff));
+      const offset = (y * 512 + x) * 4;
+      image.data[offset] = 224;
+      image.data[offset + 1] = 240;
+      image.data[offset + 2] = 255;
+      image.data[offset + 3] = alpha;
+    }
+  }
+  ctx.putImageData(image, 0, 0);
 
   const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
   texture.generateMipmaps = true;
   return texture;
 }
@@ -376,23 +381,23 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     carRoot.add(tailLight2);
 
     // Front LED Headlight Beams & Projector Glow (illuminating floor & front bumper)
-    const leftHeadlightSpot = new THREE.SpotLight(0xeaf4ff, 7.5, 16, Math.PI / 5, 0.65, 1.2);
+    const leftHeadlightSpot = new THREE.SpotLight(0xeaf4ff, 18, 20, Math.PI / 12, 0.9, 1.1);
     leftHeadlightSpot.position.set(0.72, 0.72, 2.3);
     leftHeadlightSpot.target.position.set(0.72, 0.02, 8.5);
     carRoot.add(leftHeadlightSpot);
     carRoot.add(leftHeadlightSpot.target);
 
-    const rightHeadlightSpot = new THREE.SpotLight(0xeaf4ff, 7.5, 16, Math.PI / 5, 0.65, 1.2);
+    const rightHeadlightSpot = new THREE.SpotLight(0xeaf4ff, 18, 20, Math.PI / 12, 0.9, 1.1);
     rightHeadlightSpot.position.set(-0.72, 0.72, 2.3);
     rightHeadlightSpot.target.position.set(-0.72, 0.02, 8.5);
     carRoot.add(rightHeadlightSpot);
     carRoot.add(rightHeadlightSpot.target);
 
-    const leftHeadlightGlow = new THREE.PointLight(0xebf5ff, 2.5, 4.0, 1.5);
+    const leftHeadlightGlow = new THREE.PointLight(0xebf5ff, 4.5, 5.5, 1.5);
     leftHeadlightGlow.position.set(0.72, 0.72, 2.4);
     carRoot.add(leftHeadlightGlow);
 
-    const rightHeadlightGlow = new THREE.PointLight(0xebf5ff, 2.5, 4.0, 1.5);
+    const rightHeadlightGlow = new THREE.PointLight(0xebf5ff, 4.5, 5.5, 1.5);
     rightHeadlightGlow.position.set(-0.72, 0.72, 2.4);
     carRoot.add(rightHeadlightGlow);
 
@@ -515,9 +520,10 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
         const glowMat = new THREE.MeshBasicMaterial({
           map: glowTex,
           transparent: true,
-          opacity: 0.95,
+          opacity: 1.0,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
+          toneMapped: false,
         });
         const lensGeo = new THREE.PlaneGeometry(0.38, 0.38);
 
@@ -531,20 +537,72 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
         rightGlowMesh.rotation.set(-0.25, -0.22, 0);
         porsche.add(rightGlowMesh);
 
-        // Forward Headlight Beam Pool on Showroom Floor
-        const beamTex = createHeadlightBeamTexture();
-        const beamGeo = new THREE.PlaneGeometry(3.8, 4.4);
-        const beamMat = new THREE.MeshBasicMaterial({
-          map: beamTex,
+        // Diffuse road spill makes the high beams read as light instead of flat shafts.
+        const floorBeamTexture = createHeadlightBeamTexture(0.5);
+        const floorBeamMaterial = new THREE.MeshBasicMaterial({
+          color: 0xcfe6ff,
+          map: floorBeamTexture,
           transparent: true,
-          opacity: 0.38,
+          opacity: 0.6,
           blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
           depthWrite: false,
+          toneMapped: false,
         });
-        const beamMesh = new THREE.Mesh(beamGeo, beamMat);
-        beamMesh.rotation.x = -Math.PI / 2;
-        beamMesh.position.set(0, 0.003, 3.2); // Forward light pool on floor ahead of nose
-        porsche.add(beamMesh);
+        const floorBeamGeometry = new THREE.PlaneGeometry(3.5, 3.2);
+        const addFloorBeam = (x) => {
+          const pool = new THREE.Mesh(floorBeamGeometry, floorBeamMaterial);
+          pool.rotation.x = Math.PI / 2;
+          pool.position.set(x, 0.004, 4.35);
+          porsche.add(pool);
+        };
+        addFloorBeam(0.86);
+        addFloorBeam(-0.86);
+
+        // A restrained, soft-edged cone gives the headlight output a little atmosphere.
+        const shaftLength = 4.4;
+        const shaftAngle = 0.18;
+        const shaftMaterial = new THREE.ShaderMaterial({
+          uniforms: { beamColor: { value: new THREE.Color(0xd9eaff) } },
+          vertexShader: `
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            uniform vec3 beamColor;
+            varying vec2 vUv;
+            void main() {
+              float edge = min(vUv.x, 1.0 - vUv.x) * 2.0;
+              float softEdge = smoothstep(0.0, 0.8, edge);
+              float along = 0.65 + 0.35 * sin(vUv.y * 3.14159265);
+              float alpha = softEdge * softEdge * along * 0.02;
+              gl_FragColor = vec4(beamColor, alpha);
+            }
+          `,
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          side: THREE.DoubleSide,
+          depthWrite: false,
+          toneMapped: false,
+        });
+        const addHeadlightShaft = (x) => {
+          const shaft = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.82, 0.025, shaftLength, 32, 1, true),
+            shaftMaterial
+          );
+          shaft.rotation.x = Math.PI / 2 + shaftAngle;
+          shaft.position.set(
+            x,
+            0.88 - Math.sin(shaftAngle) * shaftLength / 2,
+            3.04 + Math.cos(shaftAngle) * shaftLength / 2
+          );
+          porsche.add(shaft);
+        };
+        addHeadlightShaft(0.86);
+        addHeadlightShaft(-0.86);
 
         // ── 5.3 AUTOMOTIVE MATERIALS & AUTHENTIC DETAILS ──────────────────
         porsche.traverse((child) => {
@@ -592,7 +650,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
             child.material = new THREE.MeshStandardMaterial({
               color: new THREE.Color(0xffffff),
               emissive: new THREE.Color(0xecf6ff), // Crisp 6000K brilliant LED white
-              emissiveIntensity: 6.0,             // Illuminated LED Light ON!
+              emissiveIntensity: 9.0,             // Full-beam projector output
               metalness: 0.90,
               roughness: 0.06,
               envMapIntensity: 3.8,
