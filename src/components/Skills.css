@@ -1,0 +1,130 @@
+/* ═══════════════════════════════════════════════════════════════
+   Skills.css — Automotive Engineering Specifications Grid
+   ═══════════════════════════════════════════════════════════════ */
+
+.skills-section {
+  background: transparent;
+  position: relative;
+}
+
+.skills-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  letter-spacing: 0.01em;
+  color: var(--porsche-white);
+  text-transform: uppercase;
+}
+
+/* ── Specification Grid Layout ───────────────────────────── */
+.skills-spec-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.skill-spec-card {
+  background: var(--porsche-charcoal);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+  position: relative;
+}
+
+.skill-spec-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.spec-index {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--porsche-champagne);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.spec-accent-line {
+  width: 24px;
+  height: 2px;
+  background: var(--porsche-guards-red);
+}
+
+.spec-category-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  color: var(--porsche-white);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.spec-lead {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--porsche-steel);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Clean Typographic Pills ─────────────────────────────── */
+.spec-skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(119, 123, 120, 0.15);
+}
+
+.skill-pill {
+  font-family: var(--font-subhead);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--porsche-ivory);
+  background: rgba(17, 19, 21, 0.6);
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  transition: all var(--transition-fast);
+}
+
+.skill-pill:hover {
+  border-color: var(--porsche-champagne);
+  color: var(--porsche-white);
+}
+
+/* 5th and 4th card span nicely on 3-col grid */
+@media (min-width: 1024px) {
+  .skill-spec-card:nth-child(4) {
+    grid-column: span 1;
+  }
+  .skill-spec-card:nth-child(5) {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 1023px) {
+  .skills-spec-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .skills-spec-grid {
+    grid-template-columns: 1fr;
+  }
+}

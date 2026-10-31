@@ -1,121 +1,120 @@
-import React, { useState, useCallback } from 'react';
-import { ArrowUpRight, FileText, Copy, Check } from 'lucide-react';
-import { Github, Linkedin, Leetcode } from './Icons';
-import { profile, stats } from '../data/portfolio';
+// src/components/Hero.jsx
+import React from 'react';
+import { ArrowUpRight, ArrowDown } from 'lucide-react';
+import { motion } from 'framer-motion';
 import './Hero.css';
 
-const heroStats = [
-  { value: stats.projects, label: 'Live projects' },
-  { value: stats.cgpa, label: 'CGPA' },
-  { value: stats.problemsSolved, label: 'DSA solved' },
-  { value: 'IEEE Executive', label: 'SFIT Tech Committee' },
-];
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+  },
+};
 
 const Hero = () => {
-  const [emailCopied, setEmailCopied] = useState(false);
-
   const scrollTo = (id) => {
     const el = document.getElementById(id);
-    if (el) window.scrollTo({ top: el.offsetTop - 72, behavior: 'smooth' });
+    if (el) {
+      window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+    }
   };
-
-  const handleResumeClick = () => {
-    window.open('/resume/Resume.pdf?v=latest', '_blank');
-  };
-
-  const copyEmail = useCallback(() => {
-    navigator.clipboard.writeText(profile.email).then(() => {
-      setEmailCopied(true);
-      setTimeout(() => setEmailCopied(false), 2000);
-    });
-  }, []);
 
   return (
-    <section id="home" className="hero-section">
-      <div className="container">
-        <div className="hero-grid">
-          <div className="hero-main">
-            <div className="status-pill reveal">Open to internships · graduating Mar 2028</div>
+    <section id="home" className="hero-section" aria-label="Introduction">
+      <div className="container hero-container">
+        <motion.div
+          className="hero-content"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Automotive Campaign Overhead Label */}
+          <motion.div className="hero-eyebrow" variants={itemVariants}>
+            <span className="eyebrow-accent" />
+            <span className="eyebrow-author">AKASH YATIN JAIN</span>
+            <span className="eyebrow-divider">/</span>
+            <span className="eyebrow-role">CREATIVE DEVELOPER · FULL-STACK ENGINEER</span>
+          </motion.div>
 
-            <h1 className="hero-name reveal reveal-delay-1">
-              Hi, I'm <span className="highlight-text">{profile.shortName}</span>
-            </h1>
+          {/* Monumental Editorial Headline */}
+          <motion.h1 className="hero-headline" variants={itemVariants}>
+            ENGINEERING
+            <br />
+            DIGITAL
+            <br />
+            <span className="headline-accent">EXPERIENCES.</span>
+          </motion.h1>
 
-            <p className="hero-role reveal reveal-delay-2">
-              Full-Stack Developer · React, Node.js, PostgreSQL
-            </p>
+          {/* Editorial Subcopy */}
+          <motion.p className="hero-subcopy" variants={itemVariants}>
+            Architecting production-ready full-stack systems, high-throughput backend APIs,
+            and cinematic 3D interfaces with uncompromising automotive discipline.
+          </motion.p>
 
-            <p className="hero-bio reveal reveal-delay-2">
-              3rd-year IT student at SFIT, Mumbai. I take projects from database schema to a deployed UI —
-              auth, APIs, and the frontend that ties it together. Currently building DataStock and Finance Tracker v2.
-            </p>
-
-            <div className="hero-stats-bar reveal reveal-delay-3">
-              {heroStats.map((item) => (
-                <div key={item.label} className="hero-stat-item">
-                  <span className="hero-stat-value">{item.value}</span>
-                  <span className="hero-stat-label">{item.label}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="hero-actions reveal reveal-delay-3">
-              <button type="button" className="btn btn-primary" onClick={() => scrollTo('projects')}>
-                See my work
-                <ArrowUpRight size={16} />
-              </button>
-              <button type="button" className="btn btn-outline" onClick={handleResumeClick}>
-                <FileText size={16} />
-                Download Resume
-              </button>
-              <a href={profile.links.github} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-                <Github size={16} />
-                GitHub
-              </a>
-            </div>
-
-            <div className="hero-socials reveal reveal-delay-4">
-              <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" className="social-link" title="LinkedIn" aria-label="LinkedIn Profile">
-                <Linkedin size={18} />
-              </a>
-              <a href={profile.links.leetcode} target="_blank" rel="noopener noreferrer" className="social-link" title="LeetCode" aria-label="LeetCode Profile">
-                <Leetcode size={18} />
-              </a>
-              <a href={`mailto:${profile.email}`} className="social-link email-link" aria-label="Email Akash Jain">
-                {profile.email}
-              </a>
-              <button type="button" className="copy-email-btn" onClick={copyEmail} title="Copy email address" aria-label={emailCopied ? "Email copied" : "Copy email address"}>
-                {emailCopied ? <Check size={14} className="copy-icon copied" /> : <Copy size={14} className="copy-icon" />}
-              </button>
-              {emailCopied && <span className="sr-only" role="status">Email copied to clipboard</span>}
-            </div>
-          </div>
-
-          <div className="hero-preview reveal-right">
-            <a
-              href="https://data-stock.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hero-preview-card card"
+          {/* Clean Action Buttons */}
+          <motion.div className="hero-actions" variants={itemVariants}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => scrollTo('projects')}
             >
-              <div className="browser-chrome-header">
-                <div className="browser-chrome-dots">
-                  <span className="chrome-dot dot-red" />
-                  <span className="chrome-dot dot-yellow" />
-                  <span className="chrome-dot dot-green" />
-                </div>
-                <div className="browser-chrome-address">data-stock.vercel.app</div>
-              </div>
-              <div className="hero-preview-image-wrap">
-                <img src="/projects/datastock.png" alt="DataStock — cloud storage app" className="hero-preview-image" />
-              </div>
-              <div className="hero-preview-caption">
-                <span className="hero-preview-label">Latest project</span>
-                <span className="hero-preview-title">DataStock — Cloud Storage</span>
-              </div>
-            </a>
-          </div>
-        </div>
+              EXPLORE PROJECTS
+              <ArrowUpRight size={16} />
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={() => scrollTo('contact')}
+            >
+              GET IN TOUCH
+            </button>
+          </motion.div>
+
+          {/* Minimal Engineering Footnote */}
+          <motion.div className="hero-meta" variants={itemVariants}>
+            <div className="meta-item">
+              <span className="meta-label">DISCIPLINE</span>
+              <span className="meta-value">FULL-STACK & GRAPHICS</span>
+            </div>
+            <div className="meta-divider" />
+            <div className="meta-item">
+              <span className="meta-label">CENTERPIECE</span>
+              <span className="meta-value">1975 PORSCHE 911 [930] TURBO</span>
+            </div>
+            <div className="meta-divider" />
+            <div className="meta-item">
+              <span className="meta-label">STATUS</span>
+              <span className="meta-value">OPEN TO INTERNSHIPS '28</span>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.button
+          type="button"
+          className="hero-scroll-cue"
+          onClick={() => scrollTo('about')}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
+          aria-label="Scroll to about section"
+        >
+          <span className="scroll-cue-text">SCROLL TO EXPLORE</span>
+          <ArrowDown size={14} className="scroll-cue-icon" />
+        </motion.button>
       </div>
     </section>
   );

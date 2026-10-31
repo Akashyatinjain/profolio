@@ -1,24 +1,30 @@
+// src/components/Terminal.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Terminal as TerminalIcon, Maximize2, Minimize2 } from 'lucide-react';
-import { profile, bio, skills, experience, stats } from '../data/portfolio';
+import { motion } from 'framer-motion';
+import { profile, bio, skillCategories, projects, experience } from '../data/portfolio';
 import './Terminal.css';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
 
 const COMMANDS = {
   help: 'Show available commands',
-  about: 'Learn more about me',
-  skills: 'See my technical skills',
-  projects: 'View details of my projects',
-  experience: 'Check out my roles and hackathons',
-  dsa: 'Get my LeetCode & problem-solving progress',
-  contact: 'Find my email, phone, and links',
-  theme: 'Switch theme. Usage: theme [light|dark|matrix]',
+  about: 'Background, bio, and engineering philosophy',
+  skills: 'Categorized technical capabilities',
+  projects: 'Featured projects and live links',
+  experience: 'Roles, hackathons, and leadership milestones',
+  dsa: 'Algorithmic stats and problem-solving metrics',
+  contact: 'Direct email and social profiles',
   clear: 'Clear terminal screen',
 };
 
 const Terminal = () => {
   const [history, setHistory] = useState([
-    { type: 'system', text: 'Welcome to Akash\'s Interactive Dev Shell (v1.0.0).' },
-    { type: 'system', text: 'Type "help" to see available commands or "theme matrix" for a hacker vibe.' },
+    { type: 'system', text: 'Akash Jain DevShell v2.0.0 [Production Mode]' },
+    { type: 'system', text: 'Type "help" to list available commands or click a pill below.' },
   ]);
   const [input, setInput] = useState('');
   const [cmdHistory, setCmdHistory] = useState([]);
@@ -35,7 +41,7 @@ const Terminal = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      executeCommand();
+      executeCommand(input);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (cmdHistory.length === 0) return;
@@ -57,20 +63,18 @@ const Terminal = () => {
     }
   };
 
-  const executeCommand = () => {
-    const trimmedInput = input.trim();
+  const executeCommand = (cmdToRun) => {
+    const trimmedInput = (cmdToRun || '').trim();
     if (!trimmedInput) return;
 
     const parts = trimmedInput.toLowerCase().split(' ');
     const command = parts[0];
-    const args = parts.slice(1);
 
     // Save in command history
     setCmdHistory((prev) => [...prev, trimmedInput]);
     setHistoryIndex(-1);
 
-    // Add input command line to terminal output
-    const newOutput = [...history, { type: 'input', text: `akash-dev-shell:~$ ${trimmedInput}` }];
+    const newOutput = [...history, { type: 'input', text: `akash@portfolio:~$ ${trimmedInput}` }];
 
     switch (command) {
       case 'help':
@@ -88,170 +92,160 @@ const Terminal = () => {
       case 'about':
         newOutput.push({
           type: 'output',
-          text: `Akash Jain — IT Student & Full-Stack Developer\n\nBio:\n${bio.intro}\n\nCurrently:\n${bio.currently}\n\nInterests: ${bio.interests.join(', ')}`,
+          text: `${profile.name} — ${profile.title}\n${profile.headline}\n\nCurrently:\n${bio.currently}\n\nInterests: ${bio.interests.join(', ')}`,
         });
         break;
-      case 'skills':
-        const primary = skills.find(s => s.primary)?.items.join(', ');
-        const secondary = skills.find(s => !s.primary)?.items.join(', ');
+      case 'skills': {
+        const lines = skillCategories
+          .map((cat) => `  [${cat.label}] ${cat.items.join(', ')}`)
+          .join('\n');
         newOutput.push({
           type: 'output',
-          text: `Primary Stack:\n  ${primary}\n\nAdditional experience:\n  ${secondary}`,
+          text: `Technical Capabilities:\n${lines}`,
         });
         break;
-      case 'projects':
+      }
+      case 'projects': {
+        const featured = projects.filter((p) => p.featured);
+        const lines = featured
+          .map((p) => `  * ${p.title} (${p.tech.join(', ')}) -> ${p.liveUrl}`)
+          .join('\n');
         newOutput.push({
           type: 'output',
-          text: `DataStock Cloud App: https://data-stock.vercel.app/\nFinance Tracker: https://budget-tracker-no3.vercel.app/\nSwasthya Health: https://sih-rho-liard.vercel.app/\nSimon Game: https://akashyatinjain.github.io/Simon-Game/\nDrum Kit: https://akashyatinjain.github.io/Drums/\n\nUse "live [url]" to open a site directly or type "github" for source code.`,
+          text: `Featured Projects:\n${lines}\n\nVisit #projects section for full architecture breakdowns.`,
         });
         break;
-      case 'experience':
-        const expText = experience.map(exp => 
-          `• ${exp.role} @ ${exp.organization} (${exp.period})\n  ${exp.description}\n  Tech: ${exp.tags.join(', ')}`
-        ).join('\n\n');
+      }
+      case 'experience': {
+        const lines = experience
+          .map((e) => `  * ${e.role} @ ${e.organization} [${e.period}]\n    ${e.description}`)
+          .join('\n\n');
         newOutput.push({
           type: 'output',
-          text: `Relevant Experience:\n\n${expText}`,
+          text: `Roles & Experience:\n${lines}`,
         });
         break;
+      }
       case 'dsa':
         newOutput.push({
           type: 'output',
-          text: `DSA Problems Solved: ${stats.problemsSolved}\nLeetCode Username: Akashyatinjain\nStriver TUF Profile: takeuforward.org/profile/Akashyatinjain\n\nKeep practicing arrays, hash map, trees, graphs, and DP!`,
+          text: `LeetCode: @${profile.leetcodeUsername}\nStriver A2Z Sheet: @${profile.tufUsername}\nKey Topics: Dynamic Programming, Binary Search, Trees, Graphs, Two Pointers`,
         });
         break;
       case 'contact':
         newOutput.push({
           type: 'output',
-          text: `Email: ${profile.email}\nPhone: ${profile.phone}\nGitHub: ${profile.links.github}\nLinkedIn: ${profile.links.linkedin}`,
-        });
-        break;
-      case 'theme':
-        if (args.length === 0) {
-          newOutput.push({ type: 'error', text: 'Please specify a theme. Options: theme light | theme dark | theme matrix' });
-        } else {
-          const selectedTheme = args[0];
-          if (['light', 'dark', 'matrix'].includes(selectedTheme)) {
-            localStorage.setItem('portfolio_theme', selectedTheme);
-            document.documentElement.setAttribute('data-theme', selectedTheme);
-            window.dispatchEvent(new Event('theme-changed'));
-            newOutput.push({ type: 'success', text: `Theme successfully switched to "${selectedTheme}"!` });
-          } else {
-            newOutput.push({ type: 'error', text: `Unknown theme "${selectedTheme}". Choose from: light, dark, matrix.` });
-          }
-        }
-        break;
-      case 'live':
-        if (args.length === 0) {
-          newOutput.push({ type: 'error', text: 'Usage: live [url]' });
-        } else {
-          const url = args[0].startsWith('http') ? args[0] : `https://${args[0]}`;
-          window.open(url, '_blank');
-          newOutput.push({ type: 'success', text: `Opening ${url} in a new tab...` });
-        }
-        break;
-      case 'github':
-        window.open('https://github.com/Akashyatinjain', '_blank');
-        newOutput.push({ type: 'success', text: 'Opening GitHub profile...' });
-        break;
-      case 'sudo':
-        if (args[0] === 'rm' && args[1] === '-rf') {
-          newOutput.push({ 
-            type: 'error', 
-            text: 'WARNING: ACCESS DENIED.\nYou do not have permissions to execute "rm -rf" on the user\'s brain.\nAlso, nice try! 😉' 
-          });
-        } else {
-          newOutput.push({ type: 'error', text: 'Only standard commands allowed. Sudo usage restricted.' });
-        }
-        break;
-      case 'hack':
-        newOutput.push({
-          type: 'success',
-          text: 'Initializing mainframe bypass...\nDecrypting firewalls...\nAccess granted!\nWelcome to the Matrix. 🕶️',
+          text: `Email:    ${profile.email}\nGitHub:   ${profile.github}\nLinkedIn: ${profile.linkedin}`,
         });
         break;
       default:
         newOutput.push({
           type: 'error',
-          text: `Command not found: "${trimmedInput}". Type "help" to see all valid commands.`,
+          text: `Command not found: "${command}". Type "help" for a list of valid commands.`,
         });
+        break;
     }
 
     setHistory(newOutput);
     setInput('');
   };
 
-  const focusInput = () => {
-    inputRef.current?.focus();
-  };
-
   return (
-    <section className="terminal-section" id="developer-shell">
+    <section id="terminal" className="terminal-section">
       <div className="container">
-        <div className="reveal">
-          <p className="section-label">Dev Sandbox</p>
-          <h2 className="section-title">Interactive Terminal</h2>
+        <motion.div
+          className="section-header"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+          variants={fadeUp}
+        >
+          <span className="section-label">Interactive Shell</span>
+          <h2 className="section-title">Developer Console</h2>
           <p className="section-desc">
-            Type commands directly to query my profile, project links, or switch site themes dynamically.
+            For technical reviewers and judges who prefer a keyboard-driven interface.
           </p>
-        </div>
+        </motion.div>
 
-        <div className={`terminal-window card ${isMinimized ? 'minimized' : ''}`} onClick={focusInput}>
-          {/* Header Bar */}
+        <motion.div
+          className="terminal-window"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+          variants={fadeUp}
+        >
+          {/* Top Title Bar */}
           <div className="terminal-bar">
             <div className="terminal-left">
-              <TerminalIcon size={14} className="terminal-bar-icon" />
-              <span className="terminal-title">akash@sfit-server:~/portfolio</span>
+              <div className="terminal-dots" aria-hidden="true">
+                <span className="term-dot red" />
+                <span className="term-dot yellow" />
+                <span className="term-dot green" />
+              </div>
+              <TerminalIcon size={14} color="var(--accent)" style={{ marginLeft: 8 }} />
+              <span className="terminal-title">akash@dev-shell: ~ (zsh)</span>
             </div>
             <div className="terminal-actions">
-              <button 
-                type="button" 
-                className="terminal-btn-action minimize" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsMinimized(!isMinimized);
-                }}
-                title={isMinimized ? "Maximize terminal" : "Minimize terminal"}
-                aria-label={isMinimized ? "Maximize terminal" : "Minimize terminal"}
-                aria-expanded={!isMinimized}
+              <button
+                type="button"
+                className="terminal-action-btn"
+                onClick={() => setIsMinimized(!isMinimized)}
+                aria-label={isMinimized ? 'Expand terminal' : 'Minimize terminal'}
               >
-                {isMinimized ? <Maximize2 size={10} /> : <Minimize2 size={10} />}
+                {isMinimized ? <Maximize2 size={13} /> : <Minimize2 size={13} />}
               </button>
             </div>
           </div>
 
-          {/* Terminal Screen */}
+          {/* Terminal Body */}
           {!isMinimized && (
-            <div className="terminal-screen">
-              <div ref={historyRef} className="terminal-history">
-                {history.map((line, idx) => (
-                  <div key={idx} className={`terminal-line type-${line.type}`}>
-                    {line.text}
-                  </div>
-                ))}
+            <>
+              <div
+                className="terminal-body"
+                ref={historyRef}
+                onClick={() => inputRef.current?.focus()}
+              >
+                <div className="terminal-history">
+                  {history.map((item, idx) => (
+                    <div key={idx} className={`terminal-line ${item.type}`}>
+                      {item.text}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="terminal-input-row">
+                  <span className="terminal-prompt">akash@portfolio:~$</span>
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="terminal-input"
+                    aria-label="Terminal command prompt"
+                    autoComplete="off"
+                    spellCheck="false"
+                  />
+                </div>
               </div>
 
-              {/* Input Row */}
-              <div className="terminal-input-row">
-                <span className="terminal-prompt">akash-dev-shell:~$</span>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className="terminal-input-field"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck="false"
-                  aria-label="Terminal input"
-                  placeholder="Type 'help'..."
-                />
+              {/* Quick suggestions pills */}
+              <div className="terminal-quick-pills">
+                <span className="quick-label">Quick Run:</span>
+                {['help', 'about', 'skills', 'projects', 'dsa', 'contact', 'clear'].map((cmd) => (
+                  <button
+                    key={cmd}
+                    type="button"
+                    className="quick-btn"
+                    onClick={() => executeCommand(cmd)}
+                  >
+                    {cmd}
+                  </button>
+                ))}
               </div>
-            </div>
+            </>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

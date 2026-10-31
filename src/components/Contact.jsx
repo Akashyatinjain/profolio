@@ -1,34 +1,30 @@
+// src/components/Contact.jsx
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, FileText, CheckCircle2 } from 'lucide-react';
+import { Mail, MapPin, Send, FileText, CheckCircle2, Copy, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Leetcode } from './Icons';
 import { profile } from '../data/portfolio';
-import confetti from 'canvas-confetti';
 import './Contact.css';
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+};
+
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState(null);
-  const [showToast, setShowToast] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const copyEmail = (e) => {
-    e.preventDefault();
+  const copyEmail = () => {
     navigator.clipboard.writeText(profile.email).then(() => {
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
-    });
-  };
-
-  const triggerConfetti = () => {
-    confetti({
-      particleCount: 80,
-      spread: 60,
-      origin: { y: 0.8 },
-      colors: ['#2563EB', '#3B82F6', '#60A5FA', '#10B981']
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
     });
   };
 
@@ -40,10 +36,9 @@ const Contact = () => {
     if (!accessKey) {
       setTimeout(() => {
         setStatus('success');
-        triggerConfetti();
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        setFormData({ name: '', email: '', message: '' });
         setTimeout(() => setStatus(null), 5000);
-      }, 1000);
+      }, 700);
       return;
     }
 
@@ -53,161 +48,227 @@ const Contact = () => {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           access_key: accessKey,
-          ...formData,
-          from_name: 'Portfolio Contact',
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          subject: `Automotive Portfolio Inquiry from ${formData.name}`,
+          from_name: 'Akash Jain Portfolio',
         }),
       });
-      const result = await res.json();
-      if (result.success) {
+
+      if (res.ok) {
         setStatus('success');
-        triggerConfetti();
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setStatus(null), 5000);
       } else {
         setStatus('error');
       }
-      setTimeout(() => setStatus(null), 5000);
     } catch {
       setStatus('error');
-      setTimeout(() => setStatus(null), 5000);
     }
   };
 
+  const handleResumeClick = () => {
+    window.open('/resume/Resume.pdf?v=latest', '_blank');
+  };
+
   return (
-    <section id="contact" className="contact">
+    <section id="contact" className="contact-section" aria-label="Contact - The Final Drive">
       <div className="container">
-        <p className="section-label reveal">Contact</p>
-        <h2 className="section-title reveal reveal-delay-1">Let's talk</h2>
-        <p className="section-desc reveal reveal-delay-2">
-          Looking for a software engineering intern for 2026? I'd love to hear about your team. Let's build something great.
-        </p>
+        {/* Section Header */}
+        <motion.div
+          className="section-header"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-80px' }}
+          variants={fadeUp}
+        >
+          <div className="section-tag">05 // FINAL DRIVE</div>
+          <h2 className="contact-headline">LET'S BUILD SOMETHING EXTRAORDINARY.</h2>
+          <p>
+            Whether you are scouting engineering talent for an internship, looking to deploy
+            a high-performance full-stack system, or discussing architecture—let's talk.
+          </p>
+        </motion.div>
 
-        <div className="contact-layout">
-          <div className="contact-info reveal-left">
-            <div className="contact-card card">
-              <div onClick={copyEmail} className="contact-row clickable-contact-row" title="Click to copy email">
-                <div className="contact-icon-wrapper">
-                  <Mail size={18} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <span className="contact-row-label">Email (Click to copy)</span>
-                  <span className="contact-row-val">{profile.email}</span>
-                </div>
+        <div className="contact-editorial-layout">
+          {/* Left Column: Direct Inquiries & Links */}
+          <motion.div
+            className="contact-info-col"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-60px' }}
+            variants={fadeUp}
+          >
+            {/* Direct Email Card */}
+            <div className="contact-email-card" onClick={copyEmail} role="button" tabIndex={0}>
+              <div className="email-meta-top">
+                <span className="email-subtag">DIRECT INBOX</span>
+                <span className="email-copy-badge">
+                  {copied ? <CheckCircle2 size={13} color="var(--porsche-champagne)" /> : <Copy size={13} />}
+                  {copied ? 'COPIED TO CLIPBOARD' : 'CLICK TO COPY'}
+                </span>
               </div>
-              <a href={`tel:${profile.phone.replace(/\s/g, '')}`} className="contact-row">
-                <div className="contact-icon-wrapper">
-                  <Phone size={18} />
-                </div>
-                <div>
-                  <span className="contact-row-label">Phone</span>
-                  <span className="contact-row-val">{profile.phone}</span>
-                </div>
+              <div className="email-address-text">{profile.email}</div>
+            </div>
+
+            {/* Automotive Spec Sheet Contact Info */}
+            <div className="contact-spec-box">
+              <div className="contact-spec-row">
+                <span className="c-label">ACADEMIC INBOX</span>
+                <span className="c-val">{profile.studentEmail || 'aj0881871@student.sfit.ac.in'}</span>
+              </div>
+              <div className="contact-spec-row">
+                <span className="c-label">LOCATION</span>
+                <span className="c-val">Mumbai, India (IST · UTC +5:30)</span>
+              </div>
+              <div className="contact-spec-row">
+                <span className="c-label">STATUS</span>
+                <span className="c-val">Open to Internships '28 & Full-Time</span>
+              </div>
+            </div>
+
+            {/* Professional Network Links */}
+            <div className="contact-network-links">
+              <a
+                href={profile.links?.github || profile.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-outline"
+                aria-label="GitHub Profile"
+              >
+                <Github size={15} />
+                GITHUB
+                <ArrowUpRight size={14} />
               </a>
-              <div className="contact-row">
-                <div className="contact-icon-wrapper">
-                  <MapPin size={18} />
-                </div>
-                <div>
-                  <span className="contact-row-label">Location</span>
-                  <span className="contact-row-val">{profile.location}</span>
-                </div>
-              </div>
-            </div>
 
-            <div className="contact-socials">
-              <span className="contact-socials-label">Connect Elsewhere</span>
-              <div className="contact-socials-row">
-                <a href="/resume/Resume.pdf?v=latest" download className="social-chip resume-chip" title="Download Resume">
-                  <FileText size={16} /> Resume PDF
-                </a>
-                <a href={profile.links.github} target="_blank" rel="noopener noreferrer" className="social-chip" title="GitHub">
-                  <Github size={16} /> GitHub
-                </a>
-                <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" className="social-chip" title="LinkedIn">
-                  <Linkedin size={16} /> LinkedIn
-                </a>
-                <a href={profile.links.leetcode} target="_blank" rel="noopener noreferrer" className="social-chip" title="LeetCode">
-                  <Leetcode size={16} /> LeetCode
-                </a>
-              </div>
-            </div>
-          </div>
+              <a
+                href={profile.links?.linkedin || profile.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-outline"
+                aria-label="LinkedIn Profile"
+              >
+                <Linkedin size={15} />
+                LINKEDIN
+                <ArrowUpRight size={14} />
+              </a>
 
-          <form className="contact-form card reveal-right" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <div className="form-field">
-                <label htmlFor="name">Name</label>
+              <a
+                href={profile.links?.leetcode || profile.leetcode}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-steel"
+                aria-label="LeetCode Profile"
+              >
+                <Leetcode size={15} />
+                LEETCODE
+                <ArrowUpRight size={14} />
+              </a>
+
+              <button
+                type="button"
+                className="btn btn-steel"
+                onClick={handleResumeClick}
+              >
+                <FileText size={15} />
+                RESUME PDF
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Right Column: Luxury Contact Form */}
+          <motion.div
+            className="contact-form-col"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-60px' }}
+            variants={fadeUp}
+          >
+            <form className="porsche-contact-form" onSubmit={handleSubmit} noValidate>
+              <div className="form-group">
+                <label htmlFor="contact-name" className="form-label">
+                  YOUR NAME
+                </label>
                 <input
-                  id="name"
-                  name="name"
+                  id="contact-name"
                   type="text"
+                  name="name"
+                  className="form-input"
+                  placeholder="e.g. Ferdinand Porsche"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Your name"
                   required
                 />
               </div>
-              <div className="form-field">
-                <label htmlFor="email">Email</label>
+
+              <div className="form-group">
+                <label htmlFor="contact-email" className="form-label">
+                  YOUR EMAIL
+                </label>
                 <input
-                  id="email"
-                  name="email"
+                  id="contact-email"
                   type="email"
+                  name="email"
+                  className="form-input"
+                  placeholder="name@company.com"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="you@company.com"
                   required
                 />
               </div>
-            </div>
-            <div className="form-field">
-              <label htmlFor="subject">Subject</label>
-              <input
-                id="subject"
-                name="subject"
-                type="text"
-                value={formData.subject}
-                onChange={handleChange}
-                placeholder="Internship opportunity / Project collaboration"
-                required
-              />
-            </div>
-            <div className="form-field">
-              <label htmlFor="message">Message</label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Tell me about the role or what you have in mind..."
-                rows={5}
-                required
-              />
-            </div>
 
-            <button type="submit" className="btn btn-primary btn-submit-contact" disabled={status === 'sending'}>
-              {status === 'sending' ? 'Sending...' : 'Send Message'}
-              {status !== 'sending' && <Send size={15} />}
-            </button>
-
-            {status === 'success' && (
-              <div className="form-success-wrapper">
-                <CheckCircle2 className="success-check-icon animate-success" size={20} />
-                <p className="form-msg form-msg-success">Got it — I'll get back to you soon.</p>
+              <div className="form-group">
+                <label htmlFor="contact-message" className="form-label">
+                  PROJECT SPECIFICATIONS / MESSAGE
+                </label>
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  className="form-textarea"
+                  rows={4}
+                  placeholder="Describe your project, timeline, or engineering opportunity..."
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                />
               </div>
-            )}
-            {status === 'error' && (
-              <p className="form-msg form-msg-error">Something went wrong. Try emailing me directly.</p>
-            )}
-          </form>
+
+              <button
+                type="submit"
+                className="btn btn-primary form-submit-btn"
+                disabled={status === 'sending'}
+              >
+                {status === 'sending' ? 'TRANSMITTING...' : 'TRANSMIT MESSAGE'}
+                <Send size={14} />
+              </button>
+
+              <AnimatePresence>
+                {status === 'success' && (
+                  <motion.div
+                    className="form-alert alert-success"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    Transmission received. I will review and reply within 24 hours.
+                  </motion.div>
+                )}
+                {status === 'error' && (
+                  <motion.div
+                    className="form-alert alert-error"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    Transmission failed. Please reach out directly at {profile.email}.
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </form>
+          </motion.div>
         </div>
       </div>
-
-      {/* Copy Email Toast Notification */}
-      {showToast && (
-        <div className="contact-toast" role="status" aria-live="polite">
-          <span>Email copied to clipboard!</span>
-        </div>
-      )}
     </section>
   );
 };

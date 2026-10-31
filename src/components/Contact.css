@@ -1,325 +1,217 @@
-.contact-layout {
+/* ═══════════════════════════════════════════════════════════════
+   Contact.css — Luxury Automotive Closing Section
+   ═══════════════════════════════════════════════════════════════ */
+
+.contact-section {
+  background: transparent;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.contact-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  letter-spacing: 0.01em;
+  color: var(--porsche-white);
+  text-transform: uppercase;
+}
+
+.contact-editorial-layout {
   display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: 2rem;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3xl);
+  margin-top: var(--space-2xl);
   align-items: start;
 }
 
-.contact-info {
+/* ── Left Column: Contact Cards & Info ───────────────────── */
+.contact-info-col {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-lg);
 }
 
-.contact-card {
-  padding: 0.75rem;
-  overflow: hidden;
-  background: var(--bg-card);
-}
-
-.contact-avatar-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.15rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 0.5rem;
-}
-
-.contact-avatar-photo {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--accent-light);
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
-}
-
-.contact-avatar-name {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text);
-  margin: 0;
-}
-
-.contact-avatar-role {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.contact-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.15rem;
-  color: inherit;
-  transition: all 0.25s ease;
-  border-radius: 10px;
-}
-
-a.contact-row:hover {
-  background: var(--bg-raised);
-  transform: translateX(4px);
-}
-
-.contact-icon-wrapper {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: var(--accent-pale);
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.25s ease;
-}
-
-a.contact-row:hover .contact-icon-wrapper {
-  background: var(--accent);
-  color: #FFFFFF;
-}
-
-.contact-row-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  display: block;
-  margin-bottom: 0.2rem;
-}
-
-.contact-row-val {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text);
-  word-break: break-all;
-}
-
-.contact-socials-label {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  display: block;
-  margin-bottom: 0.85rem;
-}
-
-.contact-socials-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-}
-
-.social-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1rem;
-  border-radius: 8px;
+.contact-email-card {
+  background: var(--porsche-charcoal);
   border: 1px solid var(--border);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  background: var(--bg-card);
-  transition: all 0.25s;
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-sm);
+  padding: 1.5rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-.social-chip:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: var(--accent-pale);
+.contact-email-card:hover {
+  border-color: var(--porsche-champagne);
+  background: rgba(30, 33, 36, 0.95);
   transform: translateY(-2px);
 }
 
-.contact-form {
-  padding: 2.25rem;
+.email-meta-top {
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  background: var(--bg-card);
+  justify-content: space-between;
+  align-items: center;
 }
 
-.form-row {
+.email-subtag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: var(--porsche-champagne);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.email-copy-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--porsche-steel);
+  text-transform: uppercase;
+}
+
+.email-address-text {
+  font-family: var(--font-subhead);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--porsche-white);
+  letter-spacing: 0.04em;
+}
+
+/* ── Spec Box ────────────────────────────────────────────── */
+.contact-spec-box {
+  background: rgba(25, 27, 29, 0.6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.contact-spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.c-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--porsche-steel);
+  text-transform: uppercase;
+}
+
+.c-val {
+  font-family: var(--font-subhead);
+  font-weight: 600;
+  color: var(--porsche-ivory);
+  letter-spacing: 0.04em;
+}
+
+/* ── Network Buttons ─────────────────────────────────────── */
+.contact-network-links {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-field label {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.form-field input,
-.form-field textarea {
-  background: var(--bg-raised);
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 0.85rem 1rem;
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  outline: none;
-  transition: all 0.25s ease;
-  resize: vertical;
-}
-
-.form-field input:focus,
-.form-field textarea:focus {
-  border-color: var(--accent-light);
-  background: var(--bg-card);
-  box-shadow: 0 0 0 3px var(--accent-dim);
-}
-
-.form-field input::placeholder,
-.form-field textarea::placeholder {
-  color: var(--text-muted);
-}
-
-.btn-submit-contact {
-  align-self: flex-start;
+  gap: 0.75rem;
   margin-top: 0.5rem;
-  padding: 0.8rem 1.6rem;
 }
 
-.form-msg {
-  font-size: 0.9rem;
-  padding: 0.85rem 1.15rem;
-  border-radius: 8px;
-  font-weight: 600;
+/* ── Right Column: Form ──────────────────────────────────── */
+.contact-form-col {
   width: 100%;
 }
 
-.form-msg-success {
-  color: #10B981;
-  background: var(--accent-pale);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-.form-msg-error {
-  color: #EF4444;
-  background: #FEF2F2;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-.clickable-contact-row {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.clickable-contact-row:hover {
-  background: var(--bg-hover) !important;
-  transform: translateX(4px);
-}
-
-.resume-chip {
-  background: var(--accent-pale) !important;
-  border-color: var(--accent-soft) !important;
-  color: var(--accent) !important;
-}
-
-.resume-chip:hover {
-  background: var(--accent) !important;
-  color: var(--accent-text) !important;
-  border-color: var(--accent) !important;
-}
-
-.form-success-wrapper {
+.porsche-contact-form {
+  background: var(--porsche-charcoal);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 2.2rem 2.4rem;
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: var(--accent-pale);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: 8px;
-  padding: 0.3rem 0.85rem;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-label {
+  font-family: var(--font-subhead);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--porsche-champagne);
+  text-transform: uppercase;
+}
+
+.form-input,
+.form-textarea {
+  background: var(--porsche-graphite);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 0.85rem 1.1rem;
+  color: var(--porsche-ivory);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: border-color var(--transition-fast);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--porsche-guards-red);
+  background: #141719;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.form-submit-btn {
+  width: 100%;
   margin-top: 0.5rem;
 }
 
-.form-success-wrapper .form-msg-success {
-  border: none;
-  background: transparent;
-  padding: 0.5rem 0;
-  margin: 0;
+.form-alert {
+  padding: 0.85rem 1.2rem;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-subhead);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-align: center;
 }
 
-.success-check-icon {
-  color: #10B981;
-  animation: checkScaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  flex-shrink: 0;
+.alert-success {
+  background: rgba(195, 168, 117, 0.15);
+  border: 1px solid var(--porsche-champagne);
+  color: var(--porsche-champagne);
 }
 
-/* Slide-up Toast Notification */
-.contact-toast {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #0F172A;
-  color: #FFFFFF;
-  padding: 0.85rem 1.75rem;
-  border-radius: 50px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  box-shadow: var(--shadow-lg);
-  z-index: 1000;
-  animation: toastSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+.alert-error {
+  background: rgba(158, 41, 41, 0.2);
+  border: 1px solid var(--porsche-guards-red);
+  color: var(--porsche-white);
 }
 
-@keyframes toastSlideUp {
-  from {
-    bottom: 0rem;
-    opacity: 0;
-  }
-  to {
-    bottom: 2rem;
-    opacity: 1;
-  }
-}
-
-@keyframes checkScaleIn {
-  from {
-    transform: scale(0);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@media (max-width: 768px) {
-  .contact-layout {
+@media (max-width: 968px) {
+  .contact-editorial-layout {
     grid-template-columns: 1fr;
+    gap: var(--space-2xl);
   }
-  .form-row {
+  .contact-network-links {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .contact-form {
-    padding: 1.5rem;
-  }
-  .btn-submit-contact {
-    width: 100%;
-    justify-content: center;
   }
 }

@@ -1,0 +1,161 @@
+/* ═══════════════════════════════════════════════════════════════
+   PorscheCanvas.css — Heritage Motorsport 3D Canvas
+   ═══════════════════════════════════════════════════════════════ */
+
+.porsche-canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  transition: opacity 0.8s var(--ease-cinematic);
+}
+
+.porsche-canvas-container.is-loading {
+  opacity: 0.9;
+}
+
+.porsche-canvas-container.is-ready {
+  opacity: 1;
+}
+
+.porsche-gl-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Fallback for when WebGL is unavailable */
+.porsche-fallback {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at 60% 50%, #191B1D 0%, #111315 100%);
+}
+
+.porsche-fallback-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(195, 168, 117, 0.08) 0%,
+    rgba(158, 41, 41, 0.05) 50%,
+    transparent 70%
+  );
+  filter: blur(50px);
+}
+
+/* Telemetry HUD Loader */
+.porsche-loader-hud {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  background: rgba(25, 27, 29, 0.92);
+  border: 1px solid rgba(119, 123, 120, 0.35);
+  backdrop-filter: blur(12px);
+  padding: 1rem 1.4rem;
+  border-radius: var(--radius-sm);
+  z-index: 10;
+  font-family: var(--font-subhead);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+}
+
+.porsche-loader-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.porsche-loader-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--porsche-guards-red);
+}
+
+.porsche-loader-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--porsche-ivory);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.porsche-loader-bar-bg {
+  width: 220px;
+  height: 2px;
+  background: rgba(119, 123, 120, 0.25);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.porsche-loader-bar-fill {
+  height: 100%;
+  background: var(--porsche-guards-red);
+  transition: width 0.3s ease;
+}
+
+.porsche-loader-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--porsche-steel);
+  letter-spacing: 0.12em;
+  font-family: var(--font-mono);
+}
+
+/* Corner telemetry badges */
+.porsche-hud-badge {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: rgba(234, 230, 221, 0.35);
+  pointer-events: none;
+  z-index: 5;
+  text-transform: uppercase;
+}
+
+.porsche-hud-badge.top-right {
+  top: 5.5rem;
+  right: 2.5rem;
+}
+
+.porsche-hud-badge.bottom-left {
+  bottom: 2.5rem;
+  left: 2.5rem;
+}
+
+.porsche-hud-badge .hud-accent {
+  color: var(--porsche-champagne);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .porsche-loader-hud {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.8rem 1rem;
+  }
+  .porsche-loader-bar-bg {
+    width: 160px;
+  }
+  .porsche-hud-badge {
+    display: none;
+  }
+}

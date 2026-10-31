@@ -1,143 +1,86 @@
-/* src/index.css — Multi-theme design system */
+/* ═══════════════════════════════════════════════════════════════
+   PORSCHE HERITAGE — MODERN MOTORSPORT DESIGN SYSTEM
+   Portfolio of Akash Yatin Jain · Creative Developer & Full-Stack Engineer
+   ═══════════════════════════════════════════════════════════════ */
 
-:root, [data-theme="light"] {
-  /* Colors — light palette */
-  --bg: #FFFFFF;
-  --bg-raised: #F9FAFB;
-  --bg-card: #FFFFFF;
-  --bg-hover: #F3F4F6;
+:root {
+  /* ── 1. The Heritage Motorsport Palette ────────────────────── */
+  --porsche-graphite:   #111315; /* 70% Primary background */
+  --porsche-charcoal:   #191B1D; /* Deep secondary surface */
+  --porsche-ivory:      #EAE6DD; /* 20% Warm Ivory typography & details */
+  --porsche-white:      #FFFFFF; /* Pure White crisp accents */
+  --porsche-guards-red: #9E2929; /* 10% Restrained action accent */
+  --porsche-red-hover:  #B83030;
+  --porsche-steel:      #777B78; /* Steel Grey borders & subtle text */
+  --porsche-champagne:  #C3A875; /* Champagne badge & detail accent */
 
-  --border: #E5E7EB;
-  --border-strong: #D1D5DB;
-  --border-focus: #2563EB;
+  /* ── 2. Functional Tokens ───────────────────────────────────── */
+  --bg:                 var(--porsche-graphite);
+  --bg-surface:         var(--porsche-charcoal);
+  --bg-card:            rgba(25, 27, 29, 0.88);
+  --bg-card-hover:      rgba(32, 35, 38, 0.95);
+  --bg-overlay:         rgba(17, 19, 21, 0.94);
 
-  --text: #111827;
-  --text-secondary: #6B7280;
-  --text-muted: #9CA3AF;
-  --text-light: #D1D5DB;
+  --border:             rgba(119, 123, 120, 0.22);
+  --border-strong:      rgba(119, 123, 120, 0.45);
+  --border-accent:      var(--porsche-guards-red);
 
-  --accent: #2563EB;
-  --accent-light: #3B82F6;
-  --accent-soft: #60A5FA;
-  --accent-pale: #EFF6FF;
-  --accent-dim: rgba(37, 99, 235, 0.06);
-  --accent-text: #FFFFFF;
-  --accent-hover: #1D4ED8;
+  --text:               var(--porsche-ivory);
+  --text-primary:       var(--porsche-white);
+  --text-secondary:     #B8B9B5;
+  --text-muted:         var(--porsche-steel);
+  --text-dim:           #4A4E4C;
 
-  /* LeetCode Colors */
-  --lc-easy: #10B981;
-  --lc-medium: #F59E0B;
-  --lc-hard: #EF4444;
+  --accent:             var(--porsche-guards-red);
+  --accent-hover:       var(--porsche-red-hover);
+  --accent-champagne:   var(--porsche-champagne);
+  --accent-steel:       var(--porsche-steel);
+  --accent-ivory:       var(--porsche-ivory);
 
-  /* Browser Mockup Chrome Tokens */
-  --chrome-header-bg: #EFF6FF;
-  --chrome-address-bg: #FFFFFF;
-  --chrome-body-bg: #FFFFFF;
+  /* ── 3. Typography Hierarchy ────────────────────────────────── */
+  --font-display:       'Oswald', 'Space Grotesk', sans-serif;
+  --font-subhead:       'Space Grotesk', sans-serif;
+  --font-body:          'Manrope', 'Inter', -apple-system, sans-serif;
+  --font-mono:          'JetBrains Mono', monospace;
 
-  /* Fonts */
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'IBM Plex Sans', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  /* ── 4. Layout & Spacing ────────────────────────────────────── */
+  --radius-xs: 1px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --max-width: 1280px;
 
-  /* Layout */
-  --radius: 16px;
-  --radius-lg: 24px;
-  --max-width: 1120px;
-  
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 10px 30px rgba(37, 99, 235, 0.06);
-  --shadow-lg: 0 20px 40px rgba(15, 23, 42, 0.08);
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2.5rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 7.5rem;
+  --space-4xl: 10rem;
 
-  --header-bg: rgba(255, 255, 255, 0.75);
-  --header-border: rgba(226, 232, 240, 0.8);
-  --header-scrolled-bg: rgba(255, 255, 255, 0.85);
-  --header-scrolled-border: rgba(37, 99, 235, 0.15);
+  /* ── 5. Shadows & Atmospheric Depth ─────────────────────────── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.75);
+  --shadow-red: 0 8px 30px rgba(158, 41, 41, 0.25);
+
+  /* ── 6. Header ──────────────────────────────────────────────── */
+  --header-bg: rgba(17, 19, 21, 0.85);
+  --header-border: rgba(119, 123, 120, 0.18);
+  --header-scrolled-bg: rgba(17, 19, 21, 0.95);
+
+  /* ── 7. Transitions ─────────────────────────────────────────── */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.2s var(--ease-cinematic);
+  --transition-smooth: 0.4s var(--ease-cinematic);
 
   scroll-behavior: smooth;
 }
 
-[data-theme="dark"] {
-  /* Colors — Developer Dark palette */
-  --bg: #0D1117;
-  --bg-raised: #161B22;
-  --bg-card: #1F2937;
-  --bg-hover: #21262d;
-
-  --border: #30363D;
-  --border-strong: #484F58;
-  --border-focus: #3B82F6;
-
-  --text: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #6e7681;
-  --text-light: #484f58;
-
-  --accent: #3B82F6;
-  --accent-light: #58a6ff;
-  --accent-soft: #60A5FA;
-  --accent-pale: #161b22;
-  --accent-dim: rgba(59, 130, 246, 0.1);
-  --accent-text: #FFFFFF;
-  --accent-hover: #60A5FA;
-
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
-
-  --header-bg: rgba(13, 17, 23, 0.75);
-  --header-border: rgba(48, 54, 61, 0.8);
-  --header-scrolled-bg: rgba(22, 27, 34, 0.85);
-  --header-scrolled-border: rgba(59, 130, 246, 0.25);
-
-  /* Browser Mockup Chrome Tokens */
-  --chrome-header-bg: #161B22;
-  --chrome-address-bg: #0D1117;
-  --chrome-body-bg: #1F2937;
-}
-
-[data-theme="matrix"] {
-  /* Colors — Classic Matrix hacker palette */
-  --bg: #050505;
-  --bg-raised: #0B0B0B;
-  --bg-card: #080808;
-  --bg-hover: #1A1A1A;
-
-  --border: #1A1A1A;
-  --border-strong: #333333;
-  --border-focus: #00FF41;
-
-  --text: #E5E5E5;
-  --text-secondary: #AAAAAA;
-  --text-muted: #777777;
-  --text-light: #333333;
-
-  --accent: #00FF41;
-  --accent-light: #00C853;
-  --accent-soft: #80FF99;
-  --accent-pale: #0D0D0D;
-  --accent-dim: rgba(0, 255, 65, 0.08);
-  --accent-text: #000000;
-  --accent-hover: #00E63B;
-
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 10px 30px rgba(0, 255, 65, 0.1);
-  --shadow-lg: 0 20px 40px rgba(0, 255, 65, 0.15);
-
-  --header-bg: rgba(5, 5, 5, 0.75);
-  --header-border: rgba(26, 26, 26, 0.8);
-  --header-scrolled-bg: rgba(11, 11, 11, 0.85);
-  --header-scrolled-border: rgba(0, 255, 65, 0.25);
-
-  /* Browser Mockup Chrome Tokens */
-  --chrome-header-bg: #0B0B0B;
-  --chrome-address-bg: #050505;
-  --chrome-body-bg: #080808;
-}
-
-body, header, section, .card, .btn, .tag, input, textarea, a, .browser-chrome-header, .browser-chrome-address-bar {
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
-}
+/* ═══════════════════════════════════════════════════════════════
+   Reset & Base Standards
+   ═══════════════════════════════════════════════════════════════ */
 
 * {
   box-sizing: border-box;
@@ -155,274 +98,209 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   font-size: 16px;
-  line-height: 1.65;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Glassmorphism details */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.015;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 128px;
-}
+/* ═══════════════════════════════════════════════════════════════
+   Typography Hierarchy
+   ═══════════════════════════════════════════════════════════════ */
 
-body.menu-open {
-  overflow: hidden;
-}
-
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-  color: var(--text);
+  text-transform: uppercase;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+}
+
+h1 {
+  font-size: clamp(3rem, 7.5vw, 6.2rem);
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  letter-spacing: 0.01em;
+}
+
+h3 {
+  font-size: clamp(1.4rem, 2.5vw, 2.1rem);
+  letter-spacing: 0.02em;
+}
+
+h4 {
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+}
+
+p {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.75;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
-::selection {
-  background: var(--accent);
-  color: var(--accent-text);
+/* ═══════════════════════════════════════════════════════════════
+   Automotive Editorial Badges & Section Tags
+   ═══════════════════════════════════════════════════════════════ */
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-subhead);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--porsche-champagne);
+  margin-bottom: var(--space-md);
 }
 
-::-webkit-scrollbar {
-  width: 8px;
+.section-tag::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--porsche-guards-red);
+  border-radius: 1px;
 }
-::-webkit-scrollbar-track {
-  background: var(--bg-raised);
+
+.section-header {
+  margin-bottom: var(--space-3xl);
 }
-::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 4px;
+
+.section-header p {
+  max-width: 680px;
+  margin-top: var(--space-sm);
+  font-size: 1.1rem;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-light);
-}
+
+/* ═══════════════════════════════════════════════════════════════
+   Layout Containers
+   ═══════════════════════════════════════════════════════════════ */
 
 .container {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--space-xl);
 }
 
 section {
-  padding: 6.5rem 0;
   position: relative;
+  padding: var(--space-4xl) 0;
+  z-index: 1;
 }
 
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.section-title {
-  font-size: clamp(2rem, 5vw, 2.75rem);
-  color: var(--text);
-  margin-bottom: 0.75rem;
-  letter-spacing: -0.04em;
-}
-
-.section-desc {
-  color: var(--text-secondary);
-  font-size: 1.05rem;
-  max-width: 580px;
-  margin-bottom: 3.5rem;
-  line-height: 1.7;
-}
-
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card:hover {
-  border-color: var(--border-strong);
-  box-shadow: var(--shadow-md);
-}
+/* ═══════════════════════════════════════════════════════════════
+   Luxury Automotive Button System
+   ═══════════════════════════════════════════════════════════════ */
 
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 10px;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.9rem;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.95rem 2rem;
+  font-family: var(--font-subhead);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
-  white-space: nowrap;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Primary Button: Guards Red */
 .btn-primary {
-  background: var(--accent);
-  color: var(--accent-text);
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.18);
+  background: var(--porsche-guards-red);
+  color: var(--porsche-white);
+  border-color: var(--porsche-guards-red);
+  box-shadow: 0 4px 16px rgba(158, 41, 41, 0.35);
 }
 
 .btn-primary:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(29, 78, 216, 0.25);
+  background: var(--porsche-red-hover);
+  border-color: var(--porsche-red-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(158, 41, 41, 0.5);
 }
 
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
+/* Outline Button: Warm Ivory / Steel */
 .btn-outline {
   background: transparent;
-  color: var(--text);
-  border: 1.5px solid var(--border-strong);
+  color: var(--porsche-ivory);
+  border-color: rgba(234, 230, 221, 0.4);
 }
 
 .btn-outline:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-pale);
+  background: rgba(234, 230, 221, 0.08);
+  border-color: var(--porsche-ivory);
+  color: var(--porsche-white);
   transform: translateY(-2px);
 }
 
-.btn-ghost {
-  background: transparent;
-  color: var(--text-secondary);
-  border: none;
-  padding: 0.5rem 0.75rem;
+/* Minimal Steel Action Button */
+.btn-steel {
+  background: rgba(119, 123, 120, 0.12);
+  color: var(--porsche-ivory);
+  border-color: var(--border);
 }
 
-.btn-ghost:hover {
-  color: var(--accent);
-  background: var(--accent-pale);
-  border-radius: 8px;
+.btn-steel:hover {
+  background: rgba(119, 123, 120, 0.22);
+  border-color: var(--border-strong);
+  color: var(--porsche-white);
 }
 
-.tag {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 0.25rem 0.65rem;
-  border-radius: 6px;
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  transition: all 0.2s ease;
-}
+/* ═══════════════════════════════════════════════════════════════
+   Accessibility Standards
+   ═══════════════════════════════════════════════════════════════ */
 
-.tag:hover {
-  border-color: var(--accent-soft);
-  color: var(--accent);
-  background: var(--accent-pale);
-}
-
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 0.45rem 1rem;
-  border-radius: 100px;
-  background: var(--accent-pale);
-  border: 1px solid var(--border);
-  color: var(--accent);
-  box-shadow: var(--shadow-sm);
-}
-
-.status-pill::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-light);
-  animation: pulse-dot 2s ease infinite;
-}
-
-@keyframes pulse-dot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.5; }
-}
-
-.divider {
-  width: 100%;
-  height: 1px;
-  background: var(--border);
-  margin: 4rem 0;
-}
-
-@media (max-width: 768px) {
-  section {
-    padding: 5rem 0;
-  }
-  .section-desc {
-    font-size: 0.98rem;
-    margin-bottom: 2.5rem;
-  }
-}
-
-/* Accessibility: Consistent focus-visible ring */
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-button:focus:not(:focus-visible),
-a:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* Skip to content helper */
 .skip-link {
   position: absolute;
   top: -100px;
   left: 1rem;
-  background: var(--accent);
-  color: var(--accent-text);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-weight: 600;
+  background: var(--porsche-guards-red);
+  color: var(--porsche-white);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-subhead);
   font-size: 0.85rem;
-  z-index: 99999;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  z-index: 10000;
   transition: top 0.2s ease;
 }
 
 .skip-link:focus {
   top: 1rem;
+  outline: 2px solid var(--porsche-white);
 }
 
-/* Respect user's motion preferences */
+:focus-visible {
+  outline: 2px solid var(--porsche-guards-red);
+  outline-offset: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -430,18 +308,11 @@ a:focus:not(:focus-visible) {
   }
 }
 
-/* Screen-reader only utility */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--space-md);
+  }
+  section {
+    padding: var(--space-3xl) 0;
+  }
 }
-
-
-

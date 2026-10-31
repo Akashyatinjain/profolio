@@ -1,58 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X, FileText, Sun, Moon, Monitor } from 'lucide-react';
-import { profile } from '../data/portfolio';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './Header.css';
 
 const navItems = [
-  { label: 'About', id: 'about' },
-  { label: 'Work', id: 'projects' },
-  { label: 'Experience', id: 'experience' },
-  { label: 'DSA', id: 'leetcode' },
-  { label: 'Contact', id: 'contact' },
+  { label: 'ABOUT', id: 'about' },
+  { label: 'SKILLS', id: 'skills' },
+  { label: 'GARAGE', id: 'projects' },
+  { label: 'JOURNEY', id: 'journey' },
+  { label: 'CONTACT', id: 'contact' },
 ];
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('portfolio_theme') || 'light';
-  });
-  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('portfolio_theme', theme);
-    window.dispatchEvent(new Event('theme-changed'));
-  }, [theme]);
-
-  useEffect(() => {
-    const handleThemeChange = () => {
-      const currentTheme = localStorage.getItem('portfolio_theme') || 'light';
-      if (currentTheme !== theme) {
-        setTheme(currentTheme);
-      }
-    };
-    window.addEventListener('theme-changed', handleThemeChange);
-    return () => window.removeEventListener('theme-changed', handleThemeChange);
-  }, [theme]);
-
-  useEffect(() => {
-    if (!themeDropdownOpen) return;
-    const handleOutsideClick = (e) => {
-      if (!e.target.closest('.theme-selector-container')) {
-        setThemeDropdownOpen(false);
-      }
-    };
-    document.addEventListener('click', handleOutsideClick);
-    return () => document.removeEventListener('click', handleOutsideClick);
-  }, [themeDropdownOpen]);
-
-  const getThemeIcon = () => {
-    if (theme === 'light') return <Sun size={15} />;
-    if (theme === 'dark') return <Moon size={15} />;
-    return <Monitor size={15} />;
-  };
 
   const closeMobile = useCallback(() => {
     setMobileOpen(false);
@@ -64,23 +26,21 @@ const Header = () => {
     document.body.classList.add('menu-open');
   }, []);
 
-  // Handle Escape key to close mobile menu and dropdown
+  // Handle Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        if (themeDropdownOpen) setThemeDropdownOpen(false);
-        if (mobileOpen) closeMobile();
-      }
+      if (e.key === 'Escape' && mobileOpen) closeMobile();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [themeDropdownOpen, mobileOpen, closeMobile]);
+  }, [mobileOpen, closeMobile]);
 
+  // Scroll tracking
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 40);
 
-      const pos = window.scrollY + 100;
+      const pos = window.scrollY + 120;
       const sections = [{ id: 'home' }, ...navItems.map((n) => ({ id: n.id }))];
       for (let i = sections.length - 1; i >= 0; i--) {
         const el = document.getElementById(sections[i].id);
@@ -95,6 +55,7 @@ const Header = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Close mobile on resize
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 769px)');
     const handler = (e) => e.matches && closeMobile();
@@ -109,23 +70,19 @@ const Header = () => {
     closeMobile();
     const el = document.getElementById(id);
     if (el) {
-      window.scrollTo({ top: el.offsetTop - 72, behavior: 'smooth' });
+      window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
     }
-  };
-
-  const handleResumeClick = () => {
-    window.open('/resume/Resume.pdf?v=latest', '_blank');
   };
 
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container header-inner">
         <button type="button" className="logo" onClick={() => scrollTo('home')}>
-          <img src={profile.avatar} alt={profile.name} className="logo-avatar-img" />
-          <span className="logo-name">{profile.shortName}</span>
+          <span className="logo-brand">AKASH YATIN JAIN</span>
+          <span className="logo-model">911 TURBO HERITAGE</span>
         </button>
 
-        <nav className="nav-desktop" aria-label="Main">
+        <nav className="nav-desktop" aria-label="Main Navigation">
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -134,70 +91,21 @@ const Header = () => {
               onClick={() => scrollTo(item.id)}
             >
               {item.label}
+              {activeSection === item.id && <span className="nav-indicator" />}
             </button>
           ))}
         </nav>
 
         <div className="header-actions">
-          <div className="theme-selector-container">
-            <button
-              type="button"
-              className="btn btn-outline theme-selector-btn"
-              onClick={() => setThemeDropdownOpen(!themeDropdownOpen)}
-              title="Switch Theme"
-              aria-label="Switch Theme"
-              aria-haspopup="true"
-              aria-expanded={themeDropdownOpen}
-            >
-              {getThemeIcon()}
-              <span className="theme-btn-text">{theme}</span>
-            </button>
-            {themeDropdownOpen && (
-              <div className="theme-dropdown card" role="menu">
-                <button
-                  type="button"
-                  role="menuitem"
-                  className={`theme-option ${theme === 'light' ? 'active' : ''}`}
-                  onClick={() => {
-                    setTheme('light');
-                    setThemeDropdownOpen(false);
-                  }}
-                >
-                  <Sun size={14} /> <span>Light</span>
-                </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  className={`theme-option ${theme === 'dark' ? 'active' : ''}`}
-                  onClick={() => {
-                    setTheme('dark');
-                    setThemeDropdownOpen(false);
-                  }}
-                >
-                  <Moon size={14} /> <span>Dark</span>
-                </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  className={`theme-option ${theme === 'matrix' ? 'active' : ''}`}
-                  onClick={() => {
-                    setTheme('matrix');
-                    setThemeDropdownOpen(false);
-                  }}
-                >
-                  <Monitor size={14} /> <span>Matrix</span>
-                </button>
-              </div>
-            )}
-          </div>
+          <button
+            type="button"
+            className="btn btn-primary header-cta"
+            onClick={() => scrollTo('contact')}
+          >
+            GET IN TOUCH
+            <ArrowUpRight size={14} />
+          </button>
 
-          <button type="button" className="btn btn-outline resume-header-btn" onClick={handleResumeClick}>
-            <FileText size={15} />
-            Resume
-          </button>
-          <button type="button" className="btn btn-primary header-cta" onClick={() => scrollTo('contact')}>
-            Hire Me
-          </button>
           <button
             type="button"
             className="burger"
@@ -211,54 +119,40 @@ const Header = () => {
         </div>
       </div>
 
-      <div className={`nav-overlay ${mobileOpen ? 'open' : ''}`} onClick={closeMobile} aria-hidden="true" />
-
-      <nav id="mobile-navigation" className={`nav-mobile ${mobileOpen ? 'open' : ''}`} aria-label="Mobile Navigation">
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className={`nav-link ${activeSection === item.id ? 'active' : ''}`}
-            onClick={() => scrollTo(item.id)}
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.nav
+            id="mobile-navigation"
+            className="nav-mobile"
+            aria-label="Mobile Navigation"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
           >
-            {item.label}
-          </button>
-        ))}
-        
-        <div className="theme-selector-mobile">
-          <span className="theme-mobile-label">Theme</span>
-          <div className="theme-mobile-chips">
-            <button
-              type="button"
-              className={`theme-chip-mobile ${theme === 'light' ? 'active' : ''}`}
-              onClick={() => setTheme('light')}
-            >
-              <Sun size={13} /> Light
-            </button>
-            <button
-              type="button"
-              className={`theme-chip-mobile ${theme === 'dark' ? 'active' : ''}`}
-              onClick={() => setTheme('dark')}
-            >
-              <Moon size={13} /> Dark
-            </button>
-            <button
-              type="button"
-              className={`theme-chip-mobile ${theme === 'matrix' ? 'active' : ''}`}
-              onClick={() => setTheme('matrix')}
-            >
-              <Monitor size={13} /> Matrix
-            </button>
-          </div>
-        </div>
-
-        <button type="button" className="btn btn-outline" onClick={handleResumeClick} style={{ marginTop: '1rem' }}>
-          <FileText size={15} /> Resume
-        </button>
-        <button type="button" className="btn btn-primary" onClick={() => scrollTo('contact')} style={{ marginTop: '0.5rem' }}>
-          Get in touch
-        </button>
-      </nav>
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={`mobile-nav-link ${activeSection === item.id ? 'active' : ''}`}
+                onClick={() => scrollTo(item.id)}
+              >
+                {item.label}
+              </button>
+            ))}
+            <div className="mobile-actions">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => scrollTo('contact')}
+              >
+                GET IN TOUCH
+              </button>
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

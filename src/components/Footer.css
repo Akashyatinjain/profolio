@@ -1,149 +1,134 @@
-.footer {
-  background: var(--bg-raised);
+/* ═══════════════════════════════════════════════════════════════
+   Footer.css — Minimal Automotive Editorial Footer
+   ═══════════════════════════════════════════════════════════════ */
+
+.porsche-footer {
+  background: var(--porsche-graphite);
   border-top: 1px solid var(--border);
-  padding: 3.5rem 0 3rem 0;
+  padding: var(--space-2xl) 0;
+  position: relative;
+  z-index: 2;
 }
 
 .footer-inner {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr 1fr;
-  gap: 3rem;
-  align-items: start;
-}
-
-/* Brand Column */
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.footer-name {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.1rem;
-  color: var(--text);
-  letter-spacing: -0.02em;
-}
-
-.footer-tagline {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.footer-copy {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-top: 0.5rem;
-}
-
-/* Nav & Title Styles */
-.footer-title {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  display: block;
-  margin-bottom: 1.25rem;
-}
-
-.footer-nav {
-  display: flex;
-  flex-direction: column;
-}
-
-.footer-links-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-}
-
-.footer-links-grid a {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  transition: all 0.2s ease;
-  font-weight: 500;
-}
-
-.footer-links-grid a:hover {
-  color: var(--accent);
-  transform: translateX(2px);
-}
-
-/* Meta Column */
-.footer-meta {
-  display: flex;
-  flex-direction: column;
-}
-
-.footer-meta-items {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.footer-badge {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 600;
-  padding: 0.25rem 0.6rem;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-}
-
-.badge-react {
-  background: var(--accent-pale);
-  color: var(--accent);
-  border-color: rgba(37, 99, 235, 0.15);
-}
-
-.badge-date {
-  background: var(--bg);
-  color: var(--text-secondary);
-}
-
-.footer-social-meta {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-xl);
 }
 
-.footer-social-meta a {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  transition: color 0.2s;
-  font-weight: 500;
+/* ── Left Column ─────────────────────────────────────────── */
+.footer-brand-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.footer-social-meta a:hover {
-  color: var(--accent);
+.footer-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--porsche-white);
+  text-transform: uppercase;
 }
 
-.meta-dot {
+.footer-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: var(--porsche-steel);
+  text-transform: uppercase;
+}
+
+/* ── Center Column ────────────────────────────────────────── */
+.footer-center-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.heritage-badge {
+  font-family: var(--font-subhead);
   font-size: 0.75rem;
-  color: var(--text-light);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--porsche-champagne);
+  text-transform: uppercase;
+}
+
+.heritage-note {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--porsche-steel);
+}
+
+/* ── Right Column ────────────────────────────────────────── */
+.footer-actions-col {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.footer-social-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.f-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--porsche-charcoal);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  color: var(--porsche-ivory);
+  transition: all var(--transition-fast);
+}
+
+.f-social-btn:hover {
+  border-color: var(--porsche-champagne);
+  color: var(--porsche-white);
+  transform: translateY(-2px);
+}
+
+.porsche-top-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--porsche-charcoal);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 0.55rem 1rem;
+  color: var(--porsche-steel);
+  font-family: var(--font-subhead);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.porsche-top-btn:hover {
+  border-color: var(--porsche-guards-red);
+  color: var(--porsche-white);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
   .footer-inner {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .footer-links-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .footer {
-    padding: 2.5rem 0 2rem 0;
-  }
-  .footer-links-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .footer-center-col {
+    align-items: flex-start;
+    text-align: left;
   }
 }

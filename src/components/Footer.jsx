@@ -1,48 +1,73 @@
+// src/components/Footer.jsx
 import React from 'react';
+import { ArrowUp } from 'lucide-react';
+import { Github, Linkedin, Leetcode } from './Icons';
 import { profile } from '../data/portfolio';
 import './Footer.css';
 
 const Footer = () => {
-  const year = new Date().getFullYear();
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <footer className="footer">
+    <footer className="porsche-footer">
       <div className="container footer-inner">
-        
-        {/* Column 1: Branding & Copy */}
-        <div className="footer-brand">
-          <span className="footer-name">{profile.name}</span>
-          <p className="footer-tagline">Designed & Developed by Akash Jain</p>
-          <span className="footer-copy">© {year} · All Rights Reserved</span>
+        {/* Left: Identity */}
+        <div className="footer-brand-col">
+          <span className="footer-title">AKASH YATIN JAIN</span>
+          <span className="footer-sub">PORSCHE HERITAGE // MODERN MOTORSPORT</span>
         </div>
 
-        {/* Column 2: Navigation Links */}
-        <div className="footer-nav">
-          <span className="footer-title">Navigation</span>
-          <nav className="footer-links-grid" aria-label="Footer Navigation">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
-          </nav>
+        {/* Center: Heritage Badge */}
+        <div className="footer-center-col">
+          <span className="heritage-badge">1975 911 TURBO [930]</span>
+          <span className="heritage-note">REALTIME WEBGL · 60 FPS CHOREOGRAPHY</span>
         </div>
 
-        {/* Column 3: Tech & Metadata Info */}
-        <div className="footer-meta">
-          <span className="footer-title">Metadata</span>
-          <div className="footer-meta-items">
-            <span className="footer-badge badge-react">React + Vite</span>
-            <span className="footer-badge badge-date">Updated: July 2026</span>
+        {/* Right: Socials & Back to Top */}
+        <div className="footer-actions-col">
+          <div className="footer-social-row">
+            <a
+              href={profile.links?.github || profile.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="f-social-btn"
+              aria-label="GitHub Profile"
+            >
+              <Github size={15} />
+            </a>
+            <a
+              href={profile.links?.linkedin || profile.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="f-social-btn"
+              aria-label="LinkedIn Profile"
+            >
+              <Linkedin size={15} />
+            </a>
+            <a
+              href={profile.links?.leetcode || profile.leetcode}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="f-social-btn"
+              aria-label="LeetCode Profile"
+            >
+              <Leetcode size={15} />
+            </a>
           </div>
-          <div className="footer-social-meta">
-            <a href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-            <span className="meta-dot">•</span>
-            <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <span className="meta-dot">•</span>
-            <a href={profile.links.leetcode} target="_blank" rel="noopener noreferrer">LeetCode</a>
-          </div>
-        </div>
 
+          <button
+            type="button"
+            className="porsche-top-btn"
+            onClick={scrollToTop}
+            aria-label="Scroll to top of page"
+            title="Return to top"
+          >
+            TOP
+            <ArrowUp size={14} />
+          </button>
+        </div>
       </div>
     </footer>
   );

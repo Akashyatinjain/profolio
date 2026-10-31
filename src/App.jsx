@@ -1,77 +1,33 @@
 // src/App.jsx
-import React, { useEffect } from 'react';
+import React from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
+import Skills from './components/Skills';
 import Projects from './components/Projects';
-import ExtraSections from './components/ExtraSections';
+import Journey from './components/Journey';
 import ProblemSolving from './components/ProblemSolving';
 import Terminal from './components/Terminal';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import CustomCursor from './components/CustomCursor';
+import ScrollProgress from './components/ScrollProgress';
+import PorscheCanvas from './components/PorscheCanvas';
 import './App.css';
 
 function App() {
-  useEffect(() => {
-    // IntersectionObserver for scroll-reveal animations
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            // Unobserve after revealing for performance
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.02, // Lower threshold for mobile devices
-        rootMargin: '0px 0px -20px 0px',
-      }
-    );
-
-    // Helper to observe element nodes
-    const observeElements = (container) => {
-      const revealElements = container.querySelectorAll(
-        '.reveal:not(.visible), .reveal-left:not(.visible), .reveal-right:not(.visible), .reveal-scale:not(.visible)'
-      );
-      revealElements.forEach((el) => observer.observe(el));
-    };
-
-    // Observe initial layout
-    observeElements(document);
-
-    // Watch for dynamic DOM changes (like project category filters)
-    const mutationObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.addedNodes.length > 0) {
-          observeElements(document);
-        }
-      });
-    });
-
-    mutationObserver.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-
-    return () => {
-      observer.disconnect();
-      mutationObserver.disconnect();
-    };
-  }, []);
-
   return (
     <>
       <a href="#main-content" className="skip-link">Skip to main content</a>
+      <ScrollProgress />
+      <PorscheCanvas />
       <Header />
       <main id="main-content">
         <Hero />
         <About />
+        <Skills />
         <Projects />
-        <ExtraSections />
-        <ProblemSolving />
-        <Terminal />
+        <Journey />
         <Contact />
       </main>
       <Footer />

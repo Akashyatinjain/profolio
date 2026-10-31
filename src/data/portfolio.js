@@ -2,12 +2,12 @@ export const profile = {
   name: 'Akash Yatin Jain',
   shortName: 'Akash Jain',
   title: 'Full-Stack Developer',
-  tagline: 'Backend-Focused Full Stack Developer | React • Node • PostgreSQL • Docker',
+  tagline: 'Full-Stack Developer | Software Engineer | AI Enthusiast',
+  headline: 'I turn complex ideas into meaningful digital experiences.',
   avatar: '/avatar.png',
   location: 'Mumbai',
   email: 'aj0881871@gmail.com',
   studentEmail: 'aj0881871@student.sfit.ac.in',
-  phone: '+91 7710926977',
   available: 'Open to internships · graduating Mar 2028',
   links: {
     github: 'https://github.com/Akashyatinjain',
@@ -15,6 +15,11 @@ export const profile = {
     leetcode: 'https://leetcode.com/u/Akashyatinjain/',
     portfolio: 'https://akash-jain.vercel.app/',
   },
+  github: 'https://github.com/Akashyatinjain',
+  linkedin: 'https://www.linkedin.com/in/akash-yatin-jain',
+  leetcode: 'https://leetcode.com/u/Akashyatinjain/',
+  leetcodeUsername: 'Akashyatinjain',
+  tufUsername: 'Akashyatinjain',
 };
 
 export const stats = {
@@ -51,12 +56,41 @@ export const availableFor = [
 
 export const bio = {
   intro:
-    "I'm an IT student at SFIT who builds full-stack web apps — auth flows, REST APIs, PostgreSQL schemas, and React frontends deployed on Vercel.",
+    "I'm a 3rd-year IT student at SFIT, Mumbai, who builds full-stack web applications from database schema to deployed UI — auth flows, REST APIs, PostgreSQL schemas, and React frontends.",
+  approach:
+    "I believe in writing clean, maintainable code that solves real problems. Every project I build focuses on practical utility, not just technical demonstration.",
   currently:
-    "Shipping DataStock (cloud storage) and Finance Tracker v2. Deepening Docker, system design, and backend security patterns alongside coursework.",
+    "Currently shipping DataStock (cloud storage) and Finance Tracker v2. Deepening Docker, system design, and backend security patterns alongside coursework.",
   interests: ['Full-Stack Development', 'Backend Engineering', 'DSA & Algorithms'],
 };
 
+export const skillCategories = [
+  {
+    label: 'Frontend',
+    items: ['React', 'JavaScript', 'HTML', 'CSS', 'Tailwind CSS'],
+  },
+  {
+    label: 'Backend',
+    items: ['Node.js', 'Express.js', 'REST APIs', 'JWT Auth'],
+  },
+  {
+    label: 'Database',
+    items: ['PostgreSQL', 'MongoDB', 'Prisma ORM'],
+  },
+  {
+    label: 'Tools & DevOps',
+    items: ['Git', 'GitHub', 'Docker', 'Linux', 'Vite', 'Vercel'],
+  },
+];
+
+export const skillInterests = [
+  'Data Structures & Algorithms',
+  'AI & LLM Applications',
+  'Cloud & Deployment',
+  'System Design',
+];
+
+// Keep legacy format for backward compatibility
 export const skills = [
   {
     label: 'Primary Stack',
@@ -121,7 +155,7 @@ export const growthTimeline = [
   {
     year: '2025',
     title: 'React & Frontend Dev',
-    description: 'Built SWASTHYA,Redesign of C++ website dashboard and custom responsive UI frameworks.'
+    description: 'Built SWASTHYA, Redesign of C++ website dashboard and custom responsive UI frameworks.'
   },
   {
     year: 'Late 2025',
@@ -195,7 +229,7 @@ export const projects = [
     tech: ['React', 'Node.js', 'Express', 'PostgreSQL', 'Prisma', 'Cloudinary', 'JWT'],
     liveUrl: 'https://data-stock.vercel.app/',
     githubUrl: 'https://github.com/Akashyatinjain/DataStock',
-    accent: '#2563EB',
+    accent: '#3B82F6',
     demoVideo: '/videos/datastock.mp4'
   },
   {
@@ -213,11 +247,30 @@ export const projects = [
       'Secured 15+ API endpoints with custom JWT layers.'
     ],
     challenges: 'Parsing varied CSV formats from different banks and building real-time budget threshold alerts.',
-    tech: ['React', 'Node.js', 'Express', 'PostgreSQL', 'Prisma'],
+    tech: ['React', 'Node.js', 'Express', 'PostgreSQL', 'Prisma', 'Recharts'],
     liveUrl: 'https://budget-tracker-no3.vercel.app/',
     githubUrl: 'https://github.com/Akashyatinjain/Budget-tracker-no3',
-    accent: '#10b981',
+    accent: '#10B981',
     demoVideo: '/videos/financetracker.mp4'
+  },
+  {
+    title: 'GPT Agent',
+    category: 'fullstack',
+    featured: true,
+    date: '2026',
+    problem: 'Exploring how to integrate large language model APIs into a practical, user-friendly web interface.',
+    description:
+      'An AI-powered conversational agent built as a web application, exploring LLM integration and conversational UI patterns.',
+    highlights: [
+      'AI-powered conversational interface.',
+      'Clean, responsive chat UI design.',
+      'Real-time response streaming.'
+    ],
+    challenges: 'Designing an intuitive conversational UX and managing API response handling.',
+    tech: ['React', 'AI/LLM', 'Vite'],
+    liveUrl: 'https://res-gptagent.vercel.app/',
+    githubUrl: 'https://github.com/Akashyatinjain',
+    accent: '#A855F7',
   },
 ];
 
@@ -347,4 +400,3 @@ export const engineeringHighlights = [
   'Docker & Vercel Deployment',
   'GitHub CI',
 ];
-
