@@ -4,6 +4,52 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import './PorscheCanvas.css';
 
+function disposeModel(root) {
+  const geometries = new Set();
+  const materials = new Set();
+  const textures = new Set();
+  root.traverse((node) => {
+    if (node.geometry) geometries.add(node.geometry);
+    const nodeMaterials = Array.isArray(node.material) ? node.material : [node.material];
+    nodeMaterials.filter(Boolean).forEach((material) => {
+      materials.add(material);
+      Object.values(material).forEach((value) => {
+        if (value?.isTexture) textures.add(value);
+      });
+    });
+  });
+  geometries.forEach((geometry) => geometry.dispose());
+  materials.forEach((material) => material.dispose());
+  textures.forEach((texture) => texture.dispose());
+}
+
+function downsampleTextures(root, maxSize) {
+  const textures = new Set();
+  root.traverse((node) => {
+    if (!node.isMesh || !node.visible || !node.material) return;
+    const materials = Array.isArray(node.material) ? node.material : [node.material];
+    materials.forEach((material) => Object.values(material).forEach((value) => {
+      if (value?.isTexture) textures.add(value);
+    }));
+  });
+
+  textures.forEach((texture) => {
+    const image = texture.image;
+    if (!image?.width || !image?.height || Math.max(image.width, image.height) <= maxSize) return;
+    const scale = maxSize / Math.max(image.width, image.height);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(image.width * scale));
+    canvas.height = Math.max(1, Math.round(image.height * scale));
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    texture.image = canvas;
+    texture.generateMipmaps = true;
+    texture.anisotropy = 1;
+    texture.needsUpdate = true;
+  });
+}
+
 // Procedural luxury showroom contact shadow under wheels
 function createContactShadowTexture() {
   const canvas = document.createElement('canvas');
@@ -50,11 +96,42 @@ function createContactShadowTexture() {
   return texture;
 }
 
-const PorscheCanvas = () => {
+// Procedural soft showroom floor falloff vignette (eliminates horizon line completely)
+function createGroundAlphaTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  // Three.js alphaMap reads the green/luminance channel:
+  // #ffffff = fully opaque satin floor, #000000 = 100% transparent
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, 512, 512);
+
+  const grad = ctx.createRadialGradient(256, 256, 20, 256, 256, 235);
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(0.3, '#cccccc');
+  grad.addColorStop(0.55, '#555555');
+  grad.addColorStop(0.78, '#151515');
+  grad.addColorStop(1.0, '#000000');
+
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(256, 256, 235, 0, Math.PI * 2);
+  ctx.fill();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.generateMipmaps = true;
+  return texture;
+}
+
+const PorscheCanvas = ({ onReady }) => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
-  const [loadProgress, setLoadProgress] = useState(0);
+  const onReadyRef = useRef(onReady);
+  onReadyRef.current = onReady;
   const [isLoaded, setIsLoaded] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [webglSupported, setWebglSupported] = useState(true);
 
   useEffect(() => {
@@ -62,6 +139,9 @@ const PorscheCanvas = () => {
     if (!canvas) return;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lowEndDevice = (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || window.innerWidth <= 768;
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, lowEndDevice ? 1.25 : 1.5);
 
     // ── 1. Renderer, Camera, Scene Setup ──────────────────────────────────
     let renderer;
@@ -69,7 +149,7 @@ const PorscheCanvas = () => {
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true,
+        antialias: !lowEndDevice,
         powerPreference: 'high-performance',
       });
     } catch (e) {
@@ -78,17 +158,21 @@ const PorscheCanvas = () => {
       return;
     }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(pixelRatio);
+    const initialRect = containerRef.current.getBoundingClientRect();
+    renderer.setSize(initialRect.width || window.innerWidth, initialRect.height || window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.enabled = false;
 
     const scene = new THREE.Scene();
     window.__scene = scene;
-    scene.fog = new THREE.FogExp2(0x0e1012, 0.028);
+    window.__THREE = THREE;
+    // Set 100% opaque seamless studio background and linear fog
+    const STUDIO_BG = 0x0e1012;
+    scene.background = new THREE.Color(STUDIO_BG);
+    scene.fog = new THREE.Fog(STUDIO_BG, 7.5, 20.0);
 
     // Cinematic Automotive Studio Lens (26° FOV for authentic telephoto compression)
     // Camera is placed at eye/hood height (0.95m) for a powerful, full-sized automotive stance
@@ -98,15 +182,17 @@ const PorscheCanvas = () => {
       0.1,
       100
     );
-    camera.position.set(0, 0.95, 11.2);
-    camera.lookAt(0, 0.65, 0);
+    const mobileViewport = window.innerWidth <= 768;
+    camera.position.set(0, mobileViewport ? 2.35 : 0.95, 11.2);
+    camera.lookAt(0, mobileViewport ? 2.05 : 0.65, 0);
+    window.__camera = camera;
 
     // ── 2. Procedural Automotive Studio Environment (Continuous IBL) ──────
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     pmremGenerator.compileEquirectangularShader();
 
     const studioScene = new THREE.Scene();
-    studioScene.background = new THREE.Color(0x0e1012);
+    studioScene.background = new THREE.Color(STUDIO_BG);
 
     // Overhead softbox bank (diffuse continuous light panel)
     const topPanel = new THREE.Mesh(
@@ -147,54 +233,62 @@ const PorscheCanvas = () => {
     const studioEnvMap = pmremGenerator.fromScene(studioScene).texture;
     scene.environment = studioEnvMap;
 
-    // ── 3. Showroom Ground & Contact Shadow ───────────────────────────────
-    // Dark Graphite polished showroom floor (velvety satin sheen, NO harsh circular spots)
-    const groundGeo = new THREE.PlaneGeometry(80, 80);
-    const groundMat = new THREE.MeshStandardMaterial({
-      color: 0x0c0e10,
-      roughness: 0.72,
-      metalness: 0.18,
-      envMapIntensity: 0.45,
-    });
-    const ground = new THREE.Mesh(groundGeo, groundMat);
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = 0;
-    scene.add(ground);
-
     // ── 4. Professional Studio Lighting Rig ───────────────────────────────
-    // 1. Soft balanced ambient fill
-    const ambientLight = new THREE.AmbientLight(0x232e27, 1.6);
+    // 1. Soft forest green ambient fill - guarantees curves & body never drop to pitch black
+    const ambientLight = new THREE.AmbientLight(0x192e22, 1.85);
     scene.add(ambientLight);
 
     // 2. Large soft key light (Front-Left Studio Softbox)
-    const keyLight = new THREE.DirectionalLight(0xfff7ee, 2.5);
-    keyLight.position.set(-5.5, 5.0, 6.5);
+    const keyLight = new THREE.DirectionalLight(0xfff8f0, 2.7);
+    keyLight.position.set(-5.5, 5.0, 6.2);
     scene.add(keyLight);
 
     // 3. Secondary fill light (Front-Right)
-    const fillLight = new THREE.DirectionalLight(0xe8f0f8, 1.6);
-    fillLight.position.set(5.5, 4.2, 5.5);
+    const fillLight = new THREE.DirectionalLight(0xe4eff7, 1.75);
+    fillLight.position.set(5.5, 4.2, 5.2);
     scene.add(fillLight);
 
     // 4. Overhead strip lighting (runs along car roofline)
-    const overheadLight = new THREE.DirectionalLight(0xffffff, 1.8);
-    overheadLight.position.set(0, 8.0, 0);
+    const overheadLight = new THREE.DirectionalLight(0xffffff, 1.85);
+    overheadLight.position.set(0, 8.5, 0);
     scene.add(overheadLight);
 
     // 5. Dual subtle rim lights for flared rear turbo arches & whale tail
-    const rearRimLeft = new THREE.DirectionalLight(0xd0e4da, 1.4);
+    const rearRimLeft = new THREE.DirectionalLight(0xcdeee0, 1.45);
     rearRimLeft.position.set(-4.5, 3.2, -5.5);
     scene.add(rearRimLeft);
 
-    const rearRimRight = new THREE.DirectionalLight(0xd0e4da, 1.4);
+    const rearRimRight = new THREE.DirectionalLight(0xcdeee0, 1.45);
     rearRimRight.position.set(4.5, 3.2, -5.5);
     scene.add(rearRimRight);
 
-    // ── 5. Vehicle Root & 3D Porsche Loading ───────────────────────────────
+    // 6. Subtle upward underbody fill to soften chassis shadows
+    const underbodyFill = new THREE.DirectionalLight(0x16241b, 0.65);
+    underbodyFill.position.set(0, -2, 0);
+    scene.add(underbodyFill);
+
+    // ── 5. Vehicle Root & Ground Anchor ───────────────────────────────────
     const carRoot = new THREE.Group();
-    // Position carRoot ON THE FLOOR at y = 0
     carRoot.position.set(1.65, 0, 0.1);
     scene.add(carRoot);
+
+    // Soft radial showroom floor reflection pool (strictly under car, ZERO horizon line)
+    const groundGeo = new THREE.PlaneGeometry(8, 8);
+    const groundAlphaMap = createGroundAlphaTexture();
+    const groundMat = new THREE.MeshStandardMaterial({
+      color: 0x0a0c0e,
+      roughness: 0.92,
+      metalness: 0.04,
+      envMapIntensity: 0.08,
+      alphaMap: groundAlphaMap,
+      transparent: true,
+      opacity: 0.4,
+      depthWrite: false,
+    });
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.set(0, 0.0005, 0); // Sits right on showroom floor under chassis
+    carRoot.add(ground);
 
     // Procedural feathered 4-tire contact shadow
     const contactShadowTexture = createContactShadowTexture();
@@ -207,7 +301,7 @@ const PorscheCanvas = () => {
     });
     const contactShadow = new THREE.Mesh(shadowGeo, shadowMat);
     contactShadow.rotation.x = -Math.PI / 2;
-    contactShadow.position.y = 0.002; // Sits 2mm above ground
+    contactShadow.position.set(0, 0.002, 0); // Sits 2mm above ground
     carRoot.add(contactShadow);
 
     // Taillight point lights
@@ -219,18 +313,22 @@ const PorscheCanvas = () => {
     const taillightMeshes = [];
     let paintMeshes = [];
 
-    // Rogue nodes list: Blender curves and antennas with 240m exploded vertices
-    const rogueNodes = [
-      'Cylinder.000', 'Cylinder.006', 'Cube.004', 'Plane.007',
-      'Cylinder.003', 'Cylinder.002', 'Cylinder.041', 'Cylinder.013',
-      'Cylinder.004', 'Plane.008'
-    ];
-
     const loader = new GLTFLoader();
-    loader.load(
-      '/models/porsche_911.glb',
+    let loadedModel = null;
+    let loadCancelled = false;
+    let loadTimer;
+    let idleHandle;
+    const loadModel = () => {
+      if (loadCancelled) return;
+      loader.load(
+      '/models/porsche_911.glb?v=3',
       (gltf) => {
+        if (loadCancelled) {
+          disposeModel(gltf.scene);
+          return;
+        }
         const porsche = gltf.scene;
+        loadedModel = porsche;
 
         // ── 5.1 CLEAN UP ROGUE NODES & TOY ELEMENTS ─────────────────────
         porsche.traverse((child) => {
@@ -333,75 +431,109 @@ const PorscheCanvas = () => {
           const cleanName = rawName.replace(/[^a-z0-9]/g, '');
           const matName = child.material.name.toLowerCase();
 
-          // Compute object's local geometry center Z
-          let zCenter = child.position.z;
-          if (child.geometry) {
-            if (!child.geometry.boundingBox) child.geometry.computeBoundingBox();
-            if (child.geometry.boundingBox) {
-              zCenter += (child.geometry.boundingBox.min.z + child.geometry.boundingBox.max.z) / 2;
-            }
+          // 1. Hide motorsport sticker discs covering the front headlights
+          if (
+            matName.includes('sticker') &&
+            (cleanName.includes('circle016') ||
+             cleanName.includes('circle013') ||
+             cleanName.includes('circle014') ||
+             cleanName.includes('circle031') ||
+             cleanName.includes('circle034') ||
+             cleanName.includes('circle1012'))
+          ) {
+            child.visible = false;
+            return;
           }
 
-          // 1. Hide motorsport sticker discs covering the front headlights (zCenter < -2.1)
-          if (matName.includes('sticker')) {
-            if (zCenter < -2.1) {
-              child.visible = false;
-              console.log('STICKER HIDDEN:', child.name, zCenter);
-              return;
-            } else {
-              console.log('STICKER KEPT:', child.name, zCenter);
-            }
-          }
+          // 2. REAR TAILLIGHTS: Strictly Circle006, Circle035, Circle036 (Porsche Guards Red #991818)
+          const isRearTaillight =
+            cleanName.includes('circle006') ||
+            cleanName.includes('circle035') ||
+            (cleanName.includes('circle036') && !matName.includes('sticker'));
 
-          // 2. REAR TAILLIGHTS (Z > 0): Guards Red (#9E2929) & rear reflector strip
-          if ((matName.includes('light') || matName.includes('refraction')) && zCenter > 0) {
-            console.log('REAR LIGHT RED:', child.name, matName, zCenter);
+          if (isRearTaillight) {
             child.material = child.material.clone();
             child.material.color = new THREE.Color(0x991818);
             child.material.emissive = new THREE.Color(0xaa1515);
-            child.material.emissiveIntensity = 0.5;
-            child.material.roughness = 0.2;
-            child.material.metalness = 0.35;
-            child.material.envMapIntensity = 2.0;
+            child.material.emissiveIntensity = 0.55;
+            child.material.roughness = 0.18;
+            child.material.metalness = 0.25;
+            child.material.clearcoat = 0.95;
+            child.material.clearcoatRoughness = 0.05;
+            child.material.envMapIntensity = 2.2;
             taillightMeshes.push(child);
             return;
           }
 
-          // 3. FRONT HEADLIGHTS & TURN SIGNALS (Z <= 0):
-          if ((matName.includes('light') || matName.includes('refraction')) && zCenter <= 0) {
-            console.log('FRONT LIGHT WHITE/AMBER:', child.name, matName, zCenter);
+          // 3. FRONT TURN SIGNALS (Bumper amber lenses: Cube003)
+          const isTurnSignal = cleanName.includes('cube003');
+          if (isTurnSignal) {
             child.material = child.material.clone();
-            const isTurnSignal = cleanName.includes('cube003');
-            if (isTurnSignal) {
-              child.material.color = new THREE.Color(0xdd8833);
-              child.material.emissive = new THREE.Color(0xdd8833);
-              child.material.emissiveIntensity = 0.35;
-            } else {
-              // Main Headlight Projector Dish & Halogen Bulb
+            child.material.color = new THREE.Color(0xee8822); // Vintage amber signal lens
+            child.material.emissive = new THREE.Color(0xee8822);
+            child.material.emissiveIntensity = 0.35;
+            child.material.roughness = 0.15;
+            child.material.clearcoat = 0.85;
+            return;
+          }
+
+          // 4. FRONT HEADLIGHTS & REFLECTORS (Bosch H4 fluted lens + halogen bulb glow)
+          const isFrontHeadlight =
+            cleanName.includes('circle017') ||
+            cleanName.includes('circle011') ||
+            cleanName.includes('circle008') ||
+            cleanName.includes('circle007') ||
+            cleanName.includes('circle025') ||
+            cleanName.includes('plane009') ||
+            (matName.includes('light') && !isRearTaillight);
+
+          if (isFrontHeadlight) {
+            child.material = child.material.clone();
+            // Main fluted Bosch H4 glass lens (Circle017 & Circle011)
+            if (cleanName.includes('circle017') || cleanName.includes('circle011')) {
               child.material.color = new THREE.Color(0xffffff);
-              child.material.metalness = 0.95;
-              child.material.roughness = 0.08;
-              child.material.emissive = new THREE.Color(0xffeedd); // warm vintage halogen glow
-              child.material.emissiveIntensity = 0.75;
-              child.material.envMapIntensity = 2.8;
+              child.material.transparent = true;
+              child.material.opacity = 0.52;
+              child.material.roughness = 0.04;
+              child.material.metalness = 0.08;
+              child.material.clearcoat = 1.0;
+              child.material.clearcoatRoughness = 0.02;
+              child.material.emissive = new THREE.Color(0x000000);
+              child.material.envMapIntensity = 3.2;
+            } else if (cleanName.includes('circle008')) {
+              // Chrome dish parabolic reflector behind the lens
+              child.material.color = new THREE.Color(0xffffff);
+              child.material.metalness = 0.98;
+              child.material.roughness = 0.03;
+              child.material.emissive = new THREE.Color(0xffeedd);
+              child.material.emissiveIntensity = 0.45;
+              child.material.envMapIntensity = 3.5;
+            } else {
+              // Auxiliary fog light / reflector
+              child.material.color = new THREE.Color(0xffffff);
+              child.material.roughness = 0.12;
+              child.material.metalness = 0.85;
+              child.material.emissive = new THREE.Color(0xffeedd);
+              child.material.emissiveIntensity = 0.25;
+              child.material.envMapIntensity = 2.5;
             }
             return;
           }
 
-          // 4. Rich British Racing Green / Oak Green Metallic Body Paint
+          // 5. Rich British Racing Green / Oak Green Metallic Body Paint
           if (matName.includes('paint')) {
             const origNorm = child.material.normalMap;
             const origRough = child.material.roughnessMap;
 
-            // Luxury automotive multi-layer clearcoat lacquer
+            // Authentic British Racing Green / Oak Green Metallic automotive lacquer
             child.material = new THREE.MeshPhysicalMaterial({
-              color: new THREE.Color('#143d2b'), // Deep, rich emerald racing green
-              metalness: 0.68,
-              roughness: 0.26,
-              clearcoat: 1.0,
-              clearcoatRoughness: 0.08,
-              reflectivity: 0.92,
-              envMapIntensity: 2.4,
+              color: new THREE.Color('#14452f'), // Rich, saturated British Racing Green
+              metalness: 0.38,                  // Metallic flake feel without crushing green into black
+              roughness: 0.22,                  // Smooth automotive surface
+              clearcoat: 1.0,                   // Wet-look clear lacquer layer
+              clearcoatRoughness: 0.04,         // Mirror clearcoat shine
+              reflectivity: 0.88,
+              envMapIntensity: 2.2,
               normalMap: origNorm,
               normalScale: new THREE.Vector2(0.85, 0.85),
               roughnessMap: origRough,
@@ -472,19 +604,27 @@ const PorscheCanvas = () => {
           }
         });
 
+        if (lowEndDevice) downsampleTextures(porsche, 1024);
         carRoot.add(porsche);
         setIsLoaded(true);
+        onReadyRef.current?.();
+        if (prefersReducedMotion) renderer.render(scene, camera);
       },
-      (xhr) => {
-        if (xhr.total > 0) {
-          const pct = Math.round((xhr.loaded / xhr.total) * 100);
-          setLoadProgress(pct);
-        }
-      },
+      undefined,
       (err) => {
-        console.error('Failed to load Porsche 911 GLB:', err);
+        if (loadCancelled) return;
+        console.warn('Porsche model could not be loaded; keeping the lightweight hero fallback.', err);
+        setLoadFailed(true);
       }
-    );
+      );
+    };
+    const startWhenIdle = () => {
+      if (loadCancelled) return;
+      if ('requestIdleCallback' in window) idleHandle = window.requestIdleCallback(loadModel, { timeout: 1800 });
+      else loadTimer = window.setTimeout(loadModel, 250);
+    };
+    // Let text, navigation, and the poster surface paint before requesting the large model.
+    loadTimer = window.setTimeout(startWhenIdle, 500);
 
     // ── 6. Mouse Parallax (Refined & Subtle) ───────────────────────────────
     let targetMouseX = 0;
@@ -497,14 +637,14 @@ const PorscheCanvas = () => {
       targetMouseY = (e.clientY / window.innerHeight - 0.5) * 0.15;
     };
 
-    if (!prefersReducedMotion) {
+    if (!prefersReducedMotion && !lowEndDevice) {
       window.addEventListener('mousemove', handleMouseMove, { passive: true });
     }
 
     // ── 7. Scroll Choreography (ALL STAGES GROUNDED AT Y = 0) ──────────────
     const getChoreographyTarget = () => {
-      const isMobile = window.innerWidth < 768;
-      const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+      const isMobile = window.innerWidth <= 768;
+      const isTablet = window.innerWidth > 768 && window.innerWidth < 1024;
 
       const aboutEl = document.getElementById('about');
       const skillsEl = document.getElementById('skills');
@@ -604,8 +744,16 @@ const PorscheCanvas = () => {
         };
       }
 
+      if (isMobile) target.scale *= window.innerWidth < 360 ? 0.76 : 0.9;
+
       return target;
     };
+
+    let choreographyTarget = getChoreographyTarget();
+    const updateChoreographyTarget = () => {
+      choreographyTarget = getChoreographyTarget();
+    };
+    window.addEventListener('scroll', updateChoreographyTarget, { passive: true });
 
     const current = {
       x: 1.65,
@@ -621,20 +769,34 @@ const PorscheCanvas = () => {
 
     // ── 8. Animation Loop ─────────────────────────────────────────────────
     let animationFrameId;
-    let clock = new THREE.Clock();
+    let animationTimerId;
+    let stageVisible = true;
+    let motionStart = null;
+    const frameInterval = lowEndDevice ? 1000 / 24 : 1000 / 30;
 
-    const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
+    const scheduleAnimation = () => {
+      if (document.hidden || prefersReducedMotion || !stageVisible || animationTimerId !== undefined || animationFrameId !== undefined) return;
+      animationTimerId = window.setTimeout(() => {
+        animationTimerId = undefined;
+        animationFrameId = requestAnimationFrame(animate);
+      }, frameInterval);
+    };
 
-      const delta = clock.getDelta();
-      const elapsed = clock.getElapsedTime();
+    const animate = (now = 0) => {
+      animationFrameId = undefined;
+      if (document.hidden || prefersReducedMotion || !stageVisible) {
+        return;
+      }
+
+      if (motionStart === null) motionStart = now;
+      const elapsed = (now - motionStart) / 1000;
 
       // Mouse smoothing
       currentMouseX += (targetMouseX - currentMouseX) * 0.05;
       currentMouseY += (targetMouseY - currentMouseY) * 0.05;
 
       // Choreography interpolation
-      const target = getChoreographyTarget();
+      const target = choreographyTarget;
       const ease = 0.045;
 
       current.x += (target.x - current.x) * ease;
@@ -677,29 +839,110 @@ const PorscheCanvas = () => {
       }
 
       renderer.render(scene, camera);
+      scheduleAnimation();
     };
 
-    animate();
+    if (prefersReducedMotion) renderer.render(scene, camera);
+    else scheduleAnimation();
 
     // ── 9. Window Resize Handler ──────────────────────────────────────────
     const handleResize = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      const rect = containerRef.current?.getBoundingClientRect();
+      const width = rect?.width || window.innerWidth;
+      const height = rect?.height || window.innerHeight;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(pixelRatio);
+      updateChoreographyTarget();
     };
 
     window.addEventListener('resize', handleResize);
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(containerRef.current);
+    let mobileStage = window.innerWidth <= 768;
+    const pauseAnimation = () => {
+      cancelAnimationFrame(animationFrameId);
+      window.clearTimeout(animationTimerId);
+      animationFrameId = undefined;
+      animationTimerId = undefined;
+    };
+    const stageObserver = new IntersectionObserver(([entry]) => {
+      if (mobileStage) return;
+      stageVisible = entry.isIntersecting;
+      if (!stageVisible) {
+        pauseAnimation();
+      } else scheduleAnimation();
+    });
+    const heroObserver = new IntersectionObserver(([entry]) => {
+      if (!mobileStage) return;
+      stageVisible = entry.isIntersecting;
+      containerRef.current?.classList.toggle('is-offstage', !stageVisible);
+      if (!stageVisible) pauseAnimation();
+      else scheduleAnimation();
+    });
+    const homeSection = document.getElementById('home');
+    if (mobileStage && homeSection) {
+      containerRef.current.classList.add('is-offstage');
+      heroObserver.observe(homeSection);
+    } else {
+      stageObserver.observe(containerRef.current);
+    }
+    const updateStageObserver = () => {
+      const nextIsMobile = window.innerWidth <= 768;
+      if (nextIsMobile === mobileStage) return;
+      mobileStage = nextIsMobile;
+      if (mobileStage && homeSection) {
+        stageObserver.unobserve(containerRef.current);
+        containerRef.current.classList.add('is-offstage');
+        stageVisible = false;
+        heroObserver.observe(homeSection);
+      } else {
+        heroObserver.unobserve(homeSection);
+        containerRef.current.classList.remove('is-offstage');
+        stageVisible = true;
+        stageObserver.observe(containerRef.current);
+        scheduleAnimation();
+      }
+    };
+    window.addEventListener('resize', updateStageObserver);
+    const handleVisibility = () => {
+      if (document.hidden) {
+        pauseAnimation();
+      } else {
+        if (prefersReducedMotion) renderer.render(scene, camera);
+        else scheduleAnimation();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      window.clearTimeout(animationTimerId);
+      loadCancelled = true;
+      window.clearTimeout(loadTimer);
+      if (idleHandle !== undefined && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleHandle);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', updateStageObserver);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', updateChoreographyTarget);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      resizeObserver.disconnect();
+      stageObserver.disconnect();
+      heroObserver.disconnect();
+      renderer.renderLists.dispose();
+      if (loadedModel) disposeModel(loadedModel);
       renderer.dispose();
       pmremGenerator.dispose();
       studioEnvMap.dispose();
+      contactShadowTexture.dispose();
+      groundAlphaMap.dispose();
+      ground.geometry.dispose();
+      groundMat.dispose();
+      shadowGeo.dispose();
+      shadowMat.dispose();
+      scene.clear();
+      disposeModel(studioScene);
     };
   }, []);
 
@@ -714,30 +957,10 @@ const PorscheCanvas = () => {
   return (
     <div
       ref={containerRef}
-      className={`porsche-canvas-container ${isLoaded ? 'is-ready' : 'is-loading'}`}
+      className={`porsche-canvas-container ${isLoaded || loadFailed ? 'is-ready' : 'is-loading'}`}
       aria-hidden="true"
     >
       <canvas ref={canvasRef} className="porsche-gl-canvas" />
-
-      {/* Loading Telemetry HUD */}
-      {!isLoaded && (
-        <div className="porsche-loader-hud">
-          <div className="porsche-loader-badge">
-            <span className="porsche-loader-dot" />
-            <span className="porsche-loader-label">1975 PORSCHE 911 (930) TURBO</span>
-          </div>
-          <div className="porsche-loader-bar-bg">
-            <div
-              className="porsche-loader-bar-fill"
-              style={{ width: `${loadProgress}%` }}
-            />
-          </div>
-          <div className="porsche-loader-stats">
-            <span>CALIBRATING CHASSIS</span>
-            <span>{loadProgress}%</span>
-          </div>
-        </div>
-      )}
 
       {/* Telemetry Corner Badges */}
       <div className="porsche-hud-badge top-right">

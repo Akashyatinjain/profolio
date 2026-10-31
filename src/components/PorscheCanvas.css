@@ -7,7 +7,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
@@ -147,15 +147,21 @@
 }
 
 @media (max-width: 768px) {
-  .porsche-loader-hud {
-    bottom: 1.5rem;
-    right: 1.5rem;
-    padding: 0.8rem 1rem;
-  }
-  .porsche-loader-bar-bg {
-    width: 160px;
-  }
+  .porsche-canvas-container.is-offstage { opacity: 0; }
   .porsche-hud-badge {
     display: none;
+  }
+  .hero-model-stage .porsche-canvas-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+  }
+  .hero-model-stage .porsche-fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 }

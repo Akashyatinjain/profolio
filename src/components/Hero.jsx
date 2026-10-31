@@ -24,7 +24,8 @@ const itemVariants = {
   },
 };
 
-const Hero = () => {
+const Hero = ({ modelReady }) => {
+
   const scrollTo = (id) => {
     const el = document.getElementById(id);
     if (el) {
@@ -82,6 +83,14 @@ const Hero = () => {
               GET IN TOUCH
             </button>
           </motion.div>
+
+          <div className="hero-model-preview" aria-label="1975 Porsche 911 Turbo in British Racing Green">
+            <img className={`hero-porsche-poster ${modelReady ? 'is-hidden' : ''}`} src="/porsche-preview.svg" alt="" aria-hidden="true" />
+            <div className="hero-model-caption">
+              <span>1975 PORSCHE 911 (930) TURBO</span>
+              <span>BRITISH RACING GREEN</span>
+            </div>
+          </div>
 
           {/* Minimal Engineering Footnote */}
           <motion.div className="hero-meta" variants={itemVariants}>

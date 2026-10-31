@@ -24,6 +24,8 @@
 
 /* ── Automotive Showcase Card ────────────────────────────── */
 .project-campaign-card {
+  width: 100%;
+  min-width: 0;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: var(--space-2xl);
@@ -244,7 +246,7 @@
 @media (max-width: 1024px) {
   .project-campaign-card,
   .project-campaign-card.reverse {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-xl);
     padding: var(--space-xl);
   }
@@ -258,4 +260,15 @@
     flex-direction: column;
     align-items: stretch;
   }
+}
+
+@media (max-width: 640px) {
+  .project-campaign-card,
+  .project-campaign-card.reverse { padding: clamp(1rem, 4vw, 1.5rem); }
+  .project-pre-tag { flex-wrap: wrap; min-width: 0; }
+  .project-category { min-width: 0; overflow-wrap: anywhere; }
+  .spec-row { gap: 0.75rem; align-items: flex-start; }
+  .spec-row-label, .spec-row-value { min-width: 0; overflow-wrap: anywhere; }
+  .spec-row-value { text-align: right; }
+  .project-cta-actions .btn { min-width: 0; }
 }
