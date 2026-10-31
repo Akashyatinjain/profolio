@@ -52,12 +52,12 @@
 
   --space-xs:  0.25rem;
   --space-sm:  0.5rem;
-  --space-md:  1rem;
-  --space-lg:  1.5rem;
-  --space-xl:  2.5rem;
-  --space-2xl: 4.5rem;
-  --space-3xl: 7.5rem;
-  --space-4xl: 10rem;
+  --space-md:  0.875rem;
+  --space-lg:  1.25rem;
+  --space-xl:  1.75rem;
+  --space-2xl: 2.75rem;
+  --space-3xl: 4rem;
+  --space-4xl: 5.5rem;
 
   /* ── 5. Shadows & Atmospheric Depth ─────────────────────────── */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
@@ -181,13 +181,13 @@ a {
 }
 
 .section-header {
-  margin-bottom: var(--space-3xl);
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
 }
 
 .section-header p {
   max-width: 680px;
   margin-top: var(--space-sm);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -203,7 +203,7 @@ a {
 
 section {
   position: relative;
-  padding: clamp(5rem, 9vw, var(--space-4xl)) 0;
+  padding: clamp(3.5rem, 6vw, 5.5rem) 0;
   z-index: 1;
 }
 
@@ -216,7 +216,7 @@ section {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 0.95rem 2rem;
+  padding: 0.75rem 1.6rem;
   font-family: var(--font-subhead);
   font-size: 0.85rem;
   font-weight: 700;

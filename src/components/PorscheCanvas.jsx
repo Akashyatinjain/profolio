@@ -195,9 +195,15 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     if (!canvas) return;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mobileViewport = window.innerWidth <= 768;
+    const hasCapabilityInfo = Boolean(navigator.deviceMemory || navigator.hardwareConcurrency);
     const lowEndDevice = (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
-      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || window.innerWidth <= 768;
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, lowEndDevice ? 1.25 : 1.5);
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+      (mobileViewport && !hasCapabilityInfo);
+    const pixelRatio = Math.min(
+      window.devicePixelRatio || 1,
+      lowEndDevice ? (mobileViewport ? 1.4 : 1.25) : mobileViewport ? 1.75 : 1.5
+    );
 
     // ── 1. Renderer, Camera, Scene Setup ──────────────────────────────────
     let renderer;
@@ -239,7 +245,6 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
       0.1,
       100
     );
-    const mobileViewport = window.innerWidth <= 768;
     const mobileCameraDistance = mobileViewport
       ? Math.max(11.2, 13 * (390 / window.innerWidth))
       : 11.2;
@@ -381,25 +386,19 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     carRoot.add(tailLight2);
 
     // Front LED Headlight Beams & Projector Glow (illuminating floor & front bumper)
-    const leftHeadlightSpot = new THREE.SpotLight(0xeaf4ff, 18, 20, Math.PI / 12, 0.9, 1.1);
-    leftHeadlightSpot.position.set(0.72, 0.72, 2.3);
-    leftHeadlightSpot.target.position.set(0.72, 0.02, 8.5);
-    carRoot.add(leftHeadlightSpot);
-    carRoot.add(leftHeadlightSpot.target);
-
-    const rightHeadlightSpot = new THREE.SpotLight(0xeaf4ff, 18, 20, Math.PI / 12, 0.9, 1.1);
-    rightHeadlightSpot.position.set(-0.72, 0.72, 2.3);
-    rightHeadlightSpot.target.position.set(-0.72, 0.02, 8.5);
-    carRoot.add(rightHeadlightSpot);
-    carRoot.add(rightHeadlightSpot.target);
-
-    const leftHeadlightGlow = new THREE.PointLight(0xebf5ff, 4.5, 5.5, 1.5);
-    leftHeadlightGlow.position.set(0.72, 0.72, 2.4);
-    carRoot.add(leftHeadlightGlow);
-
-    const rightHeadlightGlow = new THREE.PointLight(0xebf5ff, 4.5, 5.5, 1.5);
-    rightHeadlightGlow.position.set(-0.72, 0.72, 2.4);
-    carRoot.add(rightHeadlightGlow);
+    const addHeadlightSpot = (x, intensity = 18, angle = Math.PI / 12) => {
+      const spot = new THREE.SpotLight(0xeaf4ff, intensity, 20, angle, 0.9, 1.1);
+      spot.position.set(x, 0.72, 2.3);
+      spot.target.position.set(x, 0.02, 8.5);
+      carRoot.add(spot, spot.target);
+    };
+    if (mobileViewport) {
+      // One broad source keeps phone rendering light while both lenses stay emissive.
+      addHeadlightSpot(0, 16, Math.PI / 10);
+    } else {
+      addHeadlightSpot(0.72);
+      addHeadlightSpot(-0.72);
+    }
 
     const taillightMeshes = [];
     let paintMeshes = [];
@@ -556,8 +555,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
           pool.position.set(x, 0.004, 4.35);
           porsche.add(pool);
         };
-        addFloorBeam(0.86);
-        addFloorBeam(-0.86);
+        (mobileViewport ? [0] : [0.86, -0.86]).forEach(addFloorBeam);
 
         // A restrained, soft-edged cone gives the headlight output a little atmosphere.
         const shaftLength = 4.4;
@@ -601,8 +599,12 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
           );
           porsche.add(shaft);
         };
-        addHeadlightShaft(0.86);
-        addHeadlightShaft(-0.86);
+        if (mobileViewport) {
+          shaftMaterial.dispose();
+        } else {
+          addHeadlightShaft(0.86);
+          addHeadlightShaft(-0.86);
+        }
 
         // ── 5.3 AUTOMOTIVE MATERIALS & AUTHENTIC DETAILS ──────────────────
         porsche.traverse((child) => {
@@ -798,11 +800,12 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
           }
         });
 
-        if (lowEndDevice) downsampleTextures(porsche, 1024);
+        if (mobileViewport) downsampleTextures(porsche, lowEndDevice ? 1280 : 1536);
         carRoot.add(porsche);
         setIsLoaded(true);
         onReadyRef.current?.();
         if (prefersReducedMotion) renderer.render(scene, camera);
+        else scheduleAnimation();
       },
       (xhr) => {
         if (xhr.total > 0) {
@@ -959,18 +962,6 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     };
 
     let choreographyTarget = getChoreographyTarget();
-    const updateChoreographyTarget = () => {
-      choreographyTarget = getChoreographyTarget();
-      if (prefersReducedMotion) {
-        current.cameraTargetY = choreographyTarget.cameraTargetY;
-        camera.lookAt(0, current.cameraTargetY, 0);
-        renderer.render(scene, camera);
-      }
-    };
-    window.addEventListener('scroll', updateChoreographyTarget, { passive: true });
-
-    // Start in the viewport-appropriate pose so reduced-motion users and the
-    // first rendered frame never see the desktop car position on a phone.
     const current = { ...choreographyTarget };
 
     // ── 8. Animation Loop ─────────────────────────────────────────────────
@@ -980,6 +971,22 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     let motionStart = null;
     const frameInterval = lowEndDevice ? 1000 / 24 : 1000 / 30;
 
+    const hasPendingMotion = () => {
+      const target = choreographyTarget;
+      return Math.abs(current.x - target.x) > 0.002 ||
+        Math.abs(current.y - target.y) > 0.002 ||
+        Math.abs(current.z - target.z) > 0.002 ||
+        Math.abs(current.rotX - target.rotX) > 0.002 ||
+        Math.abs(current.rotY - target.rotY) > 0.002 ||
+        Math.abs(current.rotZ - target.rotZ) > 0.002 ||
+        Math.abs(current.scale - target.scale) > 0.002 ||
+        Math.abs(current.cameraTargetY - target.cameraTargetY) > 0.002 ||
+        Math.abs(current.tailLightIntensity - target.tailLightIntensity) > 0.002 ||
+        Math.abs(current.tailLightGlow - target.tailLightGlow) > 0.002 ||
+        Math.abs(currentMouseX - targetMouseX) > 0.002 ||
+        Math.abs(currentMouseY - targetMouseY) > 0.002;
+    };
+
     const scheduleAnimation = () => {
       if (document.hidden || prefersReducedMotion || !stageVisible || animationTimerId !== undefined || animationFrameId !== undefined) return;
       animationTimerId = window.setTimeout(() => {
@@ -987,6 +994,21 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
         animationFrameId = requestAnimationFrame(animate);
       }, frameInterval);
     };
+
+    const updateChoreographyTarget = () => {
+      choreographyTarget = getChoreographyTarget();
+      if (containerRef.current) {
+        const scrolled = (window.scrollY || document.documentElement.scrollTop || 0) > 60;
+        containerRef.current.classList.toggle('is-scrolled', scrolled);
+      }
+      if (prefersReducedMotion) {
+        current.cameraTargetY = choreographyTarget.cameraTargetY;
+        camera.lookAt(0, current.cameraTargetY, 0);
+        renderer.render(scene, camera);
+      } else scheduleAnimation();
+    };
+    window.addEventListener('scroll', updateChoreographyTarget, { passive: true });
+    updateChoreographyTarget();
 
     const animate = (now = 0) => {
       animationFrameId = undefined;
@@ -1017,7 +1039,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
       current.tailLightGlow += (target.tailLightGlow - current.tailLightGlow) * ease;
 
       // Subtle suspension breathing (just 2mm, grounded on floor)
-      const idleHover = prefersReducedMotion ? 0 : Math.sin(elapsed * 0.8) * 0.002;
+      const idleHover = prefersReducedMotion || mobileViewport ? 0 : Math.sin(elapsed * 0.8) * 0.002;
 
       carRoot.position.set(
         current.x + currentMouseX * 0.18,
@@ -1047,7 +1069,9 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
       }
 
       renderer.render(scene, camera);
-      scheduleAnimation();
+      // Mobile GPUs should not render an idle scene 24 times per second. Scroll
+      // and pointer input schedule a short transition; once settled, it sleeps.
+      if (!mobileViewport || hasPendingMotion()) scheduleAnimation();
     };
 
     if (prefersReducedMotion) renderer.render(scene, camera);

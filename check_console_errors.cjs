@@ -21,7 +21,7 @@ let executablePath = possiblePaths.find(p => fs.existsSync(p));
   page.on('console', msg => console.log('PAGE LOG:', msg.text()));
   page.on('pageerror', err => console.log('PAGE ERROR:', err.message));
 
-  await page.goto('http://localhost:5174', { waitUntil: 'networkidle2' });
+  await page.goto('http://localhost:5173', { waitUntil: 'networkidle2' });
   await new Promise(r => setTimeout(r, 4000));
 
   await browser.close();
