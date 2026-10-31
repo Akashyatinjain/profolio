@@ -7,6 +7,7 @@ import './PorscheCanvas.css';
 
 // Optimised, meshopt-compressed master model for authentic silhouette, geometry, and textures.
 const MODEL_URL_DESKTOP = '/models/porsche_911.opt.glb?v=4';
+const MODEL_URL_MOBILE = '/models/porsche_911.mobile.glb?v=1';
 
 function disposeModel(root) {
   const geometries = new Set();
@@ -177,9 +178,10 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     const lowEndDevice = (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
       (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
       (mobileViewport && !hasCapabilityInfo);
-    // Render at the device's native density on modern phones (up to 3x).
-    // Render at full native density — critical for sharp paint reflections & chrome trim
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 3.0);
+    // Balance interactive clarity and GPU load for mobile.
+    const pixelRatio = mobileViewport
+      ? Math.min(window.devicePixelRatio || 1, lowEndDevice ? 1.25 : 2)
+      : Math.min(window.devicePixelRatio || 1, 2);
 
     // ── 1. Renderer, Camera, Scene Setup ──────────────────────────────────
     let renderer;
@@ -187,8 +189,8 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true, // Always hardware antialiased for razor-sharp silhouette & curves
-        powerPreference: 'high-performance',
+        antialias: !lowEndDevice,
+        powerPreference: mobileViewport ? 'default' : 'high-performance',
       });
     } catch (e) {
       console.warn('WebGL init failed:', e);
@@ -229,8 +231,8 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     if (import.meta.env.DEV) window.__camera = camera;
 
     // ── 2. Procedural Automotive Studio Environment (Continuous IBL) ──────
-    const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    pmremGenerator.compileEquirectangularShader();
+    const pmremGenerator = mobileViewport ? null : new THREE.PMREMGenerator(renderer);
+    pmremGenerator?.compileEquirectangularShader();
 
     const studioScene = new THREE.Scene();
     studioScene.background = new THREE.Color(STUDIO_BG);
@@ -316,12 +318,14 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     groundBounce.position.set(0, -0.5, 0);
     studioScene.add(groundBounce);
 
-    const studioEnvMap = pmremGenerator.fromScene(studioScene).texture;
-    scene.environment = studioEnvMap;
+    const studioEnvMap = pmremGenerator?.fromScene(studioScene).texture ?? null;
+    if (studioEnvMap) scene.environment = studioEnvMap;
 
     // ── 4. Professional Studio Lighting Rig ───────────────────────────────
     // 1. Warm forest green ambient fill — guarantees curves & body never drop to pitch black
-    const ambientLight = new THREE.AmbientLight(0x132a1b, 2.0);
+    const ambientLight = mobileViewport
+      ? new THREE.AmbientLight(0xffffff, 1.4)
+      : new THREE.AmbientLight(0x132a1b, 2.0);
     scene.add(ambientLight);
 
     // 2. Large soft key light (Front-Left Studio Softbox) — boosted for richer specular
@@ -422,7 +426,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
 
     const loader = new GLTFLoader();
     loader.setMeshoptDecoder(MeshoptDecoder);
-    const modelUrl = MODEL_URL_DESKTOP;
+    const modelUrl = mobileViewport ? MODEL_URL_MOBILE : MODEL_URL_DESKTOP;
     let loadedModel = null;
     let loadCancelled = false;
     const loadModel = () => {
@@ -437,8 +441,41 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
         const porsche = gltf.scene;
         loadedModel = porsche;
 
+        if (mobileViewport) {
+          const materialCache = new Map();
+          const simplifyMaterial = (source) => {
+            if (materialCache.has(source)) return materialCache.get(source);
+            const material = new THREE.MeshLambertMaterial({
+              color: source.color?.clone() ?? new THREE.Color(0xffffff),
+              map: source.map ?? null,
+              alphaMap: source.alphaMap ?? null,
+              emissive: source.emissive?.clone() ?? new THREE.Color(0x000000),
+              emissiveMap: source.emissiveMap ?? null,
+              emissiveIntensity: source.emissiveIntensity ?? 1,
+              transparent: source.transparent,
+              opacity: source.opacity,
+              alphaTest: source.alphaTest,
+              side: source.side,
+              vertexColors: source.vertexColors,
+              depthWrite: source.depthWrite,
+              toneMapped: source.toneMapped,
+            });
+            material.name = source.name;
+            source.dispose();
+            materialCache.set(source, material);
+            return material;
+          };
+
+          porsche.traverse((node) => {
+            if (!node.isMesh || !node.material) return;
+            node.material = Array.isArray(node.material)
+              ? node.material.map(simplifyMaterial)
+              : simplifyMaterial(node.material);
+          });
+        }
+
         // Reduce blur on paint and trim viewed at shallow angles.
-        const maxAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        const maxAnisotropy = Math.min(mobileViewport ? 2 : 8, renderer.capabilities.getMaxAnisotropy());
         porsche.traverse((node) => {
           const materials = Array.isArray(node.material) ? node.material : [node.material];
           materials.filter(Boolean).forEach((material) => {
@@ -457,9 +494,10 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
           const cleanName = rawName.replace(/[^a-z0-9]/g, '');
           const matName = (child.material?.name || '').toLowerCase();
 
-          // Compute object's local geometry center Z
+          // Only sticker meshes need a Z-depth test. Computing bounds for every
+          // phone mesh forces a costly full vertex scan during model startup.
           let zCenter = child.position.z;
-          if (child.geometry) {
+          if (matName.includes('sticker') && child.geometry) {
             if (!child.geometry.boundingBox) child.geometry.computeBoundingBox();
             if (child.geometry.boundingBox) {
               zCenter += (child.geometry.boundingBox.min.z + child.geometry.boundingBox.max.z) / 2;
@@ -523,22 +561,14 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
         // Authentic 1975 Porsche 930 Turbo length: 4.29 meters
         const targetLength = 4.29;
         const scaleFactor = targetLength / initialSize.z;
+        const cleanCenter = cleanBox.getCenter(new THREE.Vector3());
         porsche.scale.set(scaleFactor, scaleFactor, scaleFactor);
-        porsche.updateMatrixWorld(true);
 
-        // Step 2: Compute exact scaled bounding box
-        const scaledBox = new THREE.Box3();
-        porsche.traverse((child) => {
-          if (child.isMesh && child.visible) {
-            scaledBox.expandByObject(child);
-          }
-        });
-        const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
-
-        // Step 3: Center on X and Z, and place tire contact patches EXACTLY on Y = 0
-        porsche.position.x = -scaledCenter.x;
-        porsche.position.y = -scaledBox.min.y; // Lowest wheel contact points now sit precisely on Y = 0!
-        porsche.position.z = -scaledCenter.z;
+        // Uniform scaling lets us derive the grounded center from the first
+        // bounds pass instead of walking every vertex a second time.
+        porsche.position.x = -cleanCenter.x * scaleFactor;
+        porsche.position.y = -cleanBox.min.y * scaleFactor;
+        porsche.position.z = -cleanCenter.z * scaleFactor;
         porsche.updateMatrixWorld(true);
 
         // Position taillights at exact rear chassis coordinates (rear is negative Z)
@@ -762,6 +792,16 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
           if (matName.includes('paint')) {
             const origNorm = child.material.normalMap;
             const origRough = child.material.roughnessMap;
+            const origMap = child.material.map;
+
+            if (mobileViewport) {
+              child.material = new THREE.MeshLambertMaterial({
+                color: new THREE.Color('#237a43'),
+                map: origMap,
+              });
+              paintMeshes.push(child);
+              return;
+            }
 
             // AAA-grade British Racing Green — deep metallic lacquer with micro-flake depth
             child.material = new THREE.MeshPhysicalMaterial({
@@ -875,7 +915,11 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
           onReadyRef.current?.();
           if (!prefersReducedMotion) scheduleAnimation();
         };
-        reveal();
+        if (typeof renderer.compileAsync === 'function') {
+          renderer.compileAsync(scene, camera).then(reveal, reveal);
+        } else {
+          reveal();
+        }
       },
       (xhr) => {
         if (xhr.total > 0) {
@@ -1036,7 +1080,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     let animationTimerId;
     let stageVisible = true;
     let motionStart = null;
-    const frameInterval = lowEndDevice ? 1000 / 24 : 1000 / 30;
+    const frameInterval = lowEndDevice ? 1000 / 30 : 1000 / 60;
 
     const hasPendingMotion = () => {
       const target = choreographyTarget;
@@ -1246,8 +1290,8 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
       renderer.renderLists.dispose();
       if (loadedModel) disposeModel(loadedModel);
       renderer.dispose();
-      pmremGenerator.dispose();
-      studioEnvMap.dispose();
+      pmremGenerator?.dispose();
+      studioEnvMap?.dispose();
       contactShadowTexture.dispose();
       groundAlphaMap.dispose();
       ground.geometry.dispose();

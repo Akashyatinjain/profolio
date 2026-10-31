@@ -11,7 +11,7 @@
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
-  transition: opacity 0.8s var(--ease-cinematic);
+  transition: opacity 0.35s var(--ease-cinematic);
 }
 
 .porsche-canvas-container.is-loading {
