@@ -247,6 +247,8 @@ export const projects = [
     githubUrl: 'https://github.com/Akashyatinjain/DataStock',
     accent: '#3B82F6',
     image: '/projects/datastock.png',
+    video: '/videos/datastock.mp4',
+    demoCredentials: 'Instant guest access available directly on the landing page or signup via test OTP.',
   },
   {
     id: 'finance-tracker',
@@ -269,6 +271,8 @@ export const projects = [
     githubUrl: 'https://github.com/Akashyatinjain/Budget-tracker-no3',
     accent: '#10B981',
     image: '/projects/finance-tracker.png',
+    video: '/videos/financetracker.mp4',
+    demoCredentials: 'Pre-loaded mock transactions & CSV sample parser ready for immediate review.',
   },
   {
     id: 'minigpt',
@@ -291,6 +295,7 @@ export const projects = [
     githubUrl: 'https://github.com/Akashyatinjain/Agent',
     accent: '#A855F7',
     image: '/projects/agent-ai.png',
+    demoCredentials: 'Open assistant sandbox — prompt directly with real-time SSE token response.',
   },
 ];
 
@@ -386,12 +391,12 @@ export const developerActivity = {
 };
 
 export const dsaTopics = [
-  'Arrays & Hashing',
-  'Two Pointers',
-  'Binary Search',
-  'Stack & Queues',
-  'Trees & Graphs',
-  'Dynamic Programming',
+  { name: 'Arrays & Hashing', count: '48+' },
+  { name: 'Two Pointers & Sliding Window', count: '24+' },
+  { name: 'Binary Search', count: '32+' },
+  { name: 'Stack & Queues', count: '28+' },
+  { name: 'Trees & Graphs', count: '42+' },
+  { name: 'Dynamic Programming', count: '38+' },
 ];
 
 export const tufStats = {

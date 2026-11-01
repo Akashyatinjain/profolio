@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Volume2, VolumeX, Terminal as TerminalIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { playClick, playSwitch } from '../utils/soundEffects';
 import './Header.css';
 
 const navItems = [
   { label: 'ABOUT', id: 'about' },
   { label: 'SKILLS', id: 'skills' },
+  { label: 'TELEMETRY', id: 'problem-solving' },
   { label: 'GARAGE', id: 'projects' },
   { label: 'JOURNEY', id: 'journey' },
   { label: 'CONTACT', id: 'contact' },
 ];
 
-const Header = () => {
+const Header = ({ soundOn, onToggleSound, onOpenTerminal }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -107,6 +109,34 @@ const Header = () => {
         </nav>
 
         <div className="header-actions">
+          {/* Sound FX Toggle */}
+          <button
+            type="button"
+            className="btn-header-icon"
+            onClick={() => {
+              playClick();
+              onToggleSound?.();
+            }}
+            title={soundOn ? 'Mute Mechanical Sound FX' : 'Enable Mechanical Sound FX'}
+            aria-label={soundOn ? 'Mute Mechanical Sound FX' : 'Enable Mechanical Sound FX'}
+          >
+            {soundOn ? <Volume2 size={16} /> : <VolumeX size={16} />}
+          </button>
+
+          {/* DevShell Launcher */}
+          <button
+            type="button"
+            className="btn-header-terminal"
+            onClick={() => {
+              playSwitch();
+              onOpenTerminal?.();
+            }}
+            title="Launch Interactive DevShell [~]"
+          >
+            <TerminalIcon size={14} />
+            <span>DEVSHELL</span>
+          </button>
+
           <button
             type="button"
             className="btn btn-primary header-cta"
@@ -151,7 +181,19 @@ const Header = () => {
                 {item.label}
               </button>
             ))}
-            <div className="mobile-actions">
+            <div className="mobile-actions" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => {
+                  closeMobile();
+                  onOpenTerminal?.();
+                }}
+                style={{ justifyContent: 'center' }}
+              >
+                <TerminalIcon size={14} />
+                LAUNCH DEVSHELL
+              </button>
               <button
                 type="button"
                 className="btn btn-primary"

@@ -197,3 +197,25 @@
   color: var(--accent);
   border-color: var(--accent);
 }
+
+/* Modal Overlay Mode */
+.devshell-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 10, 12, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.terminal-window.is-modal {
+  max-width: 840px;
+  max-height: 85vh;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
+  border-color: var(--border-strong);
+}
+

@@ -154,7 +154,14 @@ function createHeadlightBeamTexture(maxAlpha = 0.32) {
   return texture;
 }
 
-const PorscheCanvas = ({ onReady, onProgress, onError }) => {
+const PorscheCanvas = ({
+  onReady,
+  onProgress,
+  onError,
+  carColor = '#083d20',
+  headlightsOn = true,
+  inspectMode = false,
+}) => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const onReadyRef = useRef(onReady);
@@ -167,6 +174,48 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const [webglSupported, setWebglSupported] = useState(true);
+
+  const carColorRef = useRef(carColor);
+  carColorRef.current = carColor;
+  const headlightsOnRef = useRef(headlightsOn);
+  headlightsOnRef.current = headlightsOn;
+  const inspectModeRef = useRef(inspectMode);
+  inspectModeRef.current = inspectMode;
+  const paintMeshesRef = useRef([]);
+  const headlightElementsRef = useRef([]);
+  const scheduleAnimationRef = useRef(null);
+  const updateChoreographyTargetRef = useRef(null);
+
+  // Dynamic Paint Color update
+  useEffect(() => {
+    if (paintMeshesRef.current.length === 0) return;
+    const col = new THREE.Color(carColor);
+    paintMeshesRef.current.forEach((mesh) => {
+      if (mesh.material) {
+        mesh.material.color.copy(col);
+        if (mesh.material.sheenColor) {
+          mesh.material.sheenColor.copy(col).offsetHSL(0, 0.1, 0.12);
+        }
+        mesh.material.needsUpdate = true;
+      }
+    });
+    scheduleAnimationRef.current?.();
+  }, [carColor]);
+
+  // Dynamic Headlights update
+  useEffect(() => {
+    if (headlightElementsRef.current.length === 0) return;
+    headlightElementsRef.current.forEach((el) => {
+      if (el) el.visible = headlightsOn;
+    });
+    scheduleAnimationRef.current?.();
+  }, [headlightsOn]);
+
+  // Inspect mode trigger update
+  useEffect(() => {
+    updateChoreographyTargetRef.current?.();
+    scheduleAnimationRef.current?.();
+  }, [inspectMode]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -912,6 +961,23 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
             return;
           }
           setIsLoaded(true);
+          paintMeshesRef.current = paintMeshes;
+          headlightElementsRef.current = [leftGlowMesh, rightGlowMesh, floorBeamMaterial, shaftMaterial].filter(Boolean);
+          if (carColorRef.current && carColorRef.current !== '#083d20') {
+            const initCol = new THREE.Color(carColorRef.current);
+            paintMeshes.forEach((mesh) => {
+              if (mesh.material) {
+                mesh.material.color.copy(initCol);
+                if (mesh.material.sheenColor) mesh.material.sheenColor.copy(initCol).offsetHSL(0, 0.1, 0.12);
+                mesh.material.needsUpdate = true;
+              }
+            });
+          }
+          if (headlightsOnRef.current === false) {
+            headlightElementsRef.current.forEach((el) => {
+              if (el) el.visible = false;
+            });
+          }
           onReadyRef.current?.();
           if (!prefersReducedMotion) scheduleAnimation();
         };
@@ -958,13 +1024,62 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
       window.addEventListener('mousemove', handleMouseMove, { passive: true });
     }
 
+    // ── 6.1 360° Inspection Orbit Controls ──────────────────────────────────
+    let inspectRotY = -Math.PI * 0.22;
+    let inspectRotX = 0.015;
+    let isInspectDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+
+    const handlePointerDown = (e) => {
+      if (!inspectModeRef.current) return;
+      isInspectDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+    };
+
+    const handlePointerMove = (e) => {
+      if (!inspectModeRef.current || !isInspectDragging) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      inspectRotY += dx * 0.009;
+      inspectRotX = Math.max(-0.25, Math.min(0.35, inspectRotX + dy * 0.006));
+      updateChoreographyTarget();
+    };
+
+    const handlePointerUp = () => {
+      isInspectDragging = false;
+    };
+
+    window.addEventListener('pointerdown', handlePointerDown, { passive: true });
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('pointerup', handlePointerUp, { passive: true });
+
     // ── 7. Scroll Choreography (ALL STAGES GROUNDED AT Y = 0) ──────────────
     const getChoreographyTarget = () => {
       const isMobile = window.innerWidth <= 768;
       const isTablet = window.innerWidth > 768 && window.innerWidth < 1024;
 
+      if (inspectModeRef.current) {
+        return {
+          x: isMobile ? 0 : 0.45,
+          y: 0,
+          z: isMobile ? -0.1 : 0.15,
+          cameraTargetY: isMobile ? 1.4 : 0.65,
+          rotX: inspectRotX,
+          rotY: inspectRotY,
+          rotZ: 0,
+          scale: isMobile ? 0.76 : 1.05,
+          tailLightIntensity: 0.8,
+          tailLightGlow: 0.6,
+        };
+      }
+
       const aboutEl = document.getElementById('about');
       const skillsEl = document.getElementById('skills');
+      const problemSolvingEl = document.getElementById('problem-solving');
       const projectsEl = document.getElementById('projects');
       const journeyEl = document.getElementById('journey');
       const contactEl = document.getElementById('contact');
@@ -977,6 +1092,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
 
       const aboutP = getProgress(aboutEl);
       const skillsP = getProgress(skillsEl);
+      const problemSolvingP = getProgress(problemSolvingEl);
       const projectsP = getProgress(projectsEl);
       const journeyP = getProgress(journeyEl);
       const contactP = getProgress(contactEl);
@@ -1035,6 +1151,20 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
           rotZ: 0,
           scale: isMobile ? 0.85 : 1.0,
           tailLightIntensity: 0.3,
+          tailLightGlow: 0.4,
+        };
+      } else if (problemSolvingP <= 0.6) {
+        // STAGE 3.5: TELEMETRY & ALGORITHMS (Technical 3/4 Stance)
+        target = {
+          x: isMobile ? 0 : -1.8,
+          y: 0, // GROUNDED
+          z: isMobile ? -0.15 : 0.15,
+          cameraTargetY: isMobile ? 1.2 : 0.65,
+          rotX: 0.035,
+          rotY: Math.PI * 0.32,
+          rotZ: 0,
+          scale: isMobile ? 0.82 : 0.96,
+          tailLightIntensity: 0.35,
           tailLightGlow: 0.4,
         };
       } else if (skillsP <= 0.6) {
@@ -1099,6 +1229,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     };
 
     const scheduleAnimation = () => {
+      scheduleAnimationRef.current = scheduleAnimation;
       if (document.hidden || prefersReducedMotion || !stageVisible || animationTimerId !== undefined || animationFrameId !== undefined) return;
       animationTimerId = window.setTimeout(() => {
         animationTimerId = undefined;
@@ -1107,6 +1238,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
     };
 
     const updateChoreographyTarget = () => {
+      updateChoreographyTargetRef.current = updateChoreographyTarget;
       choreographyTarget = getChoreographyTarget();
       if (containerRef.current) {
         const scrolled = (window.scrollY || document.documentElement.scrollTop || 0) > 60;
@@ -1281,6 +1413,9 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('resize', updateStageObserver);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
       window.removeEventListener('scroll', handleScroll);
       if (scrollFrame) cancelAnimationFrame(scrollFrame);
       document.removeEventListener('visibilitychange', handleVisibility);
@@ -1314,7 +1449,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
   return (
     <div
       ref={containerRef}
-      className={`porsche-canvas-container ${isLoaded || loadFailed ? 'is-ready' : 'is-loading'}`}
+      className={`porsche-canvas-container ${isLoaded || loadFailed ? 'is-ready' : 'is-loading'} ${inspectMode ? 'is-inspecting' : ''}`}
       aria-hidden="true"
     >
       <canvas ref={canvasRef} className="porsche-gl-canvas" />
@@ -1324,7 +1459,7 @@ const PorscheCanvas = ({ onReady, onProgress, onError }) => {
         <span className="hud-accent">MODEL:</span> 1975 PORSCHE 911 (930) TURBO
       </div>
       <div className="porsche-hud-badge bottom-left">
-        <span className="hud-accent">PAINT:</span> BRITISH RACING GREEN METALLIC
+        <span className="hud-accent">FINISH:</span> {carColor === '#083d20' ? 'BRITISH RACING GREEN' : carColor === '#9e2929' ? 'GUARDS RED' : carColor === '#7a8288' ? 'GT SILVER' : carColor === '#c27803' ? 'SPEED YELLOW' : carColor === '#e2e8f0' ? 'GRAND PRIX WHITE' : 'MIDNIGHT BLACK'}
       </div>
     </div>
   );

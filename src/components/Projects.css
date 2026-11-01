@@ -445,3 +445,238 @@
     gap: 1rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Inspect Architecture Button & Modal Styles
+   ═══════════════════════════════════════════════════════════════ */
+.btn-inspect {
+  background: rgba(195, 168, 117, 0.12);
+  color: var(--porsche-champagne);
+  border: 1px solid rgba(195, 168, 117, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-subhead);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-cinematic);
+}
+
+.btn-inspect:hover {
+  background: rgba(195, 168, 117, 0.22);
+  border-color: var(--porsche-champagne);
+  color: var(--porsche-white);
+  box-shadow: 0 4px 16px rgba(195, 168, 117, 0.2);
+}
+
+.project-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 14, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.project-modal-container {
+  background: #141618;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  width: 100%;
+  max-width: 920px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9);
+  position: relative;
+}
+
+.project-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.75rem;
+  background: #1a1d1f;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.modal-pre-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--porsche-champagne);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  color: var(--porsche-white);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.modal-close-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--porsche-ivory);
+  padding: 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: var(--porsche-guards-red);
+  color: var(--porsche-white);
+  border-color: var(--porsche-guards-red);
+}
+
+.project-modal-body {
+  padding: 1.75rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modal-video-wrapper {
+  background: #000;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+}
+
+.modal-video-player {
+  width: 100%;
+  max-height: 380px;
+  display: block;
+  object-fit: cover;
+}
+
+.modal-arch-box {
+  background: rgba(14, 16, 18, 0.7);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+}
+
+.modal-arch-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--porsche-steel);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-arch-diagram {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: #10b981;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-xs);
+  border-left: 3px solid #10b981;
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.modal-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.modal-info-card {
+  background: rgba(25, 27, 29, 0.6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+
+.modal-card-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--porsche-steel);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.modal-card-text {
+  font-size: 0.88rem;
+  color: var(--porsche-ivory);
+  line-height: 1.5;
+}
+
+.modal-credentials-box {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #bfdbfe;
+}
+
+.modal-credentials-box strong {
+  color: #60a5fa;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.project-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.25rem 1.75rem;
+  background: #1a1d1f;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .modal-grid-2col {
+    grid-template-columns: 1fr;
+  }
+  .project-modal-container {
+    max-height: 95vh;
+  }
+  .project-modal-body {
+    padding: 1.15rem;
+    gap: 1.15rem;
+  }
+  .project-modal-header,
+  .project-modal-footer {
+    padding: 1rem 1.15rem;
+  }
+}
+

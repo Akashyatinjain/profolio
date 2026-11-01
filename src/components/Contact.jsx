@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import { Send, FileText, CheckCircle2, Copy, ArrowUpRight, Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import { Github, Linkedin, Leetcode } from './Icons';
 import { profile } from '../data/portfolio';
+import { playClick, playCelebration } from '../utils/soundEffects';
 import './Contact.css';
 
 const fadeUp = {
@@ -37,18 +39,37 @@ const Contact = () => {
   const copyEmail = () => {
     navigator.clipboard.writeText(profile.email).then(() => {
       setCopied(true);
+      playCelebration();
+      try {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.8 },
+          colors: ['#083d20', '#9e2929', '#eae6dd', '#c3a875', '#ffffff'],
+        });
+      } catch {}
       setTimeout(() => setCopied(false), 2500);
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    playClick();
     setStatus('sending');
 
     const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
     if (!accessKey) {
       setTimeout(() => {
         setStatus('success');
+        playCelebration();
+        try {
+          confetti({
+            particleCount: 90,
+            spread: 90,
+            origin: { y: 0.6 },
+            colors: ['#083d20', '#9e2929', '#eae6dd', '#c3a875', '#ffffff'],
+          });
+        } catch {}
         setFormData({ name: '', email: '', topic: 'Software Engineering Opportunity', message: '' });
         setTimeout(() => setStatus(null), 5000);
       }, 700);
@@ -72,6 +93,15 @@ const Contact = () => {
 
       if (res.ok) {
         setStatus('success');
+        playCelebration();
+        try {
+          confetti({
+            particleCount: 100,
+            spread: 100,
+            origin: { y: 0.6 },
+            colors: ['#083d20', '#9e2929', '#eae6dd', '#c3a875', '#ffffff'],
+          });
+        } catch {}
         setFormData({ name: '', email: '', topic: 'Software Engineering Opportunity', message: '' });
         setTimeout(() => setStatus(null), 5000);
       } else {

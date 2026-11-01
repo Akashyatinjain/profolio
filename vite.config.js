@@ -9,7 +9,16 @@ export default defineConfig({
       '/api/tuf': {
         target: 'https://backend-go.takeuforward.org',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/tuf/, '/api/v1'),
+        rewrite: (path) => {
+          if (path.includes('endpoint=progress')) {
+            return '/api/v1/progress/dsa/Akashyatinjain';
+          }
+          if (path.includes('endpoint=heatmap')) {
+            const yr = new Date().getFullYear();
+            return `/api/v1/streak/heatmap/Akashyatinjain?year=${yr}`;
+          }
+          return path.replace(/^\/api\/tuf/, '/api/v1');
+        },
         configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq) => {
             proxyReq.setHeader('Origin', 'https://takeuforward.org');

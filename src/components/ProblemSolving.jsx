@@ -228,7 +228,7 @@ const ProblemSolving = () => {
   const hardStroke = (hardPct / 100) * circumference;
 
   return (
-    <section id="problem-solving" className="ps-section">
+    <section id="problem-solving" className="ps-section" aria-label="Algorithmic Telemetry and Problem Solving">
       <div className="container">
         <motion.div
           className="section-header"
@@ -237,10 +237,10 @@ const ProblemSolving = () => {
           viewport={{ once: true, margin: '-60px' }}
           variants={fadeUp}
         >
-          <span className="section-label">Algorithmic Competence</span>
-          <h2 className="section-title">Problem Solving</h2>
-          <p className="section-desc">
-            Consistent dedication to data structures, complexity analysis, and algorithmic patterns across competitive platforms.
+          <div className="section-tag">03 // TELEMETRY & BENCHMARKS</div>
+          <h2 className="projects-headline">ALGORITHMIC TELEMETRY.</h2>
+          <p>
+            Consistent dedication to data structures, complexity analysis, and algorithmic patterns across competitive platforms in Java.
           </p>
         </motion.div>
 
@@ -368,12 +368,16 @@ const ProblemSolving = () => {
                 </p>
 
                 <div className="topics-grid">
-                  {dsaTopics.map((topic) => (
-                    <div key={topic.name} className="topic-chip">
-                      <span>{topic.name}</span>
-                      <span className="topic-count">{topic.count} solved</span>
-                    </div>
-                  ))}
+                  {dsaTopics.map((topic) => {
+                    const name = typeof topic === 'string' ? topic : topic.name;
+                    const count = typeof topic === 'string' ? '' : topic.count;
+                    return (
+                      <div key={name} className="topic-chip">
+                        <span>{name}</span>
+                        {count && <span className="topic-count">{count} solved</span>}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 

@@ -114,6 +114,14 @@
   --transition-fast: 0.2s var(--ease-cinematic);
   --transition-smooth: 0.4s var(--ease-cinematic);
 
+  /* ── 8. LeetCode / TUF Metrics ──────────────────────────────── */
+  --lc-easy:            #00b8a3;
+  --lc-medium:          #ffc01e;
+  --lc-hard:            #ff375f;
+  --radius-full:        9999px;
+  --accent-text:        #ffffff;
+  --accent-glow:        rgba(158, 41, 41, 0.35);
+
   scroll-behavior: smooth;
 }
 
@@ -384,3 +392,234 @@ section {
   .contact-spec-box { padding-inline: 0.9rem; }
   .c-val { text-align: left; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Custom Cursor (Desktop Fine Pointer Only)
+   ═══════════════════════════════════════════════════════════════ */
+body.custom-cursor-active {
+  cursor: none;
+}
+body.custom-cursor-active a,
+body.custom-cursor-active button,
+body.custom-cursor-active [role="button"],
+body.custom-cursor-active input,
+body.custom-cursor-active textarea,
+body.custom-cursor-active select {
+  cursor: none !important;
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background-color: var(--porsche-white);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-ring {
+  position: fixed;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgba(234, 230, 221, 0.45);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Floating DevShell Trigger Pill
+   ═══════════════════════════════════════════════════════════════ */
+.floating-devshell-btn {
+  position: fixed;
+  bottom: 1.75rem;
+  right: 1.75rem;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(14, 16, 18, 0.92);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--porsche-ivory);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.2s var(--ease-cinematic);
+}
+
+.floating-devshell-btn:hover {
+  background: var(--porsche-guards-red);
+  color: var(--porsche-white);
+  border-color: var(--porsche-guards-red);
+  box-shadow: 0 8px 30px rgba(158, 41, 41, 0.35);
+  transform: translateY(-2px);
+}
+
+.floating-devshell-btn .pulse-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+@media (max-width: 768px) {
+  .floating-devshell-btn {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.72rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   360° Showroom Inspection Floating Exit Banner
+   ═══════════════════════════════════════════════════════════════ */
+.inspect-exit-banner {
+  position: fixed;
+  top: 5.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10002;
+  width: min(92vw, 620px);
+  pointer-events: auto;
+}
+
+.inspect-banner-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: rgba(14, 16, 18, 0.94);
+  border: 1px solid var(--porsche-guards-red);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(158, 41, 41, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-sm);
+}
+
+.inspect-banner-info {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--porsche-ivory);
+}
+
+.inspect-dot-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--porsche-guards-red);
+  box-shadow: 0 0 10px var(--porsche-guards-red);
+  animation: pulse-red 1.5s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(0.9); opacity: 0.75; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.75; }
+}
+
+.inspect-banner-title {
+  font-weight: 700;
+  color: var(--porsche-white);
+  text-transform: uppercase;
+}
+
+.inspect-banner-sub {
+  color: var(--porsche-steel);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+
+.btn-exit-360 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--porsche-guards-red);
+  border: 1px solid var(--porsche-red-hover);
+  color: var(--porsche-white);
+  font-family: var(--font-subhead);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-cinematic);
+  flex-shrink: 0;
+}
+
+.btn-exit-360:hover {
+  background: var(--porsche-red-hover);
+  box-shadow: 0 0 16px rgba(184, 48, 48, 0.5);
+  transform: translateY(-1px);
+}
+
+.esc-badge {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--porsche-ivory);
+}
+
+.deck-esc-kbd {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.05rem 0.3rem;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  margin-left: 0.2rem;
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .inspect-exit-banner {
+    top: auto;
+    bottom: 5.5rem;
+    width: 94vw;
+  }
+  .inspect-banner-inner {
+    padding: 0.5rem 0.75rem;
+  }
+  .inspect-banner-sub {
+    display: none;
+  }
+  .btn-exit-360 {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.68rem;
+  }
+}
+
+

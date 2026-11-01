@@ -1,9 +1,10 @@
 // src/components/Projects.jsx
-import React from 'react';
-import { ExternalLink, ArrowUpRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { ExternalLink, ArrowUpRight, X, SlidersHorizontal, Shield, Cpu } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Github } from './Icons';
 import { miniProjects } from '../data/portfolio';
+import { playClick, playSwitch } from '../utils/soundEffects';
 import './Projects.css';
 
 const fadeUp = {
@@ -18,11 +19,16 @@ const featuredProjects = [
     category: 'CLOUD STORAGE // FULL-STACK',
     date: 'Mar 2026',
     image: '/projects/datastock.png',
+    video: '/videos/datastock.mp4',
     liveUrl: 'https://data-stock.vercel.app/',
     githubUrl: 'https://github.com/Akashyatinjain/DataStock',
     description:
-      'Secure cloud storage with 3-method auth: JWT, Google OAuth, and email OTP. Features folder hierarchy, Cloudinary CDN uploads up to 100 MB, and 6 interactive storage analytics charts.',
+      'Secure cloud storage platform with 3-method auth: JWT, Google OAuth, and email OTP. Features hierarchical folder management, Cloudinary CDN uploads up to 100 MB per file, and 6 interactive storage analytics charts.',
     technologies: ['React', 'Express', 'PostgreSQL', 'Prisma', 'Cloudinary', 'OAuth'],
+    architecture: 'Client (React 19) ──▶ Express REST API ──▶ PostgreSQL (Prisma ORM) ──▶ Cloudinary CDN Stream (100MB chunked)',
+    problem: 'Users required a private, self-hosted alternative to Google Drive with granular folder access permissions and realtime disk usage telemetry.',
+    challenges: 'Handling concurrent multi-part binary streaming directly to Cloudinary without exhausting Node.js heap memory, while synchronizing hierarchical folder trees and file metadata in PostgreSQL.',
+    demoCredentials: 'Instant guest access available directly on the landing page, or sign in using any test email OTP.',
     specs: [
       { label: 'AUTHENTICATION', value: 'JWT · Google OAuth · Email OTP' },
       { label: 'STORAGE PIPELINE', value: 'Cloudinary CDN (100MB/file)' },
@@ -35,11 +41,16 @@ const featuredProjects = [
     category: 'FINTECH PLATFORM // FULL-STACK',
     date: 'Oct 2025',
     image: '/projects/finance-tracker.png',
+    video: '/videos/financetracker.mp4',
     liveUrl: 'https://budget-tracker-no3.vercel.app/',
     githubUrl: 'https://github.com/Akashyatinjain/Budget-tracker-no3',
     description:
-      'Budget automation app with Indian bank CSV import, custom spending thresholds, category-level trend charts, and automated notification alerts.',
+      'Automated personal finance platform featuring custom Indian bank statement CSV parsing, configurable category spending threshold alerts, and real-time financial trajectory visualization.',
     technologies: ['React', 'Express', 'PostgreSQL', 'Prisma', 'JWT', 'CSV Parser'],
+    architecture: 'React Dashboard ──▶ Express API ──▶ In-Memory CSV Stream Parser ──▶ PostgreSQL Relational Ledger',
+    problem: 'Mainstream budgeting tools fail to reliably parse varied statement formatting conventions across different Indian commercial banks.',
+    challenges: 'Building a robust heuristic regex and streaming parser capable of reconciling heterogeneous CSV schemas from SBI, HDFC, and ICICI into a normalized transactional database ledger.',
+    demoCredentials: 'Demo financial dataset preloaded. You can also upload test bank CSV statements directly on the dashboard.',
     specs: [
       { label: 'CSV IMPORT ENGINE', value: 'Indian Bank Statements Parser' },
       { label: 'SPENDING ALERTS', value: 'Custom Category Thresholds' },
@@ -55,8 +66,12 @@ const featuredProjects = [
     liveUrl: 'https://miniakashagent.vercel.app/',
     githubUrl: 'https://github.com/Akashyatinjain/Agent',
     description:
-      'AI assistant with dynamic intent routing: chat, RAG document search using pgvector, and real-time API tools. Multi-LLM abstraction with SSE streaming.',
+      'Autonomous reasoning assistant with dynamic intent routing across conversational chat, pgvector RAG document search, and external API tool invocation with Server-Sent Events (SSE) token streaming.',
     technologies: ['React', 'Express', 'pgvector', 'OpenAI', 'Gemini', 'SSE'],
+    architecture: 'React Client ──▶ Intent Router ──▶ pgvector Embeddings (Cosine Sim) ──▶ Multi-LLM Gateway (SSE Stream)',
+    problem: 'Bridging high-latency autonomous agent multi-step planning with instant, zero-delay conversational feedback for web users.',
+    challenges: 'Structuring low-latency Server-Sent Events token multiplexing alongside background vector similarity queries using PostgreSQL pgvector extension.',
+    demoCredentials: 'Open assistant sandbox — prompt directly with real-time SSE token response and tool execution.',
     specs: [
       { label: 'INTENT ROUTING', value: 'Chat, RAG Search & API Tools' },
       { label: 'VECTOR DATABASE', value: 'pgvector Semantic Search' },
@@ -66,6 +81,19 @@ const featuredProjects = [
 ];
 
 const Projects = () => {
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && selectedProject) {
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedProject]);
+
   return (
     <section id="projects" className="projects-section" aria-label="Featured Projects - The Garage">
       <div className="container">
@@ -77,7 +105,7 @@ const Projects = () => {
           viewport={{ once: true, margin: '-80px' }}
           variants={fadeUp}
         >
-          <div className="section-tag">03 // THE GARAGE</div>
+          <div className="section-tag">04 // THE GARAGE</div>
           <h2 className="projects-headline">FEATURED ARCHITECTURES.</h2>
           <p>
             Production-grade full-stack platforms, cloud storage engines, and AI reasoning pipelines
@@ -99,7 +127,15 @@ const Projects = () => {
                 variants={fadeUp}
               >
                 {/* Media Showcase Column */}
-                <div className="project-media-wrapper">
+                <div
+                  className="project-media-wrapper"
+                  onClick={() => {
+                    playClick();
+                    setSelectedProject(project);
+                  }}
+                  style={{ cursor: 'pointer' }}
+                  title="Click to view full architecture & demo"
+                >
                   <div className="browser-mockup-frame">
                     <div className="mockup-header">
                       <div className="mockup-dots">
@@ -156,13 +192,24 @@ const Projects = () => {
 
                   {/* Campaign Action Links */}
                   <div className="project-cta-actions">
+                    <button
+                      type="button"
+                      className="btn btn-inspect"
+                      onClick={() => {
+                        playClick();
+                        setSelectedProject(project);
+                      }}
+                    >
+                      <SlidersHorizontal size={14} />
+                      INSPECT ARCHITECTURE
+                    </button>
                     <a
                       href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-primary"
                     >
-                      LAUNCH APPLICATION
+                      LAUNCH APP
                       <ExternalLink size={14} />
                     </a>
                     <a
@@ -172,7 +219,7 @@ const Projects = () => {
                       className="btn btn-outline"
                     >
                       <Github size={15} />
-                      SOURCE CODE
+                      SOURCE
                       <ArrowUpRight size={14} />
                     </a>
                   </div>
@@ -239,6 +286,136 @@ const Projects = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Interactive Deep Dive Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            className="project-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedProject(null)}
+          >
+            <motion.div
+              className="project-modal-container"
+              initial={{ scale: 0.94, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.94, opacity: 0, y: 20 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-project-title"
+            >
+              {/* Modal Header */}
+              <div className="project-modal-header">
+                <div className="modal-header-info">
+                  <span className="modal-pre-title">{selectedProject.category} · {selectedProject.date}</span>
+                  <h3 id="modal-project-title" className="modal-title">{selectedProject.title}</h3>
+                </div>
+                <button
+                  type="button"
+                  className="modal-close-btn"
+                  onClick={() => {
+                    playSwitch();
+                    setSelectedProject(null);
+                  }}
+                  aria-label="Close modal"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="project-modal-body">
+                {/* Video Demo (if available) */}
+                {selectedProject.video ? (
+                  <div className="modal-video-wrapper">
+                    <video
+                      controls
+                      autoPlay
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="modal-video-player"
+                      poster={selectedProject.image}
+                    >
+                      <source src={selectedProject.video} type="video/mp4" />
+                      Your browser does not support HTML5 video preview.
+                    </video>
+                  </div>
+                ) : (
+                  <div className="modal-video-wrapper">
+                    <img
+                      src={selectedProject.image}
+                      alt={selectedProject.title}
+                      className="modal-video-player"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                )}
+
+                {/* Architecture Pipeline */}
+                <div className="modal-arch-box">
+                  <div className="modal-arch-title">
+                    <Cpu size={15} color="#10b981" />
+                    SYSTEM ARCHITECTURE PIPELINE
+                  </div>
+                  <div className="modal-arch-diagram">
+                    {selectedProject.architecture}
+                  </div>
+                </div>
+
+                {/* 2-Column Info: Problem & Engineering Challenges */}
+                <div className="modal-grid-2col">
+                  <div className="modal-info-card">
+                    <div className="modal-card-label">PROBLEM SOLVED</div>
+                    <p className="modal-card-text">{selectedProject.problem}</p>
+                  </div>
+
+                  <div className="modal-info-card">
+                    <div className="modal-card-label">ENGINEERING CHALLENGES OVERCOME</div>
+                    <p className="modal-card-text">{selectedProject.challenges}</p>
+                  </div>
+                </div>
+
+                {/* Demo Credentials for Judges */}
+                <div className="modal-credentials-box">
+                  <Shield size={18} style={{ flexShrink: 0, marginTop: 2 }} />
+                  <div>
+                    <strong>TESTING INSTRUCTIONS FOR HACKATHON JUDGES:</strong>
+                    <div style={{ marginTop: 4 }}>{selectedProject.demoCredentials}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="project-modal-footer">
+                <a
+                  href={selectedProject.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline"
+                >
+                  <Github size={15} />
+                  GITHUB SOURCE
+                  <ArrowUpRight size={14} />
+                </a>
+                <a
+                  href={selectedProject.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                >
+                  OPEN LIVE PRODUCTION APP
+                  <ExternalLink size={14} />
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

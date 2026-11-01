@@ -1,7 +1,8 @@
 // src/components/Hero.jsx
 import React from 'react';
-import { ArrowUpRight, ArrowDown } from 'lucide-react';
+import { ArrowUpRight, ArrowDown, Lightbulb, Volume2, RotateCw, Palette } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { playClick, playSwitch } from '../utils/soundEffects';
 import './Hero.css';
 
 const containerVariants = {
@@ -37,7 +38,29 @@ const headlineVariants = {
   },
 };
 
-const Hero = ({ modelReady, modelProgress, modelFailed, modelDeferred, onRequestModel }) => {
+const COLORS = [
+  { id: '#083d20', name: 'BRG', label: 'British Racing Green' },
+  { id: '#9e2929', name: 'Guards Red', label: 'Guards Red' },
+  { id: '#7a8288', name: 'GT Silver', label: 'GT Silver Metallic' },
+  { id: '#c27803', name: 'Speed Yellow', label: 'Speed Yellow' },
+  { id: '#e2e8f0', name: 'White', label: 'Grand Prix White' },
+  { id: '#14171a', name: 'Black', label: 'Midnight Black' },
+];
+
+const Hero = ({
+  modelReady,
+  modelProgress,
+  modelFailed,
+  modelDeferred,
+  onRequestModel,
+  carColor = '#083d20',
+  onChangeCarColor,
+  headlightsOn = true,
+  onToggleHeadlights,
+  inspectMode = false,
+  onToggleInspectMode,
+  onRevEngine,
+}) => {
 
   const scrollTo = (id) => {
     const el = document.getElementById(id);
@@ -129,12 +152,75 @@ const Hero = ({ modelReady, modelProgress, modelFailed, modelDeferred, onRequest
             </div>
             <div className="hero-model-caption">
               <span>1975 PORSCHE 911 (930) TURBO</span>
-              <span>BRITISH RACING GREEN</span>
+              <span>{COLORS.find((c) => c.id === carColor)?.label.toUpperCase() || 'BRITISH RACING GREEN'}</span>
               {modelDeferred && !modelFailed && (
                 <button type="button" className="hero-model-action" onClick={onRequestModel}>
                   VIEW INTERACTIVE 3D <ArrowUpRight size={14} />
                 </button>
               )}
+            </div>
+
+            {/* Interactive Showroom Configurator Deck */}
+            <div className="hero-showroom-deck" role="toolbar" aria-label="Porsche 3D Showroom Configurator">
+              <div className="showroom-deck-label">
+                <Palette size={13} color="var(--porsche-champagne)" />
+                <span>FINISH:</span>
+                <div className="showroom-colors">
+                  {COLORS.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      className={`color-swatch-btn ${carColor === c.id ? 'active' : ''}`}
+                      style={{ backgroundColor: c.id }}
+                      onClick={() => {
+                        playClick();
+                        onChangeCarColor?.(c.id);
+                      }}
+                      title={c.label}
+                      aria-label={`Select ${c.label}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="showroom-controls">
+                <button
+                  type="button"
+                  className={`deck-tool-btn ${headlightsOn ? 'active' : ''}`}
+                  onClick={() => {
+                    playSwitch();
+                    onToggleHeadlights?.();
+                  }}
+                  title="Toggle Xenon Headlights"
+                >
+                  <Lightbulb size={12} />
+                  <span>{headlightsOn ? 'BEAMS: ON' : 'BEAMS: OFF'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="deck-tool-btn rev-btn"
+                  onClick={() => onRevEngine?.()}
+                  title="Rev 3.0L Flat-6 Boxer Engine"
+                >
+                  <Volume2 size={12} />
+                  <span>REV FLAT-6</span>
+                </button>
+
+                <button
+                  type="button"
+                  className={`deck-tool-btn ${inspectMode ? 'active' : ''}`}
+                  onClick={() => {
+                    playSwitch();
+                    onToggleInspectMode?.();
+                  }}
+                  title={inspectMode ? "Exit 360° Inspection (Press Escape)" : "Inspect Porsche 911 in 360 degrees"}
+                >
+                  <RotateCw size={12} />
+                  <span>{inspectMode ? 'EXIT 360°' : '360° INSPECT'}</span>
+                  {inspectMode && <kbd className="deck-esc-kbd">ESC</kbd>}
+                </button>
+              </div>
             </div>
           </div>
 

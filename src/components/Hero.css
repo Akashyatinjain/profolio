@@ -361,3 +361,128 @@
   .hero-eyebrow .eyebrow-role { flex-basis: 100%; }
   .hero-actions .btn { flex-basis: 100%; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Porsche Showroom Configurator Deck
+   ═══════════════════════════════════════════════════════════════ */
+.hero-showroom-deck {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: rgba(22, 24, 27, 0.92);
+  border: 1px solid var(--border-strong);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--radius-sm);
+  margin-top: 0.65rem;
+  width: 100%;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75);
+}
+
+.showroom-deck-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--porsche-steel);
+  text-transform: uppercase;
+}
+
+.showroom-colors {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.color-swatch-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.color-swatch-btn:hover {
+  transform: scale(1.15);
+  border-color: var(--porsche-white);
+}
+
+.color-swatch-btn.active {
+  transform: scale(1.22);
+  border-color: var(--porsche-white);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.showroom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.deck-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  color: var(--porsche-ivory);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deck-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--porsche-white);
+  border-color: var(--porsche-steel);
+}
+
+.deck-tool-btn.active {
+  background: var(--porsche-guards-red);
+  color: var(--porsche-white);
+  border-color: var(--porsche-guards-red);
+  box-shadow: 0 0 12px rgba(158, 41, 41, 0.4);
+}
+
+.deck-tool-btn.rev-btn:hover {
+  background: #c3a875;
+  color: #111;
+  border-color: #c3a875;
+}
+
+@media (max-width: 768px) {
+  .hero-showroom-deck {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+  .showroom-deck-label {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .showroom-colors {
+    flex-wrap: wrap;
+  }
+  .showroom-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .deck-tool-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+

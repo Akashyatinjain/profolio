@@ -22,6 +22,16 @@
   opacity: 1;
 }
 
+.porsche-canvas-container.is-inspecting {
+  pointer-events: auto;
+  cursor: grab;
+  z-index: 20;
+}
+
+.porsche-canvas-container.is-inspecting:active {
+  cursor: grabbing;
+}
+
 .porsche-gl-canvas {
   width: 100%;
   height: 100%;

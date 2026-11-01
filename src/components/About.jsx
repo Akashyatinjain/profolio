@@ -1,8 +1,8 @@
 // src/components/About.jsx
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { profile } from '../data/portfolio';
+import { profile, stats } from '../data/portfolio';
 import './About.css';
 
 const fadeUp = {
@@ -76,31 +76,41 @@ const About = () => {
           {/* Developer Activity Telemetry */}
           <motion.div className="about-telemetry-bar" variants={fadeUp}>
             <div className="telemetry-pill">
-              <span className="tel-val">{profile.developerActivity?.contributions || '1,376'}</span>
+              <span className="tel-val">{stats.contributions || '1,376'}</span>
               <span className="tel-lbl">CONTRIBUTIONS</span>
             </div>
             <div className="telemetry-pill">
-              <span className="tel-val">{profile.developerActivity?.yearCommits || '1,122'}</span>
+              <span className="tel-val">{stats.yearCommits || '1,122'}</span>
               <span className="tel-lbl">YEAR COMMITS</span>
             </div>
             <div className="telemetry-pill">
-              <span className="tel-val">{profile.developerActivity?.maxStreak || '72d'}</span>
+              <span className="tel-val">{stats.maxStreak || '72d'}</span>
               <span className="tel-lbl">MAX STREAK</span>
             </div>
             <div className="telemetry-pill">
-              <span className="tel-val">{profile.developerActivity?.publicRepos || '40+'}</span>
+              <span className="tel-val">{stats.publicRepos || '40+'}</span>
               <span className="tel-lbl">PUBLIC REPOS</span>
             </div>
           </motion.div>
 
           <motion.div className="about-actions" variants={fadeUp}>
             <a
+              href="/resume/Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+            >
+              <FileText size={15} />
+              DOWNLOAD CV
+              <ArrowUpRight size={15} />
+            </a>
+            <a
               href={profile.links?.github || profile.github}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-outline"
             >
-              VIEW GITHUB ARCHIVE
+              GITHUB ARCHIVE
               <ArrowUpRight size={15} />
             </a>
             <a
