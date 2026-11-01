@@ -468,6 +468,9 @@
     flex-wrap: wrap;
     gap: 0.75rem;
     padding: 0.75rem;
+    background: rgba(22, 24, 27, 0.95);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
   .showroom-deck-label {
     width: 100%;

@@ -226,8 +226,10 @@ const PorscheCanvas = ({
     const lowEndDevice = (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
       (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
       (mobileViewport && !hasCapabilityInfo);
-    // High-performance automotive renderer with crisp pixel ratio for phone OLED / Retina displays
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    // High-performance automotive renderer: 1.35x DPR on mobile balances Retina clarity with 54% less GPU fill rate
+    const pixelRatio = mobileViewport
+      ? Math.min(window.devicePixelRatio || 1, 1.35)
+      : Math.min(window.devicePixelRatio || 1, 2);
 
     // ── 1. Renderer, Camera, Scene Setup ──────────────────────────────────
     let renderer;
@@ -235,8 +237,9 @@ const PorscheCanvas = ({
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true,
+        antialias: !lowEndDevice,
         powerPreference: 'high-performance',
+        precision: mobileViewport ? 'mediump' : 'highp',
       });
     } catch (e) {
       console.warn('WebGL init failed:', e);
@@ -699,11 +702,9 @@ const PorscheCanvas = ({
             const origNorm = child.material.normalMap;
             child.material = new THREE.MeshPhysicalMaterial({
               color: new THREE.Color(0xffffff),
-              transmission: 0.92,
-              opacity: 1.0,
               transparent: true,
+              opacity: 0.45,
               roughness: 0.04,
-              ior: 1.52,
               clearcoat: 1.0,
               clearcoatRoughness: 0.02,
               envMapIntensity: 4.0,
@@ -1200,12 +1201,21 @@ const PorscheCanvas = ({
         current.cameraTargetY = choreographyTarget.cameraTargetY;
         camera.lookAt(0, current.cameraTargetY, 0);
         renderer.render(scene, camera);
-      } else scheduleAnimation();
+      } else if (hasPendingMotion()) {
+        scheduleAnimation();
+      }
     };
-    // Scroll fires far faster than we can paint. Coalesce every burst into a
-    // single layout read (getBoundingClientRect for 5 sections) per frame.
+    // Scroll optimization: on mobile, car is locked to front bumper, so NEVER run
+    // expensive getBoundingClientRect or WebGL renders on touch scroll.
     let scrollFrame = 0;
     const handleScroll = () => {
+      if (mobileViewport && !inspectModeRef.current) {
+        if (containerRef.current) {
+          const scrolled = (window.scrollY || document.documentElement.scrollTop || 0) > 60;
+          containerRef.current.classList.toggle('is-scrolled', scrolled);
+        }
+        return;
+      }
       if (scrollFrame) return;
       scrollFrame = requestAnimationFrame(() => {
         scrollFrame = 0;
@@ -1298,7 +1308,6 @@ const PorscheCanvas = ({
     window.addEventListener('resize', handleResize);
     const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(containerRef.current);
-    let mobileStage = window.innerWidth <= 768;
     const pauseAnimation = () => {
       cancelAnimationFrame(animationFrameId);
       window.clearTimeout(animationTimerId);
@@ -1306,50 +1315,20 @@ const PorscheCanvas = ({
       animationTimerId = undefined;
     };
     const stageObserver = new IntersectionObserver(([entry]) => {
-      if (mobileStage) return;
       stageVisible = entry.isIntersecting;
       if (!stageVisible) {
         pauseAnimation();
-      } else scheduleAnimation();
-    });
-    const contentObserver = new IntersectionObserver(([entry]) => {
-      if (!mobileStage) return;
-      stageVisible = entry.isIntersecting;
-      containerRef.current?.classList.toggle('is-offstage', !stageVisible);
-      if (!stageVisible) pauseAnimation();
-      else scheduleAnimation();
-    });
-    const mainContent = document.querySelector('main');
-    if (mobileStage && mainContent) {
-      containerRef.current.classList.add('is-offstage');
-      contentObserver.observe(mainContent);
-    } else {
-      stageObserver.observe(containerRef.current);
-    }
-    const updateStageObserver = () => {
-      const nextIsMobile = window.innerWidth <= 768;
-      if (nextIsMobile === mobileStage) return;
-      mobileStage = nextIsMobile;
-      if (mobileStage && mainContent) {
-        stageObserver.unobserve(containerRef.current);
-        containerRef.current.classList.add('is-offstage');
-        stageVisible = false;
-        contentObserver.observe(mainContent);
-      } else {
-        contentObserver.unobserve(mainContent);
-        containerRef.current.classList.remove('is-offstage');
-        stageVisible = true;
-        stageObserver.observe(containerRef.current);
+      } else if (!mobileViewport || hasPendingMotion()) {
         scheduleAnimation();
       }
-    };
-    window.addEventListener('resize', updateStageObserver);
+    });
+    stageObserver.observe(containerRef.current);
     const handleVisibility = () => {
       if (document.hidden) {
         pauseAnimation();
       } else {
         if (prefersReducedMotion) renderer.render(scene, camera);
-        else scheduleAnimation();
+        else if (!mobileViewport || hasPendingMotion()) scheduleAnimation();
       }
     };
     document.addEventListener('visibilitychange', handleVisibility);
@@ -1359,7 +1338,6 @@ const PorscheCanvas = ({
       window.clearTimeout(animationTimerId);
       loadCancelled = true;
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('resize', updateStageObserver);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('pointermove', handlePointerMove);
@@ -1369,7 +1347,6 @@ const PorscheCanvas = ({
       document.removeEventListener('visibilitychange', handleVisibility);
       resizeObserver.disconnect();
       stageObserver.disconnect();
-      contentObserver.disconnect();
       renderer.renderLists.dispose();
       if (loadedModel) disposeModel(loadedModel);
       renderer.dispose();

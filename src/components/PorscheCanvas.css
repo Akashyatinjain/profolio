@@ -12,6 +12,9 @@
   z-index: 0;
   overflow: hidden;
   transition: opacity 0.35s var(--ease-cinematic);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  contain: strict;
 }
 
 .porsche-canvas-container.is-loading {
@@ -164,21 +167,7 @@
 }
 
 @media (max-width: 768px) {
-  .porsche-canvas-container.is-offstage { opacity: 0; }
   .porsche-hud-badge {
     display: none;
-  }
-  .hero-model-stage .porsche-canvas-container {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 1;
-  }
-  .hero-model-stage .porsche-fallback {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
   }
 }
