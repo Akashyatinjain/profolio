@@ -5,9 +5,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import './PorscheCanvas.css';
 
-// Optimised, meshopt-compressed master model for authentic silhouette, geometry, and textures.
+// Master meshopt-compressed model for authentic silhouette, clearcoat lacquer, and high-fidelity textures.
 const MODEL_URL_DESKTOP = '/models/porsche_911.opt.glb?v=4';
-const MODEL_URL_MOBILE = '/models/porsche_911.mobile.glb?v=1';
 
 function disposeModel(root) {
   const geometries = new Set();
@@ -227,10 +226,8 @@ const PorscheCanvas = ({
     const lowEndDevice = (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
       (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
       (mobileViewport && !hasCapabilityInfo);
-    // Balance interactive clarity and GPU load for mobile.
-    const pixelRatio = mobileViewport
-      ? Math.min(window.devicePixelRatio || 1, lowEndDevice ? 1.25 : 2)
-      : Math.min(window.devicePixelRatio || 1, 2);
+    // High-performance automotive renderer with crisp pixel ratio for phone OLED / Retina displays
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
 
     // ── 1. Renderer, Camera, Scene Setup ──────────────────────────────────
     let renderer;
@@ -238,8 +235,8 @@ const PorscheCanvas = ({
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: !lowEndDevice,
-        powerPreference: mobileViewport ? 'default' : 'high-performance',
+        antialias: true,
+        powerPreference: 'high-performance',
       });
     } catch (e) {
       console.warn('WebGL init failed:', e);
@@ -275,13 +272,14 @@ const PorscheCanvas = ({
       100
     );
     const mobileCameraDistance = 11.2;
-    camera.position.set(0, mobileViewport ? 0.95 : 0.95, mobileCameraDistance);
+    camera.position.set(0, 0.95, mobileCameraDistance);
     camera.lookAt(0, mobileViewport ? 0.72 : 0.65, 0);
     if (import.meta.env.DEV) window.__camera = camera;
 
     // ── 2. Procedural Automotive Studio Environment (Continuous IBL) ──────
-    const pmremGenerator = mobileViewport ? null : new THREE.PMREMGenerator(renderer);
-    pmremGenerator?.compileEquirectangularShader();
+    // Fully enabled on both mobile and desktop for rich clearcoat specular & reflections
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
 
     const studioScene = new THREE.Scene();
     studioScene.background = new THREE.Color(STUDIO_BG);
@@ -367,14 +365,13 @@ const PorscheCanvas = ({
     groundBounce.position.set(0, -0.5, 0);
     studioScene.add(groundBounce);
 
-    const studioEnvMap = pmremGenerator?.fromScene(studioScene).texture ?? null;
-    if (studioEnvMap) scene.environment = studioEnvMap;
+    const studioEnvMap = pmremGenerator.fromScene(studioScene).texture;
+    scene.environment = studioEnvMap;
+    pmremGenerator.dispose();
 
     // ── 4. Professional Studio Lighting Rig ───────────────────────────────
     // 1. Warm forest green ambient fill — guarantees curves & body never drop to pitch black
-    const ambientLight = mobileViewport
-      ? new THREE.AmbientLight(0xffffff, 1.4)
-      : new THREE.AmbientLight(0x132a1b, 2.0);
+    const ambientLight = new THREE.AmbientLight(0x132a1b, 2.0);
     scene.add(ambientLight);
 
     // 2. Large soft key light (Front-Left Studio Softbox) — boosted for richer specular
@@ -463,19 +460,16 @@ const PorscheCanvas = ({
       spot.target.position.set(x, 0.02, 8.5);
       carRoot.add(spot, spot.target);
     };
-    if (mobileViewport) {
-      addHeadlightSpot(0, 16, Math.PI / 10);
-    } else {
-      addHeadlightSpot(0.72);
-      addHeadlightSpot(-0.72);
-    }
+    addHeadlightSpot(0.72);
+    addHeadlightSpot(-0.72);
 
     const taillightMeshes = [];
     let paintMeshes = [];
 
     const loader = new GLTFLoader();
     loader.setMeshoptDecoder(MeshoptDecoder);
-    const modelUrl = mobileViewport ? MODEL_URL_MOBILE : MODEL_URL_DESKTOP;
+    // Use master optimized model everywhere for true clearcoat paint, metallic flakes, and high-fidelity textures
+    const modelUrl = MODEL_URL_DESKTOP;
     let loadedModel = null;
     let loadCancelled = false;
     const loadModel = () => {
@@ -490,41 +484,8 @@ const PorscheCanvas = ({
         const porsche = gltf.scene;
         loadedModel = porsche;
 
-        if (mobileViewport) {
-          const materialCache = new Map();
-          const simplifyMaterial = (source) => {
-            if (materialCache.has(source)) return materialCache.get(source);
-            const material = new THREE.MeshLambertMaterial({
-              color: source.color?.clone() ?? new THREE.Color(0xffffff),
-              map: source.map ?? null,
-              alphaMap: source.alphaMap ?? null,
-              emissive: source.emissive?.clone() ?? new THREE.Color(0x000000),
-              emissiveMap: source.emissiveMap ?? null,
-              emissiveIntensity: source.emissiveIntensity ?? 1,
-              transparent: source.transparent,
-              opacity: source.opacity,
-              alphaTest: source.alphaTest,
-              side: source.side,
-              vertexColors: source.vertexColors,
-              depthWrite: source.depthWrite,
-              toneMapped: source.toneMapped,
-            });
-            material.name = source.name;
-            source.dispose();
-            materialCache.set(source, material);
-            return material;
-          };
-
-          porsche.traverse((node) => {
-            if (!node.isMesh || !node.material) return;
-            node.material = Array.isArray(node.material)
-              ? node.material.map(simplifyMaterial)
-              : simplifyMaterial(node.material);
-          });
-        }
-
         // Reduce blur on paint and trim viewed at shallow angles.
-        const maxAnisotropy = Math.min(mobileViewport ? 2 : 8, renderer.capabilities.getMaxAnisotropy());
+        const maxAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
         porsche.traverse((node) => {
           const materials = Array.isArray(node.material) ? node.material : [node.material];
           materials.filter(Boolean).forEach((material) => {
@@ -665,7 +626,7 @@ const PorscheCanvas = ({
           pool.position.set(x, 0.004, 4.35);
           porsche.add(pool);
         };
-        (mobileViewport ? [0] : [0.86, -0.86]).forEach(addFloorBeam);
+        [0.86, -0.86].forEach(addFloorBeam);
 
         // A restrained, soft-edged cone gives the headlight output a little atmosphere.
         const shaftLength = 4.4;
@@ -709,12 +670,8 @@ const PorscheCanvas = ({
           );
           porsche.add(shaft);
         };
-        if (mobileViewport) {
-          shaftMaterial.dispose();
-        } else {
-          addHeadlightShaft(0.86);
-          addHeadlightShaft(-0.86);
-        }
+        addHeadlightShaft(0.86);
+        addHeadlightShaft(-0.86);
 
         // ── 5.3 AUTOMOTIVE MATERIALS & AUTHENTIC DETAILS ──────────────────
         porsche.traverse((child) => {
@@ -740,30 +697,19 @@ const PorscheCanvas = ({
           // 2. FRONT HEADLIGHTS — OUTER BOSCH FLUTED GLASS LENS (Circle036)
           if (cleanName.includes('circle036') && matName.includes('refraction')) {
             const origNorm = child.material.normalMap;
-            child.material = mobileViewport
-              ? new THREE.MeshStandardMaterial({
-                  color: new THREE.Color(0xf6f6f6),
-                  metalness: 0.35,
-                  roughness: 0.06,
-                  envMapIntensity: 3.0,
-                  transparent: true,
-                  opacity: 0.45,
-                  depthWrite: false,
-                  normalMap: origNorm,
-                })
-              : new THREE.MeshPhysicalMaterial({
-                  color: new THREE.Color(0xffffff),
-                  transmission: 0.92,
-                  opacity: 1.0,
-                  transparent: true,
-                  roughness: 0.04,
-                  ior: 1.52,
-                  clearcoat: 1.0,
-                  clearcoatRoughness: 0.02,
-                  envMapIntensity: 4.0,
-                  normalMap: origNorm,
-                  depthWrite: false,
-                });
+            child.material = new THREE.MeshPhysicalMaterial({
+              color: new THREE.Color(0xffffff),
+              transmission: 0.92,
+              opacity: 1.0,
+              transparent: true,
+              roughness: 0.04,
+              ior: 1.52,
+              clearcoat: 1.0,
+              clearcoatRoughness: 0.02,
+              envMapIntensity: 4.0,
+              normalMap: origNorm,
+              depthWrite: false,
+            });
             return;
           }
 
@@ -841,16 +787,6 @@ const PorscheCanvas = ({
           if (matName.includes('paint')) {
             const origNorm = child.material.normalMap;
             const origRough = child.material.roughnessMap;
-            const origMap = child.material.map;
-
-            if (mobileViewport) {
-              child.material = new THREE.MeshLambertMaterial({
-                color: new THREE.Color('#237a43'),
-                map: origMap,
-              });
-              paintMeshes.push(child);
-              return;
-            }
 
             // AAA-grade British Racing Green — deep metallic lacquer with micro-flake depth
             child.material = new THREE.MeshPhysicalMaterial({

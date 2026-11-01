@@ -48,14 +48,9 @@ function DeferredPorscheCanvas({
   useEffect(() => {
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-    // On phones, show the crisp poster first and only start WebGL when asked.
-    if (isMobile && !enabled) {
-      callbacksRef.current.onDeferred?.();
-      if (isDataSaverOrSlowNetwork()) callbacksRef.current.onError?.();
-      return undefined;
-    }
-
+    // Save data on slow network / Data Saver mode
     if (isDataSaverOrSlowNetwork()) {
+      callbacksRef.current.onDeferred?.();
       callbacksRef.current.onError?.();
       return undefined;
     }
@@ -65,7 +60,8 @@ function DeferredPorscheCanvas({
       return undefined;
     }
 
-    const timeoutId = window.setTimeout(() => setActive(true), 100);
+    // Auto-load master 3D showroom model (250ms on mobile, 100ms on desktop)
+    const timeoutId = window.setTimeout(() => setActive(true), isMobile ? 250 : 100);
 
     return () => window.clearTimeout(timeoutId);
   }, [enabled]);
