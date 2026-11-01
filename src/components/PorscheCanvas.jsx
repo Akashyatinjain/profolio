@@ -274,9 +274,9 @@ const PorscheCanvas = ({
       0.1,
       100
     );
-    const mobileCameraDistance = mobileViewport ? 11.2 : 11.2;
-    camera.position.set(0, mobileViewport ? 2.2 : 0.95, mobileCameraDistance);
-    camera.lookAt(0, mobileViewport ? 1.9 : 0.65, 0);
+    const mobileCameraDistance = 11.2;
+    camera.position.set(0, mobileViewport ? 0.95 : 0.95, mobileCameraDistance);
+    camera.lookAt(0, mobileViewport ? 0.72 : 0.65, 0);
     if (import.meta.env.DEV) window.__camera = camera;
 
     // ── 2. Procedural Automotive Studio Environment (Continuous IBL) ──────
@@ -1066,14 +1066,30 @@ const PorscheCanvas = ({
         return {
           x: isMobile ? 0 : 0.45,
           y: 0,
-          z: isMobile ? -0.1 : 0.15,
-          cameraTargetY: isMobile ? 1.4 : 0.65,
+          z: isMobile ? 0.2 : 0.15,
+          cameraTargetY: isMobile ? 0.72 : 0.65,
           rotX: inspectRotX,
           rotY: inspectRotY,
           rotZ: 0,
-          scale: isMobile ? 0.76 : 1.05,
+          scale: isMobile ? 0.82 : 1.05,
           tailLightIntensity: 0.8,
           tailLightGlow: 0.6,
+        };
+      }
+
+      // MOBILE VIEW: Strictly lock to direct front bumper view with NO scroll choreography animations
+      if (isMobile) {
+        return {
+          x: 0,
+          y: 0, // Grounded on showroom floor
+          z: 0.22,
+          cameraTargetY: 0.72,
+          rotX: 0.015,
+          rotY: 0, // 0° Direct straight front bumper view
+          rotZ: 0,
+          scale: window.innerWidth < 360 ? 0.76 : 0.82,
+          tailLightIntensity: 0.0,
+          tailLightGlow: 0.2,
         };
       }
 
@@ -1335,11 +1351,7 @@ const PorscheCanvas = ({
       const rect = containerRef.current?.getBoundingClientRect();
       const width = rect?.width || window.innerWidth;
       const height = rect?.height || window.innerHeight;
-      if (window.innerWidth <= 768) {
-        camera.position.set(0, 2.2, 11.2);
-      } else {
-        camera.position.set(0, 0.95, 11.2);
-      }
+      camera.position.set(0, 0.95, 11.2);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
