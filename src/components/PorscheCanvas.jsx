@@ -205,7 +205,13 @@ const PorscheCanvas = ({
   useEffect(() => {
     if (headlightElementsRef.current.length === 0) return;
     headlightElementsRef.current.forEach((el) => {
-      if (el) el.visible = headlightsOn;
+      if (el) {
+        if (el.isMesh && el.material && el.material.emissive) {
+          el.material.emissiveIntensity = headlightsOn ? 3.2 : 0.0;
+        } else {
+          el.visible = headlightsOn;
+        }
+      }
     });
     scheduleAnimationRef.current?.();
   }, [headlightsOn]);
@@ -226,10 +232,8 @@ const PorscheCanvas = ({
     const lowEndDevice = (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
       (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
       (mobileViewport && !hasCapabilityInfo);
-    // High-performance automotive renderer: 1.35x DPR on mobile balances Retina clarity with 54% less GPU fill rate
-    const pixelRatio = mobileViewport
-      ? Math.min(window.devicePixelRatio || 1, 1.35)
-      : Math.min(window.devicePixelRatio || 1, 2);
+    // High-performance automotive renderer: Retina 2x on desktop, up to 2x on mobile for tack-sharp clarity
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2.0);
 
     // ── 1. Renderer, Camera, Scene Setup ──────────────────────────────────
     let renderer;
@@ -239,7 +243,7 @@ const PorscheCanvas = ({
         alpha: true,
         antialias: !lowEndDevice,
         powerPreference: 'high-performance',
-        precision: mobileViewport ? 'mediump' : 'highp',
+        precision: 'highp',
       });
     } catch (e) {
       console.warn('WebGL init failed:', e);
@@ -252,7 +256,7 @@ const PorscheCanvas = ({
     const initialRect = containerRef.current.getBoundingClientRect();
     renderer.setSize(initialRect.width || window.innerWidth, initialRect.height || window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25; // Slightly boosted for richer midtone contrast & paint depth
+    renderer.toneMappingExposure = 1.3; // Rich automotive contrast, deep blacks & metallic highlights
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.shadowMap.enabled = false;
 
@@ -277,7 +281,10 @@ const PorscheCanvas = ({
     const mobileCameraDistance = 11.2;
     camera.position.set(0, 0.95, mobileCameraDistance);
     camera.lookAt(0, mobileViewport ? 0.72 : 0.65, 0);
-    if (import.meta.env.DEV) window.__camera = camera;
+    if (import.meta.env.DEV) {
+      window.__camera = camera;
+      window.__renderer = renderer;
+    }
 
     // ── 2. Procedural Automotive Studio Environment (Continuous IBL) ──────
     // Fully enabled on both mobile and desktop for rich clearcoat specular & reflections
@@ -353,7 +360,7 @@ const PorscheCanvas = ({
     const frontPanel = new THREE.Mesh(
       new THREE.PlaneGeometry(26, 4),
       createGradientMaterial(64, 4, [
-        [0, '#0e1012'], [0.2, '#ffffff'], [0.8, '#ffffff'], [1, '#0e1012'],
+        [0, '#0e1012'], [0.25, '#3a4045'], [0.5, '#ffffff'], [0.75, '#3a4045'], [1, '#0e1012'],
       ])
     );
     frontPanel.position.set(0, 3.5, 13);
@@ -521,7 +528,7 @@ const PorscheCanvas = ({
           if (
             matName.includes('wunderbaum') ||
             cleanName.includes('plane005') ||
-            cleanName.includes('plane004')
+            cleanName.includes('plane004') || (cleanName.includes('plane034') && !matName.includes('plate')) || (cleanName.includes('plane011') && matName.includes('sticker'))
           ) {
             child.visible = false;
           }
@@ -588,27 +595,27 @@ const PorscheCanvas = ({
         tailLight1.position.set(-0.7, 0.55, -2.1);
         tailLight2.position.set(0.7, 0.55, -2.1);
 
-        // Front LED Projector Headlight Lenses (crisp 6000K luminous glow discs)
+        // Front LED Projector Headlight Lenses (crisp photographic optical flare)
         const glowTex = createHeadlightGlowTexture();
         const glowMat = new THREE.MeshBasicMaterial({
           map: glowTex,
           transparent: true,
-          opacity: 1.0,
+          opacity: 0.85,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           toneMapped: false,
         });
-        const lensGeo = new THREE.PlaneGeometry(0.38, 0.38);
+        const lensGeo = new THREE.PlaneGeometry(0.32, 0.32);
 
         const leftGlowMesh = new THREE.Mesh(lensGeo, glowMat);
-        leftGlowMesh.position.set(0.86, 0.88, 3.02);
+        leftGlowMesh.position.set(0.985, 0.99, 2.72);
         leftGlowMesh.rotation.set(-0.25, 0.22, 0);
-        porsche.add(leftGlowMesh);
+        // porsche.add(leftGlowMesh);
 
         const rightGlowMesh = new THREE.Mesh(lensGeo, glowMat);
-        rightGlowMesh.position.set(-0.86, 0.88, 3.02);
+        rightGlowMesh.position.set(-0.985, 0.99, 2.72);
         rightGlowMesh.rotation.set(-0.25, -0.22, 0);
-        porsche.add(rightGlowMesh);
+        // porsche.add(rightGlowMesh);
 
         // Diffuse road spill makes the high beams read as light instead of flat shafts.
         const floorBeamTexture = createHeadlightBeamTexture(0.5);
@@ -697,35 +704,84 @@ const PorscheCanvas = ({
             return;
           }
 
-          // 2. FRONT HEADLIGHTS — OUTER BOSCH FLUTED GLASS LENS (Circle036)
-          if (cleanName.includes('circle036') && matName.includes('refraction')) {
+          // 2. FRONT HEADLIGHTS & FOG LAMPS — OUTER BOSCH FLUTED GLASS LENS (Circle036)
+          if (cleanName.includes('circle036')) {
             const origNorm = child.material.normalMap;
             child.material = new THREE.MeshPhysicalMaterial({
               color: new THREE.Color(0xffffff),
               transparent: true,
-              opacity: 0.45,
-              roughness: 0.04,
+              opacity: 0.40,
+              roughness: 0.06,
               clearcoat: 1.0,
               clearcoatRoughness: 0.02,
-              envMapIntensity: 4.0,
+                            envMapIntensity: 4.5,
               normalMap: origNorm,
               depthWrite: false,
             });
             return;
           }
 
-          // 3. FRONT HEADLIGHTS — INNER REFLECTORS & ILLUMINATED LED PROJECTORS (Circle035 & Circle005)
-          if (cleanName.includes('circle035') || cleanName.includes('circle005')) {
+          // 3A. FRONT MAIN HEADLIGHTS — INNER REFLECTORS & ILLUMINATED LED PROJECTORS (Circle035)
+          if (cleanName.includes('circle035')) {
             const origNorm = child.material.normalMap;
             child.material = new THREE.MeshStandardMaterial({
               color: new THREE.Color(0xffffff),
               emissive: new THREE.Color(0xecf6ff), // Crisp 6000K brilliant LED white
-              emissiveIntensity: 9.0,             // Full-beam projector output
+              emissiveIntensity: 3.8,             // Balanced luminous projector output (no white blowout)
               metalness: 0.90,
               roughness: 0.06,
               envMapIntensity: 3.8,
               normalMap: origNorm,
             });
+            return;
+          }
+
+          // 3B. FRONT LIGHTS (Circle005) — Split into illuminated 6000K Headlights and dark Fog Lamps
+          if (cleanName.includes('circle005') && child.geometry && child.geometry.index) {
+            const geo = child.geometry;
+            const idx = geo.index.array;
+            const pos = geo.attributes.position;
+            const headIdx = [];
+            const fogIdx = [];
+
+            for (let i = 0; i < idx.length; i += 3) {
+              const i0 = idx[i], i1 = idx[i + 1], i2 = idx[i + 2];
+              const avgY = (pos.getY(i0) + pos.getY(i1) + pos.getY(i2)) / 3;
+              if (avgY > 0) headIdx.push(i0, i1, i2);
+              else fogIdx.push(i0, i1, i2);
+            }
+
+            // Lower Bumper Fog Lamps (avgY < 0): Dark smoked chrome housing, 0 emissive
+            const fogGeo = geo.clone();
+            fogGeo.setIndex(fogIdx);
+            child.geometry = fogGeo;
+            child.material = new THREE.MeshStandardMaterial({
+              color: new THREE.Color(0x1a1e20),
+              metalness: 0.94,
+              roughness: 0.22,
+              emissive: new THREE.Color(0x000000),
+              emissiveIntensity: 0.0,
+              envMapIntensity: 2.5,
+            });
+
+            // Main Headlights (avgY > 0): Luminous 6000K LED/projector reflector
+            const headGeo = geo.clone();
+            headGeo.setIndex(headIdx);
+            const headMat = new THREE.MeshStandardMaterial({
+              color: new THREE.Color(0xffffff),
+              emissive: new THREE.Color(0xecf6ff),
+              emissiveIntensity: 3.2,
+              metalness: 0.90,
+              roughness: 0.06,
+              envMapIntensity: 4.2,
+            });
+            const headMesh = new THREE.Mesh(headGeo, headMat);
+            headMesh.name = 'Circle005_headlights';
+            headMesh.position.copy(child.position);
+            headMesh.rotation.copy(child.rotation);
+            headMesh.scale.copy(child.scale);
+            child.parent.add(headMesh);
+            headlightElementsRef.current.push(headMesh);
             return;
           }
 
@@ -791,18 +847,18 @@ const PorscheCanvas = ({
 
             // AAA-grade British Racing Green — deep metallic lacquer with micro-flake depth
             child.material = new THREE.MeshPhysicalMaterial({
-              color: new THREE.Color('#083d20'),  // Slightly brighter BRG for better midtone separation
-              metalness: 0.38,                   // Richer metallic flake presence without going mirror
-              roughness: 0.08,                   // Near-perfect lacquer finish
+              color: new THREE.Color('#083d20'),  // Authentic deep British Racing Green
+              metalness: 0.35,                   // Subtle metallic flake presence
+              roughness: 0.06,                   // Concours mirror lacquer finish
               clearcoat: 1.0,                    // Wet-look mirror clearcoat
-              clearcoatRoughness: 0.015,         // Razor-crisp clearcoat reflections
-              reflectivity: 0.98,                // Near-perfect Fresnel reflectivity
-              envMapIntensity: 2.8,              // Stronger environment reflections on curves
-              sheen: 0.15,                       // Subtle micro-flake metallic sheen
-              sheenRoughness: 0.25,              // Soft sparkle at grazing angles
-              sheenColor: new THREE.Color('#1a6b3a'), // Green-tinted metallic flake shimmer
+              clearcoatRoughness: 0.01,          // Razor-crisp clearcoat reflections
+              reflectivity: 1.0,                 // Near-perfect Fresnel reflectivity
+              envMapIntensity: 3.2,              // Rich studio softbox reflections on curves
+              sheen: 0.20,                       // Micro-flake metallic sheen
+              sheenRoughness: 0.20,              // Soft sparkle at grazing angles
+              sheenColor: new THREE.Color('#1d733f'), // Green-tinted metallic flake shimmer
               normalMap: origNorm,
-              normalScale: new THREE.Vector2(0.75, 0.75), // Slightly softer normals for smoother body curves
+              normalScale: new THREE.Vector2(0.7, 0.7), // Softer normals for smoother body curves
               roughnessMap: origRough,
             });
             child.material.needsUpdate = true;
@@ -899,7 +955,7 @@ const PorscheCanvas = ({
           }
           setIsLoaded(true);
           paintMeshesRef.current = paintMeshes;
-          headlightElementsRef.current = [leftGlowMesh, rightGlowMesh, floorBeamMaterial, shaftMaterial].filter(Boolean);
+          headlightElementsRef.current = [floorBeamMaterial, shaftMaterial, ...headlightElementsRef.current].filter(Boolean);
           if (carColorRef.current && carColorRef.current !== '#083d20') {
             const initCol = new THREE.Color(carColorRef.current);
             paintMeshes.forEach((mesh) => {
@@ -1004,29 +1060,13 @@ const PorscheCanvas = ({
           x: isMobile ? 0 : 0.45,
           y: 0,
           z: isMobile ? 0.2 : 0.15,
-          cameraTargetY: isMobile ? 0.72 : 0.65,
+          cameraTargetY: isMobile ? 0.55 : 0.65,
           rotX: inspectRotX,
           rotY: inspectRotY,
           rotZ: 0,
-          scale: isMobile ? 0.82 : 1.05,
+          scale: isMobile ? 0.85 : 1.05,
           tailLightIntensity: 0.8,
           tailLightGlow: 0.6,
-        };
-      }
-
-      // MOBILE VIEW: Strictly lock to direct front bumper view with NO scroll choreography animations
-      if (isMobile) {
-        return {
-          x: 0,
-          y: 0, // Grounded on showroom floor
-          z: 0.22,
-          cameraTargetY: 0.72,
-          rotX: 0.015,
-          rotY: 0, // 0° Direct straight front bumper view
-          rotZ: 0,
-          scale: window.innerWidth < 360 ? 0.76 : 0.82,
-          tailLightIntensity: 0.0,
-          tailLightGlow: 0.2,
         };
       }
 
@@ -1051,15 +1091,16 @@ const PorscheCanvas = ({
       const contactP = getProgress(contactEl);
 
       // STAGE 1: HERO (Cinematic Front 3/4 View — ALL WHEELS GROUNDED AT Y=0)
+      const isShortMobile = isMobile && window.innerHeight < 620;
       let target = {
-        x: isMobile ? 0.18 : 1.65,
+        x: isMobile ? 0 : 1.65,
         y: 0, // MUST REMAIN AT 0 (ON THE SHOWROOM FLOOR)
-        z: isMobile ? -0.28 : 0.05,
-        cameraTargetY: isMobile ? 1.74 : 0.65,
+        z: isMobile ? 0.15 : 0.05,
+        cameraTargetY: isMobile ? (isShortMobile ? 1.05 : 0.96) : 0.65, // Elegant placement below CTA buttons on mobile
         rotX: 0.015,
-        rotY: -Math.PI * 0.22, // -40° front 3/4
+        rotY: isMobile ? -Math.PI * 0.18 : -Math.PI * 0.22, // -32° front 3/4 on mobile, -40° on desktop
         rotZ: 0,
-        scale: isMobile ? 0.68 : (isTablet ? 0.82 : 1.0),
+        scale: isMobile ? (window.innerWidth < 360 || isShortMobile ? 0.68 : 0.78) : (isTablet ? 0.82 : 1.0),
         tailLightIntensity: 0.0,
         tailLightGlow: 0.2,
       };
@@ -1069,12 +1110,12 @@ const PorscheCanvas = ({
         target = {
           x: 0,
           y: 0, // GROUNDED
-          z: isMobile ? -0.1 : 0.35,
-          cameraTargetY: isMobile ? 1.3 : 0.65,
+          z: isMobile ? 0.1 : 0.35,
+          cameraTargetY: isMobile ? 0.65 : 0.65,
           rotX: 0.015,
           rotY: Math.PI, // 180° Direct Rear View
           rotZ: 0,
-          scale: isMobile ? 0.88 : 1.05,
+          scale: isMobile ? 0.84 : 1.05,
           tailLightIntensity: 4.8,
           tailLightGlow: 3.2,
         };
@@ -1083,12 +1124,12 @@ const PorscheCanvas = ({
         target = {
           x: isMobile ? 0 : 1.35,
           y: 0, // GROUNDED
-          z: isMobile ? -0.15 : 0.05,
-          cameraTargetY: isMobile ? 1.15 : 0.65,
+          z: isMobile ? 0.05 : 0.05,
+          cameraTargetY: isMobile ? 0.65 : 0.65,
           rotX: 0.03,
           rotY: -Math.PI * 0.78,
           rotZ: 0,
-          scale: isMobile ? 0.82 : 0.96,
+          scale: isMobile ? 0.80 : 0.96,
           tailLightIntensity: 1.5,
           tailLightGlow: 1.2,
         };
@@ -1097,12 +1138,12 @@ const PorscheCanvas = ({
         target = {
           x: isMobile ? 0 : -2.35,
           y: 0, // GROUNDED
-          z: isMobile ? -0.15 : 0.25,
-          cameraTargetY: isMobile ? -0.3 : 0.65,
+          z: isMobile ? 0.1 : 0.25,
+          cameraTargetY: isMobile ? 0.65 : 0.65,
           rotX: 0.025,
           rotY: Math.PI * 0.22,
           rotZ: 0,
-          scale: isMobile ? 0.85 : 1.0,
+          scale: isMobile ? 0.80 : 1.0,
           tailLightIntensity: 0.3,
           tailLightGlow: 0.4,
         };
@@ -1111,12 +1152,12 @@ const PorscheCanvas = ({
         target = {
           x: isMobile ? 0 : -1.8,
           y: 0, // GROUNDED
-          z: isMobile ? -0.15 : 0.15,
-          cameraTargetY: isMobile ? 1.2 : 0.65,
+          z: isMobile ? 0.05 : 0.15,
+          cameraTargetY: isMobile ? 0.65 : 0.65,
           rotX: 0.035,
           rotY: Math.PI * 0.32,
           rotZ: 0,
-          scale: isMobile ? 0.82 : 0.96,
+          scale: isMobile ? 0.80 : 0.96,
           tailLightIntensity: 0.35,
           tailLightGlow: 0.4,
         };
@@ -1125,12 +1166,12 @@ const PorscheCanvas = ({
         target = {
           x: isMobile ? 0 : 1.45,
           y: 0, // GROUNDED
-          z: isMobile ? -0.15 : 0.0,
-          cameraTargetY: isMobile ? 1.25 : 0.65,
+          z: isMobile ? 0.05 : 0.0,
+          cameraTargetY: isMobile ? 0.65 : 0.65,
           rotX: 0.04,
           rotY: -Math.PI * 0.28,
           rotZ: 0,
-          scale: isMobile ? 0.84 : 0.95,
+          scale: isMobile ? 0.80 : 0.95,
           tailLightIntensity: 0.2,
           tailLightGlow: 0.3,
         };
@@ -1139,12 +1180,12 @@ const PorscheCanvas = ({
         target = {
           x: isMobile ? 0 : 2.1,
           y: 0, // GROUNDED
-          z: isMobile ? -0.2 : -0.05,
-          cameraTargetY: isMobile ? 1.55 : 0.65,
+          z: isMobile ? 0.0 : -0.05,
+          cameraTargetY: isMobile ? 0.65 : 0.65,
           rotX: 0.01,
           rotY: -Math.PI * 0.5, // 90° pure side silhouette
           rotZ: 0,
-          scale: isMobile ? 0.82 : 0.98,
+          scale: isMobile ? 0.80 : 0.98,
           tailLightIntensity: 0.3,
           tailLightGlow: 0.35,
         };
