@@ -408,29 +408,6 @@ body.custom-cursor-active select {
   cursor: none !important;
 }
 
-.cursor-dot {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  background-color: var(--porsche-white);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  transform: translate(-50%, -50%);
-}
-
-.cursor-ring {
-  position: fixed;
-  width: 34px;
-  height: 34px;
-  border: 1.5px solid rgba(234, 230, 221, 0.45);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99998;
-  transform: translate(-50%, -50%);
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
 /* ═══════════════════════════════════════════════════════════════
    Floating DevShell Trigger Pill
    ═══════════════════════════════════════════════════════════════ */
